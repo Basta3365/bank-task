@@ -93,13 +93,12 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
     public void getAllFavorites(OnTaskCompleted.FavoritePresenter mainPresenterComplete) {
         List<ActualRate> rateList = new ArrayList<ActualRate>();
         if (isTableExists(TABLE_FAVORITES)) {
-            //TODO right
-//            if (getFavoritesCount() == 0) {
-//               mainPresenterComplete.onAllFavorites(null);
-//            } else {
-                String selectQuery = "SELECT * FROM " + TABLE_FAVORITES;
-                SQLiteDatabase db = this.getWritableDatabase();
-                Cursor cursor = db.rawQuery(selectQuery, null);
+            String selectQuery = "SELECT * FROM " + TABLE_FAVORITES;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.getCount() == 0) {
+                mainPresenterComplete.onAllFavorites(null);
+            } else {
                 if (cursor.moveToFirst()) {
                     do {
                         ActualRate rate = new ActualRate();
@@ -111,10 +110,10 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
                         rate.setCurOfficialRate(Double.parseDouble(cursor.getString(5)));
                         rateList.add(rate);
                     } while (cursor.moveToNext());
+                    mainPresenterComplete.onAllFavorites(rateList);
                 }
-                mainPresenterComplete.onAllFavorites(rateList);
-//            }
-        } else {
+            }
+        }else {
             onCreate(this.getWritableDatabase());
             getAllFavorites(mainPresenterComplete);
         }

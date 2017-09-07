@@ -31,11 +31,14 @@ public class FragmentFavorites extends Fragment {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_favorites, container, false);
         Repository repository=Repository.getInstance(getContext());
-        repository.getRateByAbb("USD", new OnTaskCompleted.MainPresenterComplete() {
+        repository.getRateByAbb("EUR", new OnTaskCompleted.MainPresenterComplete() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onLoadRate(Object o) {
+                //TODO kostyl
                 ActualRate actualRate= (ActualRate) o;
+                actualRate.setCurOfficialRate(3.99);
+                Repository.getInstance(getContext()).addFavorite(actualRate);
                 mJobScheduler = (JobScheduler)getContext().getSystemService( Context.JOB_SCHEDULER_SERVICE );
 //                mJobScheduler.cancelAll();
                 JobInfo.Builder builder = new JobInfo.Builder( 1,

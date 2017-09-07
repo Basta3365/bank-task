@@ -28,4 +28,6 @@ public interface DataSource {
     void getAllMetalNames(OnTaskCompleted.LoadComplete onTaskCompleted);
 
     void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted);
+
+    void getRateCalculator(String abbFrom, String abbTo, double count, OnTaskCompleted.LoadComplete loadComplete);
 }

@@ -90,22 +90,25 @@ public class LocalDataSource implements DataSource {
                 @Override
                 public void onAllFavorites(Object o) {
                     favorites.addAll((List<ActualRate>) o);
-                    for (final ActualRate favorite : favorites) {
-                        databaseHandler.getRateByAbb(favorite.getCurAbbreviation(), new OnTaskCompleted.MainPresenterComplete() {
+                    final int count=favorites.size();
+                    for(int i=0;i<count;i++){
+                        final int finalI = i;
+                        databaseHandler.getRateByAbb(favorites.get(i).getCurAbbreviation(), new OnTaskCompleted.MainPresenterComplete() {
                             @Override
                             public void onLoadRate(Object o) {
                                 if(o!=null) {
                                     ActualRate temp = (ActualRate) o;
-                                    if (temp.getCurOfficialRate() < favorite.getCurOfficialRate()) {
-                                        changes.put(temp.getCurAbbreviation(), temp.getCurOfficialRate() - favorite.getCurOfficialRate());
+                                    if (temp.getCurOfficialRate() < favorites.get(finalI).getCurOfficialRate()) {
+                                        changes.put(temp.getCurAbbreviation(), temp.getCurOfficialRate() - favorites.get(finalI).getCurOfficialRate());
                                     }
                                     databaseHandlerFavorites.updateFavorite(temp);
-                                    favoritePresenter.onAllFavorites(changes);
+                                    if(finalI==count-1) {
+                                        favoritePresenter.onAllFavorites(changes);
+                                    }
                                 }
                             }
                         });
                     }
-                    //TODO right
                 }
             });
 
@@ -113,6 +116,8 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void addFavorite(ActualRate favorite) {
+        //TODO kostyl dlya proverki
+        databaseHandlerFavorites.deleteAll();
         databaseHandlerFavorites.addFavorite(favorite);
     }
 
@@ -124,7 +129,32 @@ public class LocalDataSource implements DataSource {
     @Override
     public void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted) {
         databaseHandlerMetalRate.getAllIngots(onTaskCompleted);
-//        databaseHandler.deleteAll();
+    }
+
+    @Override
+    public void getRateCalculator(String abbFrom, String abbTo, final double count, final OnTaskCompleted.LoadComplete loadComplete) {
+        if(abbFrom.equals("BYR")){
+            databaseHandler.getRateByAbb(abbTo, new OnTaskCompleted.MainPresenterComplete() {
+                @Override
+                public void onLoadRate(Object o) {
+                    ActualRate rate= (ActualRate) o;
+                    double answer=0;
+                    answer=(count*rate.getCurScale())/rate.getCurOfficialRate();
+                    loadComplete.onLoadComplete(answer);
+                }
+            });
+        }
+        if(abbTo.equals("BYR")){
+            databaseHandler.getRateByAbb(abbFrom, new OnTaskCompleted.MainPresenterComplete() {
+                @Override
+                public void onLoadRate(Object o) {
+                    ActualRate rate= (ActualRate) o;
+                    double answer=0;
+                    answer=(count*rate.getCurOfficialRate())/rate.getCurScale();
+                    loadComplete.onLoadComplete(answer);
+                }
+            });
+        }
     }
 
     public void getRateByAdd(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter) {

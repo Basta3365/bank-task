@@ -10,10 +10,10 @@
     <string name="select_date">Select date</string>
     <string name="wrong_input">Wrong input date</string>
     <string-array name="rate_list">
-    <item>@string/select_none</item>
-    <item>@string/eur</item>
-    <item>@string/rub</item>
-    <item>@string/usd</item>
+        <item>@string/select_none</item>
+        <item>@string/eur</item>
+        <item>@string/rub</item>
+        <item>@string/usd</item>
     </string-array>
     <string-array name="date_list">
         <item>@string/select_none</item>

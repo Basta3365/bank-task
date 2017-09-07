@@ -12,6 +12,5 @@ import java.util.List;
 public interface TwoScreen {
     interface DynamicView {
        void showDynamicInfo(List<DynamicPeriod> dynamicPeriods);
-        void showAllCurrencies(List<Currency> currencies);
     }
 }

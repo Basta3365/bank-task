@@ -63,4 +63,8 @@ public class Repository {
     public void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted){
         localDataSource.getAllIngots(onTaskCompleted);
     }
+
+    public void getRateCalculator(String abbFrom, String abbTo, double count, OnTaskCompleted.LoadComplete loadComplete) {
+        localDataSource.getRateCalculator(abbFrom,abbTo,count,loadComplete);
+    }
 }

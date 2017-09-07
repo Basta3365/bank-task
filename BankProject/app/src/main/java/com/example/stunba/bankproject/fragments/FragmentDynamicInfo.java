@@ -44,22 +44,42 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     private String startDate;
     private String endDate;
     private String rate;
-    private String value;
     private Button draw;
-    private Map<String,String> currencyIndex;
+    private String abb;
+    private boolean isNotification=false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_dynamics, container, false);
+        Bundle bundle=getArguments();
+        if(bundle.getString("abb")!=null){
+            abb=bundle.getString("abb");
+            isNotification=true;
+        }
         if (savedInstanceState == null) {
             presenter = new DynamicPresenter(getContext(),this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            restoreState(savedInstanceState);
         }
         initViews();
         presenter.loadInfo();
+        if(isNotification){
+            selectDate.setSelection(1);
+            int position=presenter.getValueNumber(abb);
+            if(position!=-1) {
+                selectRate.setSelection(position);
+            }
+            loadDynamics("3",abb);
+        }
         return view;
     }
 
@@ -81,17 +101,6 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     }
 
     @Override
-    public void showAllCurrencies(List<Currency> currencies) {
-        for (Currency cur: currencies) {
-            currencyIndex.put(cur.getCurAbbreviation(),String.valueOf(cur.getCurID()));
-        }
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, new ArrayList<>(currencyIndex.keySet()));
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectRate.setAdapter(spinnerAdapter);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         presenter.bindView(this);
@@ -106,15 +115,23 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("startDate", startDate);
+        outState.putString("endDate", endDate);
+        outState.putString("rate", rate);
         PresenterManager.getInstance().savePresenter(presenter, outState);
+    }
+    private void restoreState(Bundle savedInstanceState) {
+        startDate = savedInstanceState.getString("startDate");
+        endDate = savedInstanceState.getString("endDate");
+        rate=savedInstanceState.getString("rate");
     }
 
     protected void initViews() {
         chart = (BarChart) view.findViewById(R.id.chart);
         selectDate = (Spinner) view.findViewById(R.id.spinnerSelectDate);
         selectRate = (Spinner) view.findViewById(R.id.spinnerSelectRate);
+        selectRate.setAdapter(presenter.getAdapter());
         draw = (Button) view.findViewById(R.id.buttonDraw);
-        currencyIndex=new HashMap<>();
         draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,47 +140,29 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
                 final int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
                 if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
                     endDate = Settings.getDate(year, month, day);
-                    Settings.CALENDAR.add(Calendar.MONTH, -Integer.valueOf(selectDate.getSelectedItem().toString()));
-                    int yearEnd = Settings.CALENDAR.get(Calendar.YEAR);
-                    int monthEnd = Settings.CALENDAR.get(Calendar.MONTH);
-                    int dayEnd = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
-                    startDate = Settings.getDate(yearEnd, monthEnd, dayEnd);
-                    Settings.CALENDAR.add(Calendar.MONTH, +Integer.valueOf(selectDate.getSelectedItem().toString()));
-                    rate = (String) selectRate.getSelectedItem();
-                    value = currencyIndex.get(rate);
-                    if (startDate != null & endDate != null & value != null) {
-                        presenter.loadDynamics(value, startDate, endDate);
+                    loadDynamics(selectDate.getSelectedItem().toString(),(String) selectRate.getSelectedItem());
+                    if (startDate != null & endDate != null & rate != null) {
+                        presenter.loadDynamics(rate, startDate, endDate);
                     }
                 }
             }
         });
     }
 
-//    public String getDate(int year, int month, int dayOfMonth) {
-//        String sMonth = String.valueOf(month + 1);
-//        String sDay = String.valueOf(dayOfMonth);
-//        return year + "-" + sMonth + "-" + sDay;
-//
-//    }
-
-    protected String getValue(String text) {
-        String value = null;
-        switch (text) {
-            case "USD": {
-                value = "145";
-                break;
-            }
-            case "EUR": {
-                value = "292";
-                break;
-            }
-            case "RUB": {
-                value = "298";
-                break;
-            }
+    private void loadDynamics(String period,String rateAbb){
+        final int year = Settings.CALENDAR.get(Calendar.YEAR);
+        final int month = Settings.CALENDAR.get(Calendar.MONTH);
+        final int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
+        endDate = Settings.getDate(year, month, day);
+        Settings.CALENDAR.add(Calendar.MONTH, -Integer.valueOf(period));
+        int yearEnd = Settings.CALENDAR.get(Calendar.YEAR);
+        int monthEnd = Settings.CALENDAR.get(Calendar.MONTH);
+        int dayEnd = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
+        startDate = Settings.getDate(yearEnd, monthEnd, dayEnd);
+        Settings.CALENDAR.add(Calendar.MONTH, +Integer.valueOf(period));
+        if (startDate != null & endDate != null & rateAbb != null) {
+            presenter.loadDynamics(rateAbb, startDate, endDate);
         }
-        return value;
     }
-
 
 }
