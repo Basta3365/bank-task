@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="13">
+    <Spinner
+        android:layout_weight="1"
+        android:id="@+id/spinnerSelectRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp"/>
+    <Spinner
+        android:layout_weight="1"
+        android:id="@+id/spinnerSelectDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/date_list"
+        android:padding="3dp"/>
+
+    <Button
+        android:id="@+id/buttonDraw"
+        android:text="draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_weight="11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</LinearLayout>

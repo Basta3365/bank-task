@@ -3,4 +3,23 @@
     <string name="usd">USD</string>
     <string name="eur">EUR</string>
     <string name="rub">RUB</string>
+    <string name="stacked_one_1">STATE 1</string>
+    <string name="stacked_one_2">STATE 2</string>
+    <string name="stacked_one_3">STATE 3</string>
+    <string name="select_none">Select none</string>
+    <string name="select_date">Select date</string>
+    <string name="wrong_input">Wrong input date</string>
+    <string-array name="rate_list">
+    <item>@string/select_none</item>
+    <item>@string/eur</item>
+    <item>@string/rub</item>
+    <item>@string/usd</item>
+    </string-array>
+    <string-array name="date_list">
+        <item>@string/select_none</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+    </string-array>
+
 </resources>
