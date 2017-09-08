@@ -73,6 +73,7 @@ public class RecyclerViewAdapterMetal  extends RecyclerView.Adapter<RecyclerView
             case 3: holder.imageView.setImageResource(R.drawable.usd);
                 break;
         }
+        //TODO change language set image
         holder.metalName.setText(names.get(data.get(position).getMetalID()));
         holder.nominal.setText(String.valueOf(data.get(position).getNominal()));
         holder.totalPrice.setText(String.valueOf(data.get(position).getBanksRubles())+" BYN");

@@ -30,4 +30,8 @@ public interface DataSource {
     void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted);
 
     void getRateCalculator(String abbFrom, String abbTo, double count, OnTaskCompleted.LoadComplete loadComplete);
+
+    void getAllFavorites(OnTaskCompleted.FavoritePresenter loadComplete);
+
+    void deleteFavorite(ActualRate o);
 }

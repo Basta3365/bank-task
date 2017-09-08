@@ -116,8 +116,6 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void addFavorite(ActualRate favorite) {
-        //TODO kostyl dlya proverki
-        databaseHandlerFavorites.deleteAll();
         databaseHandlerFavorites.addFavorite(favorite);
     }
 
@@ -155,6 +153,16 @@ public class LocalDataSource implements DataSource {
                 }
             });
         }
+    }
+
+    @Override
+    public void getAllFavorites(OnTaskCompleted.FavoritePresenter loadComplete) {
+        databaseHandlerFavorites.getAllFavorites(loadComplete);
+    }
+
+    @Override
+    public void deleteFavorite(ActualRate o) {
+        databaseHandlerFavorites.deleteFavorite(o);
     }
 
     public void getRateByAdd(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter) {
