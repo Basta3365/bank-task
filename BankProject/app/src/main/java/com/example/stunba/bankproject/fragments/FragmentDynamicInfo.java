@@ -60,14 +60,17 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
         if (view == null)
             view = inflater.inflate(R.layout.fragment_dynamics, container, false);
         Bundle bundle=getArguments();
-        if(bundle.getString("abb")!=null){
-            abb=bundle.getString("abb");
-            isNotification=true;
+        if(bundle!=null) {
+            if (bundle.getString("abb") != null) {
+                abb = bundle.getString("abb");
+                isNotification = true;
+            }
         }
         if (savedInstanceState == null) {
             presenter = new DynamicPresenter(getContext(),this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setDynamicView(this);
             restoreState(savedInstanceState);
         }
         initViews();
@@ -124,6 +127,7 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
         startDate = savedInstanceState.getString("startDate");
         endDate = savedInstanceState.getString("endDate");
         rate=savedInstanceState.getString("rate");
+        presenter.loadDynamics(rate,startDate,endDate);
     }
 
     protected void initViews() {
@@ -141,15 +145,13 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
                 if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
                     endDate = Settings.getDate(year, month, day);
                     loadDynamics(selectDate.getSelectedItem().toString(),(String) selectRate.getSelectedItem());
-                    if (startDate != null & endDate != null & rate != null) {
-                        presenter.loadDynamics(rate, startDate, endDate);
-                    }
                 }
             }
         });
     }
 
     private void loadDynamics(String period,String rateAbb){
+        rate=rateAbb;
         final int year = Settings.CALENDAR.get(Calendar.YEAR);
         final int month = Settings.CALENDAR.get(Calendar.MONTH);
         final int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);

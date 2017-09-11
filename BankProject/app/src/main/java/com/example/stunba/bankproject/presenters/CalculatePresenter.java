@@ -20,13 +20,17 @@ import java.util.Map;
 
 public class CalculatePresenter extends BasePresenter<String, TreeScreen.CalculateView> {
     private Repository repository;
-    private TreeScreen.CalculateView view;
+    private TreeScreen.CalculateView calculateView;
     private Map<String, Integer> currency;
     private ArrayAdapter<String> adapter = null;
 
+    public void setCalculateView(TreeScreen.CalculateView calculateView) {
+        this.calculateView = calculateView;
+    }
+
     public CalculatePresenter(Context context, TreeScreen.CalculateView v) {
         repository = Repository.getInstance(context);
-        view = v;
+        calculateView = v;
         currency = new HashMap<>();
         adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_item, new ArrayList<String>());
@@ -58,7 +62,7 @@ public class CalculatePresenter extends BasePresenter<String, TreeScreen.Calcula
         repository.getRateByDate(String.valueOf(currency.get(val)), date, new OnTaskCompleted.CalculatePresenterComplete() {
             @Override
             public void onLoadRateByDate(Object o) {
-                view.showActualRate((ActualRate) o);
+                calculateView.showActualRate((ActualRate) o);
             }
         });
     }

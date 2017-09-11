@@ -30,7 +30,7 @@ public class FragmentTreeScreen extends Fragment implements TreeScreen.Calculate
     private CalculatePresenter presenter;
     private Spinner selectRate;
     private TextView selectDate;
-    private TextView actualRate;
+    private TextView actualRateTextScreen;
     private String startDate;
     private String value;
     private Button calculate;
@@ -46,6 +46,7 @@ public class FragmentTreeScreen extends Fragment implements TreeScreen.Calculate
             presenter = new CalculatePresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setCalculateView(this);
             restoreState(savedInstanceState);
         }
         initViews();
@@ -65,9 +66,9 @@ public class FragmentTreeScreen extends Fragment implements TreeScreen.Calculate
         }
         selectRate = (Spinner) view.findViewById(R.id.spinnerSelectRateCalculate);
         selectRate.setAdapter(presenter.getAdapter());
-        actualRate = (TextView) view.findViewById(R.id.textViewActualRate);
+        actualRateTextScreen = (TextView) view.findViewById(R.id.textViewActualRateScreen);
         if (actualRateText != null) {
-            actualRate.setText(actualRateText);
+            actualRateTextScreen.setText(actualRateText);
         }
         calculate = (Button) view.findViewById(R.id.buttonCalculate);
         final int year = Settings.CALENDAR.get(Calendar.YEAR);
@@ -102,9 +103,9 @@ public class FragmentTreeScreen extends Fragment implements TreeScreen.Calculate
     @Override
     public void showActualRate(ActualRate rate) {
         if (rate != null) {
-            actualRate.setText(String.valueOf(rate.getCurOfficialRate()));
+            actualRateTextScreen.setText(String.valueOf(rate.getCurOfficialRate()));
         } else {
-            actualRate.setText(getString(R.string.wrong_input));
+            actualRateTextScreen.setText(FragmentTreeScreen.this.getString(R.string.wrong_input));
         }
     }
 
@@ -125,7 +126,7 @@ public class FragmentTreeScreen extends Fragment implements TreeScreen.Calculate
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("date", startDate);
-        outState.putString("actual_rate", actualRate.getText().toString());
+        outState.putString("actual_rate", actualRateTextScreen.getText().toString());
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 

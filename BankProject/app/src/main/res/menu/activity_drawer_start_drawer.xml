@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/one_screen"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="The current exchange rate of major currencies" />
+        <item
+            android:id="@+id/two_screen"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Rate graph currency" />
+        <item
+            android:id="@+id/three_screen"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="The exchange rate on the date" />
+        <item
+            android:id="@+id/four_screen"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="The list of cost of precious metals" />
+        <item
+            android:id="@+id/five_screen"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Currency calculator" />
+        <item
+            android:id="@+id/six_screen"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Favorite" />
+        <item
+            android:id="@+id/seven_screen"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="About" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

@@ -2,8 +2,11 @@ package com.example.stunba.bankproject.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.job.JobInfo;
 import android.app.job.JobParameters;
+import android.app.job.JobScheduler;
 import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -12,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.fragments.DynamicActivity;
 import com.example.stunba.bankproject.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
@@ -25,12 +29,11 @@ import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class JobSchedulerService extends JobService {
-    private static final int NOTIFY_ID = 11;
 
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.d("TAG", "Start");
-//        Repository.getInstance(getBaseContext()).updateAllCurrencies();
+        Repository.getInstance(getBaseContext()).updateAllCurrencies();
         Repository.getInstance(getBaseContext()).updateAllRates(new OnTaskCompleted.MainPresenterComplete() {
             @Override
             public void onLoadRate(Object o) {
@@ -46,7 +49,13 @@ public class JobSchedulerService extends JobService {
                 });
             }
         });
-
+        JobScheduler mJobScheduler = (JobScheduler)getSystemService( Context.JOB_SCHEDULER_SERVICE );
+        mJobScheduler.cancelAll();
+        JobInfo.Builder builder = new JobInfo.Builder( 1,
+                new ComponentName( getPackageName(),
+                        JobSchedulerService.class.getName() ) );
+        builder.setOverrideDeadline(28800000);
+        mJobScheduler.schedule(builder.build());
         return true;
     }
 
@@ -54,11 +63,13 @@ public class JobSchedulerService extends JobService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_date_range)
-                        .setContentTitle(key+" cheaper!!!!!!!")
+                        .setContentTitle(key+" cheaper!!!!!!! ")
                         .setContentText("View statistics for 3 months");
         Intent intent=new Intent(this,DynamicActivity.class);
         intent.putExtra("abb",key);
         intent.putExtra("cheaper",value);
+        Settings.COUNT+=1;
+        intent.putExtra("id",Settings.COUNT);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -70,7 +81,7 @@ public class JobSchedulerService extends JobService {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager.notify(112, mBuilder.build());
+        mNotificationManager.notify(Settings.COUNT, mBuilder.build());
     }
 
     @Override

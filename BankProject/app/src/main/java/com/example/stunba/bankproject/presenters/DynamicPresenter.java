@@ -27,6 +27,10 @@ public class DynamicPresenter extends BasePresenter<List<String>, TwoScreen.Dyna
     private Map<String, Integer> currency;
     private ArrayAdapter<String> adapter = null;
 
+    public void setDynamicView(TwoScreen.DynamicView dynamicView) {
+        this.dynamicView = dynamicView;
+    }
+
     public DynamicPresenter(Context context, TwoScreen.DynamicView view) {
         repository = Repository.getInstance(context);
         dynamicView = view;

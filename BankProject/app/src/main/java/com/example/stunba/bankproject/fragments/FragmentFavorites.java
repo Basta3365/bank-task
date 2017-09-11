@@ -1,6 +1,5 @@
 package com.example.stunba.bankproject.fragments;
 
-import android.app.job.JobScheduler;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +23,6 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
 public class FragmentFavorites extends Fragment implements FavoriteSceen.FavoriteView {
     private View view;
     private RecyclerView mRecyclerView;
-    private JobScheduler mJobScheduler;
     private FavoriteScreenPresenter presenter;
     private Button buttonAdd;
     @Nullable
@@ -36,28 +34,11 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
             presenter = new FavoriteScreenPresenter(getContext(),this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setFavoriteView(this);
         }
         initView();
         presenter.loadInfo();
         return view;
-//        Repository repository=Repository.getInstance(getContext());
-//        repository.getRateByAbb("EUR", new OnTaskCompleted.MainPresenterComplete() {
-//            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//            @Override
-//            public void onLoadRate(Object o) {
-//                //TODO kostyl
-//                ActualRate actualRate= (ActualRate) o;
-//                actualRate.setCurOfficialRate(3.99);
-//                Repository.getInstance(getContext()).addFavorite(actualRate);
-//                mJobScheduler = (JobScheduler)getContext().getSystemService( Context.JOB_SCHEDULER_SERVICE );
-////                mJobScheduler.cancelAll();
-//                JobInfo.Builder builder = new JobInfo.Builder( 1,
-//                        new ComponentName( getContext().getPackageName(),
-//                                JobSchedulerService.class.getName() ) );
-//                builder.setOverrideDeadline(5000);
-//                mJobScheduler.schedule(builder.build());
-//            }
-//        });
     }
 
     private void initView() {
@@ -65,7 +46,8 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.addFavorite();
+                presenter.addFavorite(getActivity());
+
             }
         });
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_favorites);
@@ -79,5 +61,23 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
     @Override
     public void showFavorite() {
         mRecyclerView.setAdapter(presenter.getRecyclerViewAdapterFavorites());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.bindView(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unbindView();
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 }

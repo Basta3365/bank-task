@@ -39,6 +39,7 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
             presenter = new MetalScreenPresenter(getContext(),this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setMetalView(this);
         }
         initView();
         presenter.loadInfo();
@@ -57,5 +58,23 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
     @Override
     public void showMetal(List<ActualAllIngot> allIngots, Map<Integer, String> map) {
         mRecyclerView.setAdapter(new RecyclerViewAdapterMetal(allIngots,map));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.bindView(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unbindView();
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 }

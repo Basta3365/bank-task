@@ -17,11 +17,12 @@ public class DynamicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic);
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        nm.cancel(112);
         Intent intent=getIntent();
         abb=intent.getStringExtra("abb");
         cheaper=intent.getDoubleExtra("cheaper",0);
+        int id=intent.getIntExtra("id",0);
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.cancel(id);
         FragmentManager fragmentManager=getSupportFragmentManager();
         Fragment fragment =fragmentManager.findFragmentById(R.id.fragment_container_dynamic);
         if(fragment==null) {

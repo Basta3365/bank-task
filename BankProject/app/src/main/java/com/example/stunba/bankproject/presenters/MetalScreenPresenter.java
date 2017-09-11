@@ -22,6 +22,11 @@ import java.util.Map;
 public class MetalScreenPresenter extends BasePresenter<List<String>,FourScreen.MetalView> {
     private Repository repository;
     private FourScreen.MetalView metalView;
+
+    public void setMetalView(FourScreen.MetalView metalView) {
+        this.metalView = metalView;
+    }
+
     public MetalScreenPresenter(Context context, FourScreen.MetalView view){
         repository=Repository.getInstance(context);
         metalView=view;

@@ -27,7 +27,7 @@
         android:text="Calculate" />
 
     <TextView
-        android:id="@+id/textViewActualRate"
+        android:id="@+id/textViewActualRateScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="" />
