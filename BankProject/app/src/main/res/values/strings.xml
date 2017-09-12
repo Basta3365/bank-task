@@ -20,9 +20,9 @@
     </string-array>
     <string-array name="date_list">
         <item>@string/select_none</item>
-        <item>3</item>
-        <item>6</item>
-        <item>12</item>
+        <item>3 months</item>
+        <item>6 months</item>
+        <item>12 months</item>
     </string-array>
     <string name="title_activity_drawer_start">Bank API</string>
 

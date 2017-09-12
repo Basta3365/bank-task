@@ -1,6 +1,9 @@
 package com.example.stunba.bankproject.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.presenters.RateOnDatePresenter;
@@ -34,10 +38,9 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
     private TextView actualRateTextScreen;
     private String startDate;
     private String value;
-    private Button calculate;
     private String actualRateText;
     private DatePickerDialog dialogDepartureDate;
-    private boolean isCalculate=false;
+    private boolean isCalculate = false;
 
     @Nullable
     @Override
@@ -71,11 +74,15 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
         selectRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(isCalculate){
+                if (isCalculate && startDate != null) {
                     value = (String) selectRate.getSelectedItem();
-                    presenter.actualRate(value, startDate);
-                }else {
-                    isCalculate=true;
+                    if(internetAvailable()) {
+                        presenter.actualRate(value, startDate);
+                    }else {
+                        Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+                    }
+                } else {
+                    isCalculate = true;
                 }
             }
 
@@ -99,11 +106,15 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         startDate = Settings.getDate(year, month, dayOfMonth);
                         selectDate.setText(startDate);
-                        if(isCalculate){
+                        if (isCalculate) {
                             value = (String) selectRate.getSelectedItem();
-                            presenter.actualRate(value, startDate);
-                        }else {
-                            isCalculate=true;
+                            if(internetAvailable()) {
+                                presenter.actualRate(value, startDate);
+                            }else {
+                                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+                            }
+                        } else {
+                            isCalculate = true;
                         }
                     }
                 };
@@ -146,6 +157,13 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 
+    public Boolean internetAvailable() {
+        ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean internetAvailable = (connectManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectManager
+                .getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+        return internetAvailable;
+    }
 
 
 }

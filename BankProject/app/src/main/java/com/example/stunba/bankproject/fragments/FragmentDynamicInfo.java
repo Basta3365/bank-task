@@ -1,7 +1,10 @@
 package com.example.stunba.bankproject.fragments;
 
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.stunba.bankproject.presenters.DynamicInfoPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
@@ -79,7 +83,11 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             if (position != -1) {
                 selectRate.setSelection(position);
             }
-            loadDynamics(defaultPeriod, abb);
+            if (internetAvailable()) {
+                loadDynamics(defaultPeriod, abb);
+            } else {
+                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+            }
         }
         return view;
     }
@@ -137,7 +145,11 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
                     if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-                        loadDynamics(selectDate.getSelectedItem().toString(), (String) selectRate.getSelectedItem());
+                        if (internetAvailable()) {
+                            loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
+                        } else {
+                            Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+                        }
                     }
                 } else {
                     isDraw = true;
@@ -156,7 +168,11 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
                     if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-                        loadDynamics(selectDate.getSelectedItem().toString(), (String) selectRate.getSelectedItem());
+                        if (internetAvailable()) {
+                            loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
+                        } else {
+                            Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+                        }
                     }
                 } else {
                     isDraw = true;
@@ -187,4 +203,20 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
         }
     }
 
+    public String getPeriod(String date) {
+        if (date.contains("3")) {
+            return "3";
+        } else if (date.contains("6")) {
+            return "6";
+        }
+        return "12";
+    }
+
+    public Boolean internetAvailable() {
+        ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean internetAvailable = (connectManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectManager
+                .getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+        return internetAvailable;
+    }
 }

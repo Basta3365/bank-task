@@ -8,19 +8,20 @@
     android:weightSum="13">
     <Spinner
         android:layout_weight="1"
-        android:background="#14ffffff"
+        android:background="#54FFFFF0"
         android:id="@+id/spinnerSelectRate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="3dp"/>
+        android:layout_marginBottom="5dp"/>
+
     <Spinner
-        android:layout_weight="1"
-        android:background="#14ffffff"
         android:id="@+id/spinnerSelectDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#54FFFFF0"
         android:entries="@array/date_list"
-        android:padding="3dp"/>
+        android:layout_marginBottom="5dp"/>
 
 
     <LinearLayout
