@@ -4,15 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/parent"
+    android:background="@drawable/wall"
     android:weightSum="13">
     <Spinner
         android:layout_weight="1"
+        android:background="#14ffffff"
         android:id="@+id/spinnerSelectRate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="3dp"/>
     <Spinner
         android:layout_weight="1"
+        android:background="#14ffffff"
         android:id="@+id/spinnerSelectDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +25,7 @@
     <Button
         android:id="@+id/buttonDraw"
         android:text="draw"
+        android:background="#14ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -30,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <com.github.mikephil.charting.charts.BarChart
+        android:background="#14ffffff"
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

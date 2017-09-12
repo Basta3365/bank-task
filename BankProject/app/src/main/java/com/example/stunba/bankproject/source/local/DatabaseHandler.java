@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandler {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "contactsManager";
+    private static final String DATABASE_NAME = "bankManager";
     private static final String TABLE_RATE = "actual";
     private static final String KEY_ID = "id";
     private static final String KEY_DATE = "date";
@@ -52,7 +52,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
 
     @Override
     public void addRate(ActualRate rate) {
-        if(isTableExists(TABLE_RATE)) {
+        if (isTableExists(TABLE_RATE)) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(KEY_ID, rate.getCurID());
@@ -63,7 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
             values.put(KEY_CUR_OFF_RATE, String.valueOf(rate.getCurOfficialRate()));
             db.insert(TABLE_RATE, null, values);
             db.close();
-        }else {
+        } else {
             onCreate(this.getWritableDatabase());
             addRate(rate);
         }

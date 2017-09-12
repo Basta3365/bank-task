@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.MetalName;
 import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
@@ -20,8 +20,8 @@ import java.util.List;
 public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatabaseHandlerMetalName {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "contactsManager";
-    private static final String TABLE_METAL = "metallName";
+    private static final String DATABASE_NAME = "bankManager";
+    private static final String TABLE_METAL = "metalName";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_NAME_BEL = "nameBel";
@@ -32,11 +32,12 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         remoteDataSource = new RemoteDataSource();
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_METAL_TABLE = "CREATE TABLE " + TABLE_METAL + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_NAME_BEL + " TEXT," +KEY_NAME_ENG + " TEXT"+")";
+                + KEY_NAME_BEL + " TEXT," + KEY_NAME_ENG + " TEXT" + ")";
         db.execSQL(CREATE_METAL_TABLE);
     }
 
@@ -48,47 +49,77 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
 
     @Override
     public void addMetal(MetalName metalName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_ID, metalName.getId());
-        values.put(KEY_NAME, metalName.getName());
-        values.put(KEY_NAME_BEL, metalName.getNameBel());
-        values.put(KEY_NAME_ENG, metalName.getNameEng());
-        db.insert(TABLE_METAL, null, values);
-        db.close();
+        if (isTableExists(TABLE_METAL)) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_ID, metalName.getId());
+            values.put(KEY_NAME, metalName.getName());
+            values.put(KEY_NAME_BEL, metalName.getNameBel());
+            values.put(KEY_NAME_ENG, metalName.getNameEng());
+            db.insert(TABLE_METAL, null, values);
+            db.close();
+        } else {
+            onCreate(this.getWritableDatabase());
+            addMetal(metalName);
+        }
     }
 
     @Override
-    public MetalName getMetal(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_METAL, new String[]{KEY_ID,
-                        KEY_NAME,KEY_NAME_BEL, KEY_NAME_ENG }, KEY_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
+    public void getMetal(final int id, final OnTaskCompleted.LoadComplete onTaskCompleted) {
+        if (isTableExists(TABLE_METAL)) {
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.query(TABLE_METAL, new String[]{KEY_ID,
+                            KEY_NAME, KEY_NAME_BEL, KEY_NAME_ENG}, KEY_ID + "=?",
+                    new String[]{String.valueOf(id)}, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+            }
+            if (cursor.getCount() == 0) {
+                loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+                    @Override
+                    public void onLoadComplete(Object o) {
+                        for (MetalName rate : (List<MetalName>) o) {
+                            addMetal(rate);
+                        }
+                        getMetal(id, onTaskCompleted);
+                    }
+                });
+            } else {
+                MetalName metalName = new MetalName(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                onTaskCompleted.onLoadComplete(metalName);
+            }
+        } else {
+            onCreate(this.getWritableDatabase());
+            loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+                @Override
+                public void onLoadComplete(Object o) {
+                    for (MetalName rate : (List<MetalName>) o) {
+                        addMetal(rate);
+                    }
+                    getMetal(id, onTaskCompleted);
+                }
+            });
         }
-        MetalName metalName = new MetalName(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2),cursor.getString(3));
-        return metalName;
     }
 
     @Override
     public void getAllMetal(final OnTaskCompleted.LoadComplete onTaskCompleted) {
         if (isTableExists(TABLE_METAL)) {
-                List<MetalName> rateList = new ArrayList<MetalName>();
-                String selectQuery = "SELECT * FROM " + TABLE_METAL;
-                SQLiteDatabase db = this.getWritableDatabase();
-                Cursor cursor = db.rawQuery(selectQuery, null);
-                if(cursor.getCount()==0){
-                    loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
-                        @Override
-                        public void onLoadComplete(Object o) {
-                            for (MetalName rate : (List<MetalName>) o) {
-                                addMetal(rate);
-                            }
-                            getAllMetal(onTaskCompleted);
+            List<MetalName> rateList = new ArrayList<MetalName>();
+            String selectQuery = "SELECT * FROM " + TABLE_METAL;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.getCount() == 0) {
+                loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+                    @Override
+                    public void onLoadComplete(Object o) {
+                        for (MetalName rate : (List<MetalName>) o) {
+                            addMetal(rate);
                         }
-                    });
-                }else{
+                        getAllMetal(onTaskCompleted);
+                    }
+                });
+            } else {
                 if (cursor.moveToFirst()) {
                     do {
                         MetalName rate = new MetalName();
@@ -101,7 +132,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                     onTaskCompleted.onLoadComplete(rateList);
                 }
             }
-        }else {
+        } else {
             onCreate(this.getWritableDatabase());
             loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
                 @Override

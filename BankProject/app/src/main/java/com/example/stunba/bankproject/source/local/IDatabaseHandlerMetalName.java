@@ -1,9 +1,7 @@
 package com.example.stunba.bankproject.source.local;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.MetalName;
-
-import java.util.List;
 
 /**
  * Created by Kseniya_Bastun on 8/29/2017.
@@ -11,10 +9,16 @@ import java.util.List;
 
 public interface IDatabaseHandlerMetalName {
     void addMetal(MetalName metalName);
-    MetalName getMetal(int id);
+
+    void getMetal(int id, OnTaskCompleted.LoadComplete onTaskCompleted);
+
     void getAllMetal(OnTaskCompleted.LoadComplete onTaskCompleted);
+
     int getMetalCount();
+
     int updateMetal(MetalName rate);
+
     void deleteMetal(MetalName rate);
+
     void deleteAll();
 }

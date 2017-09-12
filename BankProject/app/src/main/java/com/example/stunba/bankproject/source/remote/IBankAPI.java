@@ -20,18 +20,25 @@ import retrofit2.http.Query;
 public interface IBankAPI {
     @GET("ExRates/Rates/{val}")
     Call<ActualRate> getActualRate(@Path("val") String val, @Query("Periodicity") String periodicity);
+
     @GET("ExRates/Rates")
-    Call<List<ActualRate>> getAllActualRate( @Query("Periodicity") String periodicity);
+    Call<List<ActualRate>> getAllActualRate(@Query("Periodicity") String periodicity);
+
     @GET("ExRates/Rates/Dynamics/{val}")
     Call<List<DynamicPeriod>> getDynamicsPeriod(@Path("val") String val, @Query("startDate") String startDate, @Query("endDate") String endDate);
+
     @GET("ExRates/Rates/{val}")
-    Call<ActualRate> getActualRateOnDate(@Path("val") String val,@Query("onDate") String onDate);
+    Call<ActualRate> getActualRateOnDate(@Path("val") String val, @Query("onDate") String onDate);
+
     @GET("Ingots/Prices")
     Call<List<ActualAllIngot>> getAllIngotsPricesOnDate(@Query("onDate") String onDate);
+
     @GET("Ingots/Prices/{val}")
-    Call<List<ActualAllIngot>> getIngotsPricesOnDate(@Path("val") String val,@Query("onDate") String onDate);
+    Call<List<ActualAllIngot>> getIngotsPricesOnDate(@Path("val") String val, @Query("onDate") String onDate);
+
     @GET("ExRates/Currencies")
     Call<List<Currency>> getAllCurrencies();
+
     @GET("Metals")
     Call<List<MetalName>> getAllMetalNames();
 }

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.Currency;
 import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDatabaseHandlerCurrency {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "contactsManager";
+    private static final String DATABASE_NAME = "bankManager";
     private static final String TABLE_CURRENCY = "currency";
     private static final String KEY_ID = "id";
     private static final String KEY_PARENT_ID = "parentId";
@@ -100,8 +100,20 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
             if (cursor != null) {
                 cursor.moveToFirst();
             }
-            Currency currency = new Currency(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11), cursor.getString(12), Integer.parseInt(cursor.getString(13)), Integer.parseInt(cursor.getString(14)), cursor.getString(15), cursor.getString(16));
-            dynamicPresenterCompleteCurrency.onAllCurrencyLoad(currency);
+            if (cursor.getCount() == 0) {
+                loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                    @Override
+                    public void onAllCurrencyLoad(Object o) {
+                        for (Currency cur:(List<Currency>)o) {
+                            addCurrency(cur);
+                        }
+                        getCurrency(id,dynamicPresenterCompleteCurrency);
+                    }
+                });
+            }else {
+                Currency currency = new Currency(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11), cursor.getString(12), Integer.parseInt(cursor.getString(13)), Integer.parseInt(cursor.getString(14)), cursor.getString(15), cursor.getString(16));
+                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(currency);
+            }
         }else {
             onCreate(this.getWritableDatabase());
             loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {

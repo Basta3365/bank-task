@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.stunba.bankproject.DrawerActivityStart"
+    tools:context="com.example.stunba.bankproject.activity.DrawerActivityStart"
+    android:background="@drawable/wall"
     tools:showIn="@layout/app_bar_drawer_activity_start">
     <LinearLayout
         android:layout_weight="1"

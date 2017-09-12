@@ -3,8 +3,8 @@ package com.example.stunba.bankproject.presenters;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import com.example.stunba.bankproject.CalculatorScreen;
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.CalculatorScreen;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.Currency;
 
@@ -17,17 +17,19 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 9/7/2017.
  */
 
-public class CalculatorPresenter extends BasePresenter<List<String>,CalculatorScreen.CalculatorView> {
+public class CalculatorPresenter extends BasePresenter<CalculatorScreen.CalculatorView> {
     private Repository repository;
     private CalculatorScreen.CalculatorView calculatorView;
     private Map<String, Integer> currency;
-    private ArrayAdapter<String> adapterFirst = null;
-    private ArrayAdapter<String> adapterSecond = null;
-    private ArrayList<String> strings=new ArrayList<>();
-    public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view){
-        repository=Repository.getInstance(context);
-        calculatorView=view;
-        currency=new HashMap<>();
+    private ArrayAdapter<String> adapterFirst;
+    private ArrayAdapter<String> adapterSecond;
+    private ArrayList<String> strings;
+
+    public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
+        repository = Repository.getInstance(context);
+        calculatorView = view;
+        strings = new ArrayList<>();
+        currency = new HashMap<>();
         strings.add("BYR");
         adapterFirst = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_item, new ArrayList<String>());
@@ -36,6 +38,7 @@ public class CalculatorPresenter extends BasePresenter<List<String>,CalculatorSc
                 android.R.layout.simple_spinner_item, strings);
         adapterSecond.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
+
     public void loadInfo() {
         if (currency.size() > 0) {
             adapterFirst.clear();
@@ -57,11 +60,11 @@ public class CalculatorPresenter extends BasePresenter<List<String>,CalculatorSc
         });
     }
 
-    public void getRate(String abbFrom, String abbTo,double count){
-        repository.getRateCalculator(abbFrom,abbTo,count, new OnTaskCompleted.LoadComplete() {
+    public void getRate(String abbFrom, String abbTo, double count) {
+        repository.getRateCalculator(abbFrom, abbTo, count, new OnTaskCompleted.LoadComplete() {
             @Override
             public void onLoadComplete(Object o) {
-                calculatorView.showChangeResults((double)o);
+                calculatorView.showChangeResults((double) o);
             }
         });
     }

@@ -2,7 +2,7 @@ package com.example.stunba.bankproject.source.local;
 
 import android.content.Context;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.DataSource;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 import com.example.stunba.bankproject.source.entities.Currency;
@@ -86,31 +86,31 @@ public class LocalDataSource implements DataSource {
     public void updateFavorites(final OnTaskCompleted.FavoritePresenter favoritePresenter) {
         final List<ActualRate> favorites = new ArrayList<>();
         final Map<String, Double> changes = new HashMap<>();
-            databaseHandlerFavorites.getAllFavorites(new OnTaskCompleted.FavoritePresenter() {
-                @Override
-                public void onAllFavorites(Object o) {
-                    favorites.addAll((List<ActualRate>) o);
-                    final int count=favorites.size();
-                    for(int i=0;i<count;i++){
-                        final int finalI = i;
-                        databaseHandler.getRateByAbb(favorites.get(i).getCurAbbreviation(), new OnTaskCompleted.MainPresenterComplete() {
-                            @Override
-                            public void onLoadRate(Object o) {
-                                if(o!=null) {
-                                    ActualRate temp = (ActualRate) o;
-                                    if (temp.getCurOfficialRate() < favorites.get(finalI).getCurOfficialRate()) {
-                                        changes.put(temp.getCurAbbreviation(), temp.getCurOfficialRate() - favorites.get(finalI).getCurOfficialRate());
-                                    }
-                                    databaseHandlerFavorites.updateFavorite(temp);
-                                    if(finalI==count-1) {
-                                        favoritePresenter.onAllFavorites(changes);
-                                    }
+        databaseHandlerFavorites.getAllFavorites(new OnTaskCompleted.FavoritePresenter() {
+            @Override
+            public void onAllFavorites(Object o) {
+                favorites.addAll((List<ActualRate>) o);
+                final int count = favorites.size();
+                for (int i = 0; i < count; i++) {
+                    final int finalI = i;
+                    databaseHandler.getRateByAbb(favorites.get(i).getCurAbbreviation(), new OnTaskCompleted.MainPresenterComplete() {
+                        @Override
+                        public void onLoadRate(Object o) {
+                            if (o != null) {
+                                ActualRate temp = (ActualRate) o;
+                                if (temp.getCurOfficialRate() < favorites.get(finalI).getCurOfficialRate()) {
+                                    changes.put(temp.getCurAbbreviation(), temp.getCurOfficialRate() - favorites.get(finalI).getCurOfficialRate());
+                                }
+                                databaseHandlerFavorites.updateFavorite(temp);
+                                if (finalI == count - 1) {
+                                    favoritePresenter.onAllFavorites(changes);
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
-            });
+            }
+        });
 
     }
 
@@ -131,24 +131,24 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void getRateCalculator(String abbFrom, String abbTo, final double count, final OnTaskCompleted.LoadComplete loadComplete) {
-        if(abbFrom.equals("BYR")){
+        if (abbFrom.equals("BYR")) {
             databaseHandler.getRateByAbb(abbTo, new OnTaskCompleted.MainPresenterComplete() {
                 @Override
                 public void onLoadRate(Object o) {
-                    ActualRate rate= (ActualRate) o;
-                    double answer=0;
-                    answer=(count*rate.getCurScale())/rate.getCurOfficialRate();
+                    ActualRate rate = (ActualRate) o;
+                    double answer = 0;
+                    answer = (count * rate.getCurScale()) / rate.getCurOfficialRate();
                     loadComplete.onLoadComplete(answer);
                 }
             });
         }
-        if(abbTo.equals("BYR")){
+        if (abbTo.equals("BYR")) {
             databaseHandler.getRateByAbb(abbFrom, new OnTaskCompleted.MainPresenterComplete() {
                 @Override
                 public void onLoadRate(Object o) {
-                    ActualRate rate= (ActualRate) o;
-                    double answer=0;
-                    answer=(count*rate.getCurOfficialRate())/rate.getCurScale();
+                    ActualRate rate = (ActualRate) o;
+                    double answer = 0;
+                    answer = (count * rate.getCurOfficialRate()) / rate.getCurScale();
                     loadComplete.onLoadComplete(answer);
                 }
             });

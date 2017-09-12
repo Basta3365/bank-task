@@ -1,6 +1,6 @@
 package com.example.stunba.bankproject.source.remote;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.Settings;
 
 import java.util.Calendar;
@@ -10,17 +10,18 @@ import java.util.Calendar;
  */
 
 public class RemoteDataSource {
-    private BankApi bankApi=new BankApi();
+    private BankApi bankApi = new BankApi();
+
     public void getAllCurrencies(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
         bankApi.getAllCurrencies(dynamicPresenterCompleteCurrency);
     }
 
-    public void getAllRates(OnTaskCompleted.MainPresenterComplete mainPresenterComplete){
+    public void getAllRates(OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
         bankApi.getAllActualRate(mainPresenterComplete);
     }
 
     public void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {
-        bankApi.getActualRateOnDate(val,date,calculatePresenterComplete);
+        bankApi.getActualRateOnDate(val, date, calculatePresenterComplete);
     }
 
     public void getAllMetalNames(OnTaskCompleted.LoadComplete loadComplete) {
@@ -31,6 +32,6 @@ public class RemoteDataSource {
         int year = Settings.CALENDAR.get(Calendar.YEAR);
         int month = Settings.CALENDAR.get(Calendar.MONTH);
         int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
-        bankApi.getAllIngotsPricesOnDate(Settings.getDate(year,month,day),loadComplete);
+        bankApi.getAllIngotsPricesOnDate(Settings.getDate(year, month, day), loadComplete);
     }
 }

@@ -18,9 +18,10 @@ public class MetalName {
     @Expose
     private String nameEng;
 
-    public MetalName(){
+    public MetalName() {
 
     }
+
     public MetalName(int id, String name, String nameBel, String nameEng) {
         this.id = id;
         this.name = name;

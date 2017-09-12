@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.ActualRate;
-import com.example.stunba.bankproject.source.entities.Currency;
-import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 
 public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatabaseHandlerFavorites {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "contactsManager";
+    private static final String DATABASE_NAME = "bankManager";
     private static final String TABLE_FAVORITES = "favorites";
     private static final String KEY_ID = "id";
     private static final String KEY_DATE = "date";

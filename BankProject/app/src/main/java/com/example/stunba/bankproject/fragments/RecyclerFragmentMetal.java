@@ -9,16 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.stunba.bankproject.FourScreen;
+import com.example.stunba.bankproject.interfaces.FourScreen;
 import com.example.stunba.bankproject.R;
-import com.example.stunba.bankproject.adapter.RecyclerViewAdapterMetal;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.MetalScreenPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
-import com.example.stunba.bankproject.source.entities.ActualAllIngot;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Kseniya_Bastun on 9/6/2017.
@@ -36,7 +31,7 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
             view = inflater.inflate(R.layout.recycler_view, container, false);
         }
         if (savedInstanceState == null) {
-            presenter = new MetalScreenPresenter(getContext(),this);
+            presenter = new MetalScreenPresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setMetalView(this);
@@ -52,13 +47,9 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(new RecyclerViewAdapterMetal());
+        mRecyclerView.setAdapter(presenter.getRecyclerViewAdapterMetal());
     }
 
-    @Override
-    public void showMetal(List<ActualAllIngot> allIngots, Map<Integer, String> map) {
-        mRecyclerView.setAdapter(new RecyclerViewAdapterMetal(allIngots,map));
-    }
 
     @Override
     public void onResume() {
@@ -72,6 +63,7 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
         presenter.unbindView();
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

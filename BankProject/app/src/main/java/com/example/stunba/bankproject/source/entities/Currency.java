@@ -57,7 +57,7 @@ public class Currency {
     @Expose
     private String curDateEnd;
 
-    public Currency(){
+    public Currency() {
     }
 
     public Currency(int curID, int curParentID, String curCode, String curAbbreviation, String curName, String curNameBel, String curNameEng, String curQuotName, String curQuotNameBel, String curQuotNameEng, String curNameMulti, String curNameBelMulti, String curNameEngMulti, int curScale, int curPeriodicity, String curDateStart, String curDateEnd) {

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.stunba.bankproject.FavoriteSceen;
+import com.example.stunba.bankproject.interfaces.FavoriteSceen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.FavoriteScreenPresenter;
@@ -25,13 +25,14 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
     private RecyclerView mRecyclerView;
     private FavoriteScreenPresenter presenter;
     private Button buttonAdd;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_favorites, container, false);
         if (savedInstanceState == null) {
-            presenter = new FavoriteScreenPresenter(getContext(),this);
+            presenter = new FavoriteScreenPresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setFavoriteView(this);
@@ -42,7 +43,7 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
     }
 
     private void initView() {
-        buttonAdd= (Button) view.findViewById(R.id.buttonAdd);
+        buttonAdd = (Button) view.findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +76,7 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
         presenter.unbindView();
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

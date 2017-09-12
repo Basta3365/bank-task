@@ -16,8 +16,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.example.stunba.bankproject.Settings;
-import com.example.stunba.bankproject.fragments.DynamicActivity;
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.activity.DynamicActivity;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.Repository;
 

@@ -8,11 +8,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.stunba.bankproject.CalculatorScreen;
+import com.example.stunba.bankproject.interfaces.CalculatorScreen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.presenters.CalculatorPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
@@ -28,8 +28,8 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     private Spinner selectSecondRate;
     private TextView firstText;
     private TextView secondText;
-    private Button change;
-    private boolean isBYR=false;
+    private ImageButton change;
+    private boolean isBYR = false;
 
     @Nullable
     @Override
@@ -37,7 +37,7 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
         if (view == null)
             view = inflater.inflate(R.layout.fragment_screen_five, container, false);
         if (savedInstanceState == null) {
-            presenter = new CalculatorPresenter(getContext(),this);
+            presenter = new CalculatorPresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
         }
@@ -47,11 +47,11 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     }
 
     private void initViews() {
-        selectFirstRate= (Spinner) view.findViewById(R.id.spinnerFirst);
+        selectFirstRate = (Spinner) view.findViewById(R.id.spinnerFirst);
         selectFirstRate.setAdapter(presenter.getAdapterFirst());
-        selectSecondRate= (Spinner) view.findViewById(R.id.spinnerSecond);
+        selectSecondRate = (Spinner) view.findViewById(R.id.spinnerSecond);
         selectSecondRate.setAdapter(presenter.getAdapterSecond());
-        firstText= (TextView) view.findViewById(R.id.editTextFirst);
+        firstText = (TextView) view.findViewById(R.id.editTextFirst);
         firstText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,7 +60,7 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()>0) {
+                if (s.length() > 0) {
                     presenter.getRate(selectFirstRate.getSelectedItem().toString(), selectSecondRate.getSelectedItem().toString(), Double.parseDouble(firstText.getText().toString()));
                 }
             }
@@ -70,25 +70,25 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
             }
         });
-        secondText= (TextView) view.findViewById(R.id.editTextSecond);
-        change= (Button) view.findViewById(R.id.change);
+        secondText = (TextView) view.findViewById(R.id.editTextSecond);
+        change = (ImageButton) view.findViewById(R.id.change);
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isBYR) {
-                    int select=selectFirstRate.getSelectedItemPosition();
+                if (!isBYR) {
+                    int select = selectFirstRate.getSelectedItemPosition();
                     selectFirstRate.setAdapter(presenter.getAdapterSecond());
                     selectSecondRate.setAdapter(presenter.getAdapterFirst());
                     selectSecondRate.setSelection(select);
                     firstText.setText(secondText.getText());
-                    isBYR=true;
-                }else {
-                    int select=selectSecondRate.getSelectedItemPosition();
+                    isBYR = true;
+                } else {
+                    int select = selectSecondRate.getSelectedItemPosition();
                     selectFirstRate.setAdapter(presenter.getAdapterFirst());
                     selectFirstRate.setSelection(select);
                     selectSecondRate.setAdapter(presenter.getAdapterSecond());
                     firstText.setText(secondText.getText());
-                    isBYR=false;
+                    isBYR = false;
                 }
             }
         });

@@ -1,8 +1,6 @@
 package com.example.stunba.bankproject.source.remote;
 
-import android.util.Log;
-
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.source.entities.ActualAllIngot;
 import com.example.stunba.bankproject.source.entities.ActualRate;
@@ -36,26 +34,36 @@ public class BankApi implements IBankOperations {
             @Override
             public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
                 allRates.addAll(response.body());
+                Settings.RETROFIT.create(IBankAPI.class).getAllActualRate("1").enqueue(new Callback<List<ActualRate>>() {
+                    @Override
+                    public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
+                        allRates.addAll(response.body());
+                        mainPresenterComplete.onLoadRate(allRates);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ActualRate>> call, Throwable t) {
+                        mainPresenterComplete.onLoadRate(allRates);
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<List<ActualRate>> call, Throwable t) {
+                Settings.RETROFIT.create(IBankAPI.class).getAllActualRate("1").enqueue(new Callback<List<ActualRate>>() {
+                    @Override
+                    public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
+                        allRates.addAll(response.body());
+                        mainPresenterComplete.onLoadRate(allRates);
 
-            }
-        });
-        Settings.RETROFIT.create(IBankAPI.class).getAllActualRate("1").enqueue(new Callback<List<ActualRate>>() {
-            @Override
-            public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
-                allRates.addAll(response.body());
-                mainPresenterComplete.onLoadRate(allRates);
+                    }
 
-            }
-
-            @Override
-            public void onFailure(Call<List<ActualRate>> call, Throwable t) {
-                if(allRates.size()==0) {
-                    mainPresenterComplete.onLoadRate(null);
-                }
+                    @Override
+                    public void onFailure(Call<List<ActualRate>> call, Throwable t) {
+                        mainPresenterComplete.onLoadRate(null);
+                    }
+                });
             }
         });
     }
@@ -70,7 +78,7 @@ public class BankApi implements IBankOperations {
 
             @Override
             public void onFailure(Call<List<DynamicPeriod>> call, Throwable t) {
-                Log.d("BANKAPI", "Failed");
+                dynamicPresenterCompleteDynamic.onDynamicLoad(null);
             }
         });
     }
@@ -121,7 +129,7 @@ public class BankApi implements IBankOperations {
 
             @Override
             public void onFailure(Call<List<Currency>> call, Throwable t) {
-
+                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(null);
             }
         });
     }

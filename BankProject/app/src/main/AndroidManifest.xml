@@ -11,16 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-        </activity>
 
         <service
             android:name=".service.JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".fragments.DynamicActivity" />
+        <activity android:name=".activity.DynamicActivity" />
         <activity
-            android:name=".DrawerActivityStart"
+            android:name=".activity.DrawerActivityStart"
             android:label="@string/title_activity_drawer_start"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -40,7 +40,7 @@ public class ActualAllIngot {
     private Object entitiesRubles;
     private int id;
 
-    public ActualAllIngot(){
+    public ActualAllIngot() {
 
     }
 

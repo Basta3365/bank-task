@@ -5,44 +5,31 @@
         <item
             android:id="@+id/one_screen"
             android:icon="@drawable/ic_menu_camera"
-            android:title="The current exchange rate of major currencies" />
+            android:title="@string/the_current_exchange_rate_of_major_currencies" />
         <item
             android:id="@+id/two_screen"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Rate graph currency" />
+            android:title="@string/rate_graph_currency" />
         <item
             android:id="@+id/three_screen"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="The exchange rate on the date" />
+            android:title="@string/the_exchange_rate_on_the_date" />
         <item
             android:id="@+id/four_screen"
             android:icon="@drawable/ic_menu_manage"
-            android:title="The list of cost of precious metals" />
+            android:title="@string/the_list_of_cost_of_precious_metals" />
         <item
             android:id="@+id/five_screen"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Currency calculator" />
+            android:title="@string/currency_calculator" />
         <item
             android:id="@+id/six_screen"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Favorite" />
+            android:title="@string/favorite" />
         <item
             android:id="@+id/seven_screen"
             android:icon="@drawable/ic_menu_manage"
-            android:title="About" />
+            android:title="@string/about" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>

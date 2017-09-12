@@ -3,17 +3,20 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_favorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#14ffffff"
         android:layout_gravity="center"
         android:layout_weight="10"
         card_view:contentPadding="10dp">
 
         <LinearLayout
+            android:background="#14ffffff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -34,10 +37,11 @@
                 android:text="zoloto" />
             <Button
                 android:layout_weight="4"
+                android:background="#14ffffff"
                 android:id="@+id/deleteFavorite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="-"/>
+                android:text="---"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

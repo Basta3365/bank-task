@@ -24,11 +24,18 @@
         <item>6</item>
         <item>12</item>
     </string-array>
-    <string name="title_activity_drawer_start">DrawerActivityStart</string>
+    <string name="title_activity_drawer_start">Bank API</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="the_current_exchange_rate_of_major_currencies">The current exchange rate of major currencies</string>
+    <string name="rate_graph_currency">Rate graph currency</string>
+    <string name="the_exchange_rate_on_the_date">The exchange rate on the date</string>
+    <string name="the_list_of_cost_of_precious_metals">The list of cost of precious metals</string>
+    <string name="currency_calculator">Currency calculator</string>
+    <string name="favorite">Favorite</string>
+    <string name="about">About</string>
 
 </resources>

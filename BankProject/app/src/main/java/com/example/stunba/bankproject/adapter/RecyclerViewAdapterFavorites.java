@@ -9,18 +9,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.stunba.bankproject.OnTaskCompleted;
+import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Kseniya_Bastun on 9/8/2017.
  */
 
-public class RecyclerViewAdapterFavorites  extends RecyclerView.Adapter<RecyclerViewAdapterFavorites.ViewHolder> {
+public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerViewAdapterFavorites.ViewHolder> {
     private List<ActualRate> favorites;
     private OnTaskCompleted.LoadComplete mListener;
 
@@ -37,23 +36,19 @@ public class RecyclerViewAdapterFavorites  extends RecyclerView.Adapter<Recycler
         private TextView favoriteName;
         private ImageView imageView;
         private Button delete;
+
         ViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.card_view_favorites);
             favoriteName = (TextView) itemView.findViewById(R.id.favoriteName);
-            imageView= (ImageView) itemView.findViewById(R.id.imageViewFavorite);
-            delete= (Button) itemView.findViewById(R.id.deleteFavorite);
+            imageView = (ImageView) itemView.findViewById(R.id.imageViewFavorite);
+            delete = (Button) itemView.findViewById(R.id.deleteFavorite);
         }
     }
-    public RecyclerViewAdapterFavorites(List<ActualRate> actualAllIngots, OnTaskCompleted.LoadComplete loadComplete) {
-        favorites = actualAllIngots;
-        mListener=loadComplete;
 
-    }
-
-    public RecyclerViewAdapterFavorites() {
+    public RecyclerViewAdapterFavorites(OnTaskCompleted.LoadComplete loadComplete) {
         favorites = null;
-        mListener=null;
+        mListener = loadComplete;
 
     }
 
@@ -66,23 +61,23 @@ public class RecyclerViewAdapterFavorites  extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.cv.setTag(position);
         //TODO setImage
         holder.favoriteName.setText(favorites.get(position).getCurAbbreviation());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onLoadComplete(favorites.get(position));
+                mListener.onLoadComplete(favorites.get(holder.getAdapterPosition()));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if(favorites !=null) {
+        if (favorites != null) {
             return favorites.size();
-        }else {
+        } else {
             return 0;
         }
     }

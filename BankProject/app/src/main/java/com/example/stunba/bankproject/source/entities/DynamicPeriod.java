@@ -1,11 +1,11 @@
 package com.example.stunba.bankproject.source.entities;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Kseniya_Bastun on 8/25/2017.
  */
-
 
 
 public class DynamicPeriod {
