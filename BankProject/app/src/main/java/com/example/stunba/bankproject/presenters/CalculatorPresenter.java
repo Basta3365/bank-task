@@ -25,6 +25,10 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     private ArrayAdapter<String> adapterSecond;
     private ArrayList<String> strings;
 
+    public void setCalculatorView(CalculatorScreen.CalculatorView calculatorView) {
+        this.calculatorView = calculatorView;
+    }
+
     public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
         repository = Repository.getInstance(context);
         calculatorView = view;

@@ -38,6 +38,7 @@ public class FragmentCurrentExchangeRate extends Fragment implements OneScreen.M
             presenter = new CurrentExchangeRatePresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setMainView(this);
         }
         initViews();
         List<String> listCurrency = new ArrayList<>(3);

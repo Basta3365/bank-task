@@ -76,11 +76,11 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isCalculate && startDate != null) {
                     value = (String) selectRate.getSelectedItem();
-                    if(internetAvailable()) {
+//                    if(internetAvailable()) {
                         presenter.actualRate(value, startDate);
-                    }else {
-                        Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-                    }
+//                    }else {
+//                        Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+//                    }
                 } else {
                     isCalculate = true;
                 }
@@ -108,11 +108,11 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
                         selectDate.setText(startDate);
                         if (isCalculate) {
                             value = (String) selectRate.getSelectedItem();
-                            if(internetAvailable()) {
+//                            if(internetAvailable()) {
                                 presenter.actualRate(value, startDate);
-                            }else {
-                                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-                            }
+//                            }else {
+//                                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+//                            }
                         } else {
                             isCalculate = true;
                         }
@@ -164,6 +164,5 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
         return internetAvailable;
     }
-
 
 }

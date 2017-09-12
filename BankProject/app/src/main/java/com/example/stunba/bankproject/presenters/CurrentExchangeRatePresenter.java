@@ -20,6 +20,10 @@ public class CurrentExchangeRatePresenter extends BasePresenter<OneScreen.MainVi
     private Repository repository;
     private OneScreen.MainView mainView;
 
+    public void setMainView(OneScreen.MainView mainView) {
+        this.mainView = mainView;
+    }
+
     public CurrentExchangeRatePresenter(Context context, OneScreen.MainView view) {
         repository = Repository.getInstance(context);
         mainView = view;

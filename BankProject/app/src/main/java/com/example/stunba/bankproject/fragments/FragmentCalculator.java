@@ -42,6 +42,8 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
             presenter = new CalculatorPresenter(getContext(), this);
         } else {
             presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setCalculatorView(this);
+
         }
         initViews();
         presenter.loadInfo();
