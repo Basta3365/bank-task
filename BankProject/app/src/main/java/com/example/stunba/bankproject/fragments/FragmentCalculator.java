@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,12 +31,13 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     private TextView secondText;
     private ImageButton change;
     private boolean isBYR = false;
+    private boolean isSelect=false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null)
-            view = inflater.inflate(R.layout.fragment_screen_five, container, false);
+            view = inflater.inflate(R.layout.fragment_calculator, container, false);
         if (savedInstanceState == null) {
             presenter = new CalculatorPresenter(getContext(), this);
         } else {
@@ -49,8 +51,38 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     private void initViews() {
         selectFirstRate = (Spinner) view.findViewById(R.id.spinnerFirst);
         selectFirstRate.setAdapter(presenter.getAdapterFirst());
+        selectFirstRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(isSelect & firstText.getText().length()>0) {
+                    presenter.getRate(selectFirstRate.getSelectedItem().toString(), selectSecondRate.getSelectedItem().toString(), Double.parseDouble(firstText.getText().toString()));
+                }else{
+                    isSelect=true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         selectSecondRate = (Spinner) view.findViewById(R.id.spinnerSecond);
         selectSecondRate.setAdapter(presenter.getAdapterSecond());
+        selectSecondRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(isSelect & firstText.getText().length()>0) {
+                    presenter.getRate(selectFirstRate.getSelectedItem().toString(), selectSecondRate.getSelectedItem().toString(), Double.parseDouble(firstText.getText().toString()));
+                }else{
+                    isSelect=true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         firstText = (TextView) view.findViewById(R.id.editTextFirst);
         firstText.addTextChangedListener(new TextWatcher() {
             @Override

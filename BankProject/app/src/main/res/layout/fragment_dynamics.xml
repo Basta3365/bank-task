@@ -22,12 +22,6 @@
         android:entries="@array/date_list"
         android:padding="3dp"/>
 
-    <Button
-        android:id="@+id/buttonDraw"
-        android:text="draw"
-        android:background="#14ffffff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_weight="11"

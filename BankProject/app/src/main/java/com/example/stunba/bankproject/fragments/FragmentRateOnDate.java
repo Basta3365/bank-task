@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -36,12 +37,13 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
     private Button calculate;
     private String actualRateText;
     private DatePickerDialog dialogDepartureDate;
+    private boolean isCalculate=false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null)
-            view = inflater.inflate(R.layout.fragment_tree_screen, container, false);
+            view = inflater.inflate(R.layout.fragment_rate_on_date, container, false);
         if (savedInstanceState == null) {
             presenter = new RateOnDatePresenter(getContext(), this);
         } else {
@@ -66,11 +68,26 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
         }
         selectRate = (Spinner) view.findViewById(R.id.spinnerSelectRateCalculate);
         selectRate.setAdapter(presenter.getAdapter());
+        selectRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(isCalculate){
+                    value = (String) selectRate.getSelectedItem();
+                    presenter.actualRate(value, startDate);
+                }else {
+                    isCalculate=true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         actualRateTextScreen = (TextView) view.findViewById(R.id.textViewActualRateScreen);
         if (actualRateText != null) {
             actualRateTextScreen.setText(actualRateText);
         }
-        calculate = (Button) view.findViewById(R.id.buttonCalculate);
         final int year = Settings.CALENDAR.get(Calendar.YEAR);
         final int month = Settings.CALENDAR.get(Calendar.MONTH);
         final int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
@@ -82,6 +99,12 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         startDate = Settings.getDate(year, month, dayOfMonth);
                         selectDate.setText(startDate);
+                        if(isCalculate){
+                            value = (String) selectRate.getSelectedItem();
+                            presenter.actualRate(value, startDate);
+                        }else {
+                            isCalculate=true;
+                        }
                     }
                 };
                 dialogDepartureDate = new DatePickerDialog(getContext(), listenerDeparture, year, month, day);
@@ -89,13 +112,6 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
 
             }
 
-        });
-        calculate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                value = (String) selectRate.getSelectedItem();
-                presenter.actualRate(value, startDate);
-            }
         });
 
     }

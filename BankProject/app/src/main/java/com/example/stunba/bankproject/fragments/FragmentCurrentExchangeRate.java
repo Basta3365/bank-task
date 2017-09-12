@@ -33,7 +33,7 @@ public class FragmentCurrentExchangeRate extends Fragment implements OneScreen.M
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null)
-            view = inflater.inflate(R.layout.fragment_screen_one, container, false);
+            view = inflater.inflate(R.layout.fragment_current_exchange_rate, container, false);
         if (savedInstanceState == null) {
             presenter = new CurrentExchangeRatePresenter(getContext(), this);
         } else {

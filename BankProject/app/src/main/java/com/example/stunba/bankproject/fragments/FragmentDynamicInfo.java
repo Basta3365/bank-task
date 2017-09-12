@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -40,10 +41,10 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     private String startDate;
     private String endDate;
     private String rate;
-    private Button draw;
     private String abb;
     private String defaultPeriod = "3";
     private boolean isNotification = false;
+    private boolean isDraw = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,19 +132,40 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     protected void initViews() {
         chart = (BarChart) view.findViewById(R.id.chart);
         selectDate = (Spinner) view.findViewById(R.id.spinnerSelectDate);
+        selectDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isDraw) {
+                    if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
+                        loadDynamics(selectDate.getSelectedItem().toString(), (String) selectRate.getSelectedItem());
+                    }
+                } else {
+                    isDraw = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         selectRate = (Spinner) view.findViewById(R.id.spinnerSelectRate);
         selectRate.setAdapter(presenter.getAdapter());
-        draw = (Button) view.findViewById(R.id.buttonDraw);
-        draw.setOnClickListener(new View.OnClickListener() {
+        selectRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                final int year = Settings.CALENDAR.get(Calendar.YEAR);
-                final int month = Settings.CALENDAR.get(Calendar.MONTH);
-                final int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
-                if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-                    endDate = Settings.getDate(year, month, day);
-                    loadDynamics(selectDate.getSelectedItem().toString(), (String) selectRate.getSelectedItem());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isDraw) {
+                    if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
+                        loadDynamics(selectDate.getSelectedItem().toString(), (String) selectRate.getSelectedItem());
+                    }
+                } else {
+                    isDraw = true;
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

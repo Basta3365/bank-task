@@ -25,8 +25,6 @@ import com.example.stunba.bankproject.fragments.RecyclerFragmentMetal;
 
 public class DrawerActivityStart extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
