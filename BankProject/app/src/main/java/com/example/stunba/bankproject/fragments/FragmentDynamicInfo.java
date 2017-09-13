@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -86,7 +85,7 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             if (internetAvailable()) {
                 loadDynamics(defaultPeriod, abb);
             } else {
-                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
+                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT).show();
             }
         }
         return view;
@@ -94,17 +93,21 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
 
     @Override
     public void showDynamicInfo(List<DynamicPeriod> dynamicPeriods) {
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        for (int i = 0; i < dynamicPeriods.size(); i++) {
-            entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
+        if(dynamicPeriods.size()!=0) {
+            ArrayList<BarEntry> entries = new ArrayList<>();
+            for (int i = 0; i < dynamicPeriods.size(); i++) {
+                entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
+            }
+            BarDataSet dataSet = new BarDataSet(entries, "Rate");
+            dataSet.setValueTextColor(Color.TRANSPARENT);
+            BarData data = new BarData(dataSet);
+            dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+            chart.setData(data);
+            chart.animateY(3000);
+            chart.invalidate();
+        }else {
+            Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
         }
-        BarDataSet dataSet = new BarDataSet(entries, "Rate");
-        dataSet.setValueTextColor(Color.TRANSPARENT);
-        BarData data = new BarData(dataSet);
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        chart.setData(data);
-        chart.animateY(3000);
-        chart.invalidate();
 
 
     }
@@ -144,15 +147,9 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
-                    if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-//                        if (internetAvailable()) {
-                            loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
-//                        } else {
-//                            Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-//                        }
-                    }
-                } else {
-                    isDraw = true;
+                    drawDynamics();
+                }else {
+                    isDraw=true;
                 }
             }
 
@@ -167,15 +164,9 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
-                    if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-//                        if (internetAvailable()) {
-                            loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
-//                        } else {
-//                            Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-//                        }
-                    }
-                } else {
-                    isDraw = true;
+                    drawDynamics();
+                }else {
+                    isDraw=true;
                 }
             }
 
@@ -212,7 +203,7 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
         return "12";
     }
 
-    public Boolean internetAvailable() {
+    private Boolean internetAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         boolean isAvailable = false;
@@ -220,5 +211,14 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
             isAvailable = true;
         }
         return isAvailable;
+    }
+    private void drawDynamics() {
+        if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
+            if (internetAvailable()) {
+                loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
+            } else {
+                Toast.makeText(getContext(), R.string.internet_not_available, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

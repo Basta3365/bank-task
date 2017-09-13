@@ -12,7 +12,9 @@ import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.Currency;
 import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Kseniya_Bastun on 8/29/2017.
@@ -64,27 +66,27 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
     @Override
     public void addCurrency(Currency currency) {
         if(isTableExists(TABLE_CURRENCY)) {
-            SQLiteDatabase db = this.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(KEY_ID, currency.getCurID());
-            values.put(KEY_PARENT_ID, currency.getCurParentID());
-            values.put(KEY_CODE, currency.getCurCode());
-            values.put(KEY_CUR_ABB, currency.getCurAbbreviation());
-            values.put(KEY_CUR_SCALE, String.valueOf(currency.getCurScale()));
-            values.put(KEY_CUR_NAME, currency.getCurName());
-            values.put(KEY_CUR_NAME_BEL, currency.getCurNameBel());
-            values.put(KEY_CUR_NAME_ENG, currency.getCurNameEng());
-            values.put(KEY_QUOT_NAME, currency.getCurQuotName());
-            values.put(KEY_QUOT_NAME_BEL, currency.getCurQuotNameBel());
-            values.put(KEY_QUOT_NAME_ENG, currency.getCurQuotNameEng());
-            values.put(KEY_MUL_NAME, currency.getCurNameMulti());
-            values.put(KEY_MUL_NAME_BEL, currency.getCurNameBelMulti());
-            values.put(KEY_MUL_NAME_ENG, currency.getCurNameEngMulti());
-            values.put(KEY_PERIODICITY, currency.getCurPeriodicity());
-            values.put(KEY_DATE_START, currency.getCurDateStart());
-            values.put(KEY_DATE_END, currency.getCurDateEnd());
-            db.insert(TABLE_CURRENCY, null, values);
-            db.close();
+                SQLiteDatabase db = this.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(KEY_ID, currency.getCurID());
+                values.put(KEY_PARENT_ID, currency.getCurParentID());
+                values.put(KEY_CODE, currency.getCurCode());
+                values.put(KEY_CUR_ABB, currency.getCurAbbreviation());
+                values.put(KEY_CUR_SCALE, String.valueOf(currency.getCurScale()));
+                values.put(KEY_CUR_NAME, currency.getCurName());
+                values.put(KEY_CUR_NAME_BEL, currency.getCurNameBel());
+                values.put(KEY_CUR_NAME_ENG, currency.getCurNameEng());
+                values.put(KEY_QUOT_NAME, currency.getCurQuotName());
+                values.put(KEY_QUOT_NAME_BEL, currency.getCurQuotNameBel());
+                values.put(KEY_QUOT_NAME_ENG, currency.getCurQuotNameEng());
+                values.put(KEY_MUL_NAME, currency.getCurNameMulti());
+                values.put(KEY_MUL_NAME_BEL, currency.getCurNameBelMulti());
+                values.put(KEY_MUL_NAME_ENG, currency.getCurNameEngMulti());
+                values.put(KEY_PERIODICITY, currency.getCurPeriodicity());
+                values.put(KEY_DATE_START, currency.getCurDateStart());
+                values.put(KEY_DATE_END, currency.getCurDateEnd());
+                db.insertWithOnConflict(TABLE_CURRENCY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                db.close();
         }else {
             onCreate(this.getWritableDatabase());
             addCurrency(currency);
@@ -133,6 +135,7 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
     public void getAllCurrencies(final OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
         if (isTableExists(TABLE_CURRENCY)) {
             List<Currency> rateList = new ArrayList<Currency>();
+            Map<Integer,Currency> currencyMap=new HashMap<>();
             String selectQuery = "SELECT * FROM " + TABLE_CURRENCY;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
@@ -168,9 +171,19 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
                         rate.setCurDateStart(cursor.getString(15));
                         rate.setCurDateEnd(cursor.getString(16));
                         rateList.add(rate);
+                        currencyMap.put(rate.getCurID(),rate);
                     } while (cursor.moveToNext());
                 }
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(rateList);
+                List<Integer> itemToDelete=new ArrayList<>();
+                for (Map.Entry<Integer,Currency> currency: currencyMap.entrySet()) {
+                    if(currency.getKey()!=currency.getValue().getCurParentID()){
+                        itemToDelete.add(currency.getValue().getCurParentID());
+                    }
+                }
+                for (Integer item:itemToDelete ) {
+                    currencyMap.remove(item);
+                }
+                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(new ArrayList<>(currencyMap.values()));
             }
         } else {
             onCreate(this.getWritableDatabase());
@@ -230,9 +243,9 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
     }
 
     @Override
-    public void deleteCurrency(Currency currency) {
+    public void deleteCurrency(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CURRENCY, KEY_ID + " = ?", new String[]{String.valueOf(currency.getCurID())});
+        db.delete(TABLE_CURRENCY, KEY_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 

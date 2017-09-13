@@ -76,11 +76,7 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isCalculate && startDate != null) {
                     value = (String) selectRate.getSelectedItem();
-//                    if(internetAvailable()) {
-                        presenter.actualRate(value, startDate);
-//                    }else {
-//                        Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-//                    }
+                    calculateRate();
                 } else {
                     isCalculate = true;
                 }
@@ -108,11 +104,7 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
                         selectDate.setText(startDate);
                         if (isCalculate) {
                             value = (String) selectRate.getSelectedItem();
-//                            if(internetAvailable()) {
-                                presenter.actualRate(value, startDate);
-//                            }else {
-//                                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT);
-//                            }
+                            calculateRate();
                         } else {
                             isCalculate = true;
                         }
@@ -158,11 +150,22 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
     }
 
     public Boolean internetAvailable() {
-        ConnectivityManager connectManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean internetAvailable = (connectManager.getNetworkInfo(
-                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectManager
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-        return internetAvailable;
+        ConnectivityManager manager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+    private void calculateRate() {
+        if (internetAvailable()) {
+            presenter.actualRate(value, startDate);
+        } else {
+            Toast.makeText(getContext(), R.string.internet_not_available, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

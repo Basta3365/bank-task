@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
-import com.example.stunba.bankproject.interfaces.FavoriteSceen;
+import com.example.stunba.bankproject.interfaces.FavoriteScreen;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterFavorites;
@@ -22,15 +22,15 @@ import java.util.Set;
  * Created by Kseniya_Bastun on 9/8/2017.
  */
 
-public class FavoriteScreenPresenter extends BasePresenter<FavoriteSceen.FavoriteView> implements OnTaskCompleted.LoadComplete {
+public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.FavoriteView> implements OnTaskCompleted.LoadComplete {
     private Repository repository;
-    private FavoriteSceen.FavoriteView favoriteView;
+    private FavoriteScreen.FavoriteView favoriteView;
     private RecyclerViewAdapterFavorites recyclerViewAdapterFavorites;
     private List<ActualRate> actualFavorites;
     private Set<String> abbFavorite;
     private List<Currency> currencyList;
 
-    public void setFavoriteView(FavoriteSceen.FavoriteView favoriteView) {
+    public void setFavoriteView(FavoriteScreen.FavoriteView favoriteView) {
         this.favoriteView = favoriteView;
     }
 
@@ -42,7 +42,7 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteSceen.Favorit
         this.recyclerViewAdapterFavorites = recyclerViewAdapterFavorites;
     }
 
-    public FavoriteScreenPresenter(Context context, FavoriteSceen.FavoriteView view) {
+    public FavoriteScreenPresenter(Context context, FavoriteScreen.FavoriteView view) {
         repository = Repository.getInstance(context);
         favoriteView = view;
         recyclerViewAdapterFavorites = new RecyclerViewAdapterFavorites(this);
@@ -52,27 +52,29 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteSceen.Favorit
     }
 
     public void loadInfo() {
-        repository.getAllFavorites(new OnTaskCompleted.FavoritePresenter() {
-            @Override
-            public void onAllFavorites(Object o) {
-                if (o != null) {
-                    actualFavorites.addAll((List<ActualRate>) o);
-                    for (ActualRate rate : actualFavorites) {
-                        abbFavorite.add(rate.getCurAbbreviation());
-                    }
-                    getRecyclerViewAdapterFavorites().setFavorites((List<ActualRate>) o);
-                    getRecyclerViewAdapterFavorites().notifyDataSetChanged();
-                    favoriteView.showFavorite();
+        if(actualFavorites.size()==0) {
+            repository.getAllFavorites(new OnTaskCompleted.FavoritePresenter() {
+                @Override
+                public void onAllFavorites(Object o) {
+                    if (o != null) {
+                        actualFavorites = (List<ActualRate>) o;
+                        for (ActualRate rate : actualFavorites) {
+                            abbFavorite.add(rate.getCurAbbreviation());
+                        }
+                        getRecyclerViewAdapterFavorites().setFavorites((List<ActualRate>) o);
+                        getRecyclerViewAdapterFavorites().notifyDataSetChanged();
 
+                    }
                 }
-            }
-        });
-        repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-            @Override
-            public void onAllCurrencyLoad(Object o) {
-                currencyList = (List<Currency>) o;
-            }
-        });
+            });
+        }if(currencyList.size()==0) {
+            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                @Override
+                public void onAllCurrencyLoad(Object o) {
+                    currencyList = (List<Currency>) o;
+                }
+            });
+        }
     }
 
     public void addFavorite(final FragmentActivity activity) {
@@ -92,14 +94,17 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteSceen.Favorit
                             repository.getRateByAbb(abb[0], new OnTaskCompleted.MainPresenterComplete() {
                                 @Override
                                 public void onLoadRate(Object o) {
-                                    ActualRate actualRate = (ActualRate) o;
-                                    if (!abbFavorite.contains(actualRate.getCurAbbreviation())) {
-                                        actualFavorites.add(actualRate);
-                                        abbFavorite.add(actualRate.getCurAbbreviation());
-                                        repository.addFavorite(actualRate);
-                                        getRecyclerViewAdapterFavorites().setFavorites(actualFavorites);
-                                        getRecyclerViewAdapterFavorites().notifyDataSetChanged();
-                                        favoriteView.showFavorite();
+                                    if(o!=null) {
+                                        ActualRate actualRate = (ActualRate) o;
+                                        if (!abbFavorite.contains(actualRate.getCurAbbreviation())) {
+                                            actualFavorites.add(actualRate);
+                                            abbFavorite.add(actualRate.getCurAbbreviation());
+                                            repository.addFavorite(actualRate);
+                                            getRecyclerViewAdapterFavorites().setFavorites(actualFavorites);
+                                            getRecyclerViewAdapterFavorites().notifyDataSetChanged();
+                                        }
+                                    }else {
+                                        favoriteView.showError();
                                     }
                                 }
                             });

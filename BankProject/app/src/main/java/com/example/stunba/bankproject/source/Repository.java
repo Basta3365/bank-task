@@ -31,7 +31,7 @@ public class Repository {
     }
 
     public void getRateByAbb(String abb, OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
-        localDataSource.getRateByAdd(abb, mainPresenterComplete);
+        localDataSource.getRateByAbb(abb, mainPresenterComplete);
     }
 
     public void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {

@@ -8,7 +8,7 @@
     <string name="stacked_one_3">STATE 3</string>
     <string name="select_none">Select none</string>
     <string name="select_date">Select date</string>
-    <string name="wrong_input">Wrong input date</string>
+    <string name="wrong_input">Wrong input or no information</string>
     <string name="select_currency">Select currency </string>
     <string name="ok">OK </string>
     <string name="cancel">Cancel </string>
@@ -37,5 +37,6 @@
     <string name="currency_calculator">Currency calculator</string>
     <string name="favorite">Favorite</string>
     <string name="about">About</string>
+    <string name="internet_not_available">Internet not available</string>
 
 </resources>

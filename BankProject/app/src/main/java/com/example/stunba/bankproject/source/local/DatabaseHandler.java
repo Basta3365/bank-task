@@ -61,7 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
             values.put(KEY_CUR_SCALE, String.valueOf(rate.getCurScale()));
             values.put(KEY_CUR_NAME, rate.getCurName());
             values.put(KEY_CUR_OFF_RATE, String.valueOf(rate.getCurOfficialRate()));
-            db.insert(TABLE_RATE, null, values);
+            db.insertWithOnConflict(TABLE_RATE, null, values,SQLiteDatabase.CONFLICT_REPLACE );
             db.close();
         } else {
             onCreate(this.getWritableDatabase());
@@ -117,19 +117,23 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
             if (cursor != null) {
                 cursor.moveToFirst();
             }
-            if (cursor.getCount() == 0) {
-                loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
-                    @Override
-                    public void onLoadRate(Object o) {
-                        for (ActualRate rate : (List<ActualRate>) o) {
-                            addRate(rate);
-                        }
-                        getRateByAbb(abb, mainPresenterComplete);
-                    }
-                });
-            } else {
+            //TODO change
+            if (cursor.getCount() != 0) {
+//                loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
+//                    @Override
+//                    public void onLoadRate(Object o) {
+//                        for (ActualRate rate : (List<ActualRate>) o) {
+//                            addRate(rate);
+//                        }
+//                        getRateByAbb(abb, mainPresenterComplete);
+//                    }
+//                });
+//            } else {
                 ActualRate rate = new ActualRate(cursor.getInt(0), cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)), cursor.getString(4), Double.parseDouble(cursor.getString(5)));
                 mainPresenterComplete.onLoadRate(rate);
+            }
+            else {
+                mainPresenterComplete.onLoadRate(null);
             }
         } else {
             onCreate(this.getWritableDatabase());

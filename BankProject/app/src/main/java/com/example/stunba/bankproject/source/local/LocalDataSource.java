@@ -135,10 +135,13 @@ public class LocalDataSource implements DataSource {
             databaseHandler.getRateByAbb(abbTo, new OnTaskCompleted.MainPresenterComplete() {
                 @Override
                 public void onLoadRate(Object o) {
-                    ActualRate rate = (ActualRate) o;
-                    double answer = 0;
-                    answer = (count * rate.getCurScale()) / rate.getCurOfficialRate();
-                    loadComplete.onLoadComplete(answer);
+                    if(o!=null) {
+                        ActualRate rate = (ActualRate) o;
+                        double answer = (count * rate.getCurScale()) / rate.getCurOfficialRate();
+                        loadComplete.onLoadComplete(answer);
+                    }else {
+                        loadComplete.onLoadComplete(null);
+                    }
                 }
             });
         }
@@ -146,10 +149,13 @@ public class LocalDataSource implements DataSource {
             databaseHandler.getRateByAbb(abbFrom, new OnTaskCompleted.MainPresenterComplete() {
                 @Override
                 public void onLoadRate(Object o) {
-                    ActualRate rate = (ActualRate) o;
-                    double answer = 0;
-                    answer = (count * rate.getCurOfficialRate()) / rate.getCurScale();
-                    loadComplete.onLoadComplete(answer);
+                    if(o!=null) {
+                        ActualRate rate = (ActualRate) o;
+                        double answer = (count * rate.getCurOfficialRate()) / rate.getCurScale();
+                        loadComplete.onLoadComplete(answer);
+                    }else{
+                        loadComplete.onLoadComplete(null);
+                    }
                 }
             });
         }
@@ -165,7 +171,7 @@ public class LocalDataSource implements DataSource {
         databaseHandlerFavorites.deleteFavorite(o);
     }
 
-    public void getRateByAdd(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter) {
+    public void getRateByAbb(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter) {
         databaseHandler.getRateByAbb(abb, mainPresenter);
     }
 

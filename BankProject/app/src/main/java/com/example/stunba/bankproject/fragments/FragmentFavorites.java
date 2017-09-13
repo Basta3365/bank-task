@@ -8,9 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
-import com.example.stunba.bankproject.interfaces.FavoriteSceen;
+import com.example.stunba.bankproject.interfaces.FavoriteScreen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.FavoriteScreenPresenter;
@@ -20,11 +21,11 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
  * Created by Kseniya_Bastun on 9/5/2017.
  */
 
-public class FragmentFavorites extends Fragment implements FavoriteSceen.FavoriteView {
+public class FragmentFavorites extends Fragment implements FavoriteScreen.FavoriteView {
     private View view;
     private RecyclerView mRecyclerView;
     private FavoriteScreenPresenter presenter;
-    private Button buttonAdd;
+    private ImageButton buttonAdd;
 
     @Nullable
     @Override
@@ -43,7 +44,7 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
     }
 
     private void initView() {
-        buttonAdd = (Button) view.findViewById(R.id.buttonAdd);
+        buttonAdd = (ImageButton) view.findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,11 +57,6 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(presenter.getRecyclerViewAdapterFavorites());
-    }
-
-    @Override
-    public void showFavorite() {
         mRecyclerView.setAdapter(presenter.getRecyclerViewAdapterFavorites());
     }
 
@@ -81,5 +77,10 @@ public class FragmentFavorites extends Fragment implements FavoriteSceen.Favorit
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         PresenterManager.getInstance().savePresenter(presenter, outState);
+    }
+
+    @Override
+    public void showError() {
+        Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
     }
 }

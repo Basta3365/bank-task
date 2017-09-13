@@ -10,7 +10,7 @@ import com.example.stunba.bankproject.source.entities.ActualRate;
 public interface DataSource {
     void getAllCurrencies(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency);
 
-    void getRateByAdd(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter);
+    void getRateByAbb(String abb, OnTaskCompleted.MainPresenterComplete mainPresenter);
 
     void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete);
 

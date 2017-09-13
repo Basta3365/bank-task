@@ -15,6 +15,7 @@
     <string name="currency_calculator">Калькулятар валют</string>
     <string name="favorite">Выдатныя</string>
     <string name="about">Аб прыладзе</string>
+    <string name="internet_not_available"> Няма падлучэння да інтэрнэту</string>
     <string-array name="date_list">
         <item>@string/select_none</item>
         <item>3 месяца</item>

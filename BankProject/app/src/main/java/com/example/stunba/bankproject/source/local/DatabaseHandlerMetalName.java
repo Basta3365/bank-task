@@ -56,7 +56,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
             values.put(KEY_NAME, metalName.getName());
             values.put(KEY_NAME_BEL, metalName.getNameBel());
             values.put(KEY_NAME_ENG, metalName.getNameEng());
-            db.insert(TABLE_METAL, null, values);
+            db.insertWithOnConflict(TABLE_METAL, null, values,SQLiteDatabase.CONFLICT_REPLACE );
             db.close();
         } else {
             onCreate(this.getWritableDatabase());

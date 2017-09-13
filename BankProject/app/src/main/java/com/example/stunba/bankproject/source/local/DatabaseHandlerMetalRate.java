@@ -73,7 +73,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
             values.put(KEY_BANKS_RUB, String.valueOf(allIngot.getBanksRubles()));
             values.put(KEY_ENTITIES_DOL, String.valueOf(allIngot.getEntitiesDollars()));
             values.put(KEY_ENTITIES_RUB, String.valueOf(allIngot.getEntitiesRubles()));
-            db.insert(TABLE_INGOTS, null, values);
+            db.insertWithOnConflict(TABLE_INGOTS, null, values,SQLiteDatabase.CONFLICT_REPLACE );
             db.close();
         } else {
             onCreate(this.getWritableDatabase());

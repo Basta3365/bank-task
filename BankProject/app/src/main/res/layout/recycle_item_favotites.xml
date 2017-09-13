@@ -23,25 +23,26 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_weight="1"
                 android:id="@+id/imageViewFavorite"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="60dp"
-                android:src="@drawable/image" />
+                android:src="@drawable/favorite" />
 
             <TextView
                 android:paddingLeft="10dp"
-                android:layout_weight="2"
+                android:layout_weight="7"
                 android:id="@+id/favoriteName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="zoloto" />
-            <Button
-                android:layout_weight="4"
+                android:text="" />
+            <ImageButton
+                android:layout_weight="1"
                 android:background="#14ffffff"
                 android:id="@+id/deleteFavorite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="---"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/trash"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

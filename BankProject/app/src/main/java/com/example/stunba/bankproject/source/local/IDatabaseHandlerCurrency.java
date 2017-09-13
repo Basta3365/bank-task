@@ -18,7 +18,7 @@ public interface IDatabaseHandlerCurrency {
 
     int updateCurrency(Currency currency);
 
-    void deleteCurrency(Currency currency);
+    void deleteCurrency(int id);
 
     void deleteAll();
 }

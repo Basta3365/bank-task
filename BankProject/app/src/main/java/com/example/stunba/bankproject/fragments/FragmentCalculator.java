@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.stunba.bankproject.interfaces.CalculatorScreen;
 import com.example.stunba.bankproject.R;
@@ -130,8 +131,12 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
 
     @Override
-    public void showChangeResults(double o) {
-        secondText.setText(String.valueOf(o));
+    public void showChangeResults(Object o) {
+        if(o!=null) {
+            secondText.setText(String.valueOf((double)o));
+        }else {
+            Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

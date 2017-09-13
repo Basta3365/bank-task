@@ -2,6 +2,7 @@ package com.example.stunba.bankproject.presenters;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.interfaces.TwoScreen;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -68,6 +71,8 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
             public void onDynamicLoad(List<DynamicPeriod> o) {
                 if (o != null) {
                     dynamicView.showDynamicInfo(o);
+                }else {
+                    dynamicView.showDynamicInfo(null);
                 }
             }
         });

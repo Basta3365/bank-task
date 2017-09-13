@@ -68,7 +68,7 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
         repository.getRateCalculator(abbFrom, abbTo, count, new OnTaskCompleted.LoadComplete() {
             @Override
             public void onLoadComplete(Object o) {
-                calculatorView.showChangeResults((double) o);
+                calculatorView.showChangeResults(o);
             }
         });
     }

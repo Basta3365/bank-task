@@ -56,7 +56,7 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
             values.put(KEY_CUR_SCALE, String.valueOf(rate.getCurScale()));
             values.put(KEY_CUR_NAME, rate.getCurName());
             values.put(KEY_CUR_OFF_RATE, String.valueOf(rate.getCurOfficialRate()));
-            db.insert(TABLE_FAVORITES, null, values);
+            db.insertWithOnConflict(TABLE_FAVORITES, null, values,SQLiteDatabase.CONFLICT_REPLACE );
             db.close();
         }else {
             onCreate(this.getWritableDatabase());

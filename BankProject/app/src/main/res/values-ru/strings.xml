@@ -4,7 +4,7 @@
     <string name="action_settings"></string>
     <string name="select_none">Не выбрано</string>
     <string name="select_date">Выберите дату</string>
-    <string name="wrong_input">Неправильно введена дата</string>
+    <string name="wrong_input">Нверный ввод или нет информации</string>
     <string name="select_currency">Выбрать валюту </string>
     <string name="ok">OK </string>
     <string name="cancel">Отмена </string>
@@ -14,6 +14,7 @@
     <string name="the_list_of_cost_of_precious_metals">Список стоимостей драгоценных металлов</string>
     <string name="currency_calculator">Калькулятор валют</string>
     <string name="favorite">Избранные</string>
+    <string name="internet_not_available">Нет подключения к интернету</string>
     <string name="about">О приложении</string>
     <string-array name="date_list">
         <item>@string/select_none</item>

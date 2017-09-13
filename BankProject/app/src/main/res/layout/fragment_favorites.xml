@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
 
-    <Button
+    <ImageButton
+        android:src="@drawable/ic_add_circle_black_24dp"
         android:id="@+id/buttonAdd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#24ffffff"
-        android:text="Button add" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#24ffffff" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_favorites"
         android:layout_width="match_parent"

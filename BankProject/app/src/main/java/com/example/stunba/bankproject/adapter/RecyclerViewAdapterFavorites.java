@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,15 +35,13 @@ public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerV
     static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cv;
         private TextView favoriteName;
-        private ImageView imageView;
-        private Button delete;
+        private ImageButton delete;
 
         ViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.card_view_favorites);
             favoriteName = (TextView) itemView.findViewById(R.id.favoriteName);
-            imageView = (ImageView) itemView.findViewById(R.id.imageViewFavorite);
-            delete = (Button) itemView.findViewById(R.id.deleteFavorite);
+            delete = (ImageButton) itemView.findViewById(R.id.deleteFavorite);
         }
     }
 
@@ -63,7 +62,6 @@ public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerV
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.cv.setTag(position);
-        //TODO setImage
         holder.favoriteName.setText(favorites.get(position).getCurAbbreviation());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override

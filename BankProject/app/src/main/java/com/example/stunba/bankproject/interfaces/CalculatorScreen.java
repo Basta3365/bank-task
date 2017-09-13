@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface CalculatorScreen {
     interface CalculatorView{
-        void showChangeResults(double o);
+        void showChangeResults(Object o);
     }
 }
