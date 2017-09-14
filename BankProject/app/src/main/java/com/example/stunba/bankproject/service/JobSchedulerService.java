@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.activity.DynamicActivity;
@@ -31,8 +32,9 @@ import java.util.Map;
 public class JobSchedulerService extends JobService {
 
     @Override
-    public boolean onStartJob(JobParameters params) {
+    public boolean onStartJob(final JobParameters params) {
         Log.d("TAG", "Start");
+        Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
         Repository.getInstance(getBaseContext()).updateAllCurrencies();
         Repository.getInstance(getBaseContext()).updateAllRates(new OnTaskCompleted.MainPresenterComplete() {
             @Override
@@ -41,37 +43,37 @@ public class JobSchedulerService extends JobService {
                     @Override
                     public void onAllFavorites(Object o) {
                         if (o != null) {
-                            for (Map.Entry<String,Double> entry:((Map<String,Double> )o).entrySet()){
-                                sendNotification(entry.getKey(),entry.getValue());
+                            for (Map.Entry<String, Double> entry : ((Map<String, Double>) o).entrySet()) {
+                                sendNotification(entry.getKey(), entry.getValue());
                             }
+//                            jobFinished(params,false);
                         }
                     }
                 });
             }
         });
-        JobScheduler mJobScheduler = (JobScheduler)getSystemService( Context.JOB_SCHEDULER_SERVICE );
-        mJobScheduler.cancelAll();
-        JobInfo.Builder builder = new JobInfo.Builder( 1,
-                new ComponentName( getPackageName(),
-                        JobSchedulerService.class.getName() ) );
-        builder.setOverrideDeadline(28800000);
-        mJobScheduler.schedule(builder.build());
+//        JobScheduler mJobScheduler = (JobScheduler)getSystemService( Context.JOB_SCHEDULER_SERVICE );
+//        mJobScheduler.cancelAll();
+//        JobInfo.Builder builder = new JobInfo.Builder( 1,
+//                new ComponentName( getPackageName(),
+//                        JobSchedulerService.class.getName() ) );
+//        builder.setOverrideDeadline(28800000);
+//        mJobScheduler.schedule(builder.build());
         return true;
     }
 
-    private void sendNotification(String key,Double value) {
+    private void sendNotification(String key, Double value) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_date_range)
-                        .setContentTitle(key+" cheaper!!!!!!! ")
+                        .setContentTitle(key + " cheaper!!!!!!! ")
                         .setContentText("View statistics for 3 months");
-        Intent intent=new Intent(this,DynamicActivity.class);
-        intent.putExtra("abb",key);
-        intent.putExtra("cheaper",value);
-        Settings.COUNT+=1;
-        intent.putExtra("id",Settings.COUNT);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, DynamicActivity.class);
+        intent.putExtra("abb", key);
+        intent.putExtra("cheaper", value);
+        Settings.COUNT++;
+        intent.putExtra("id", Settings.COUNT);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(DynamicActivity.class);
         stackBuilder.addNextIntent(intent);

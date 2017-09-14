@@ -10,11 +10,7 @@ import com.example.stunba.bankproject.source.entities.ActualRate;
 public interface IDatabaseHandlerFavorites {
     void addFavorite(ActualRate rate);
 
-    void getFavorite(int id, OnTaskCompleted.FavoritePresenter mainPresenterComplete);
-
     void getAllFavorites(OnTaskCompleted.FavoritePresenter mainPresenterComplete);
-
-    int getFavoritesCount();
 
     int updateFavorite(ActualRate rate);
 

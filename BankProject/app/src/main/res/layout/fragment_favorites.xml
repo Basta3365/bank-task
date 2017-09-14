@@ -10,6 +10,7 @@
         android:id="@+id/buttonAdd"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_gravity="right"
         android:background="#24ffffff" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_favorites"

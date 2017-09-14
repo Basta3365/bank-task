@@ -4,12 +4,21 @@
     android:background="@drawable/wall"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select currency "
+        android:layout_marginBottom="43dp"
+        android:layout_alignBottom="@+id/spinnerSelectRateCalculate"
+        android:layout_centerHorizontal="true" />
+
     <Spinner
         android:id="@+id/spinnerSelectRateCalculate"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:background="#54FFFFF0"
+        android:background="@color/button_color"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="114dp" />
@@ -21,12 +30,19 @@
         android:drawableLeft="@drawable/ic_date_range"
         android:text="@string/select_date"
         android:gravity="center|left"
-        android:background="#54FFFFF0"
+        android:background="@color/button_color"
         android:layout_height="40dp"
         android:layout_width="match_parent"
-        android:layout_below="@+id/spinnerSelectRateCalculate"
-        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/textView8"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select date"
+        android:layout_below="@+id/spinnerSelectRateCalculate"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/textViewActualRateScreen"

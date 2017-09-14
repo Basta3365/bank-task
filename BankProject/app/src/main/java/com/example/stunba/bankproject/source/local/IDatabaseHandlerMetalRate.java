@@ -14,8 +14,6 @@ public interface IDatabaseHandlerMetalRate {
 
     void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted);
 
-    int getIngotsCount();
-
     int updateIngot(ActualAllIngot rate);
 
     void deleteIngot(ActualAllIngot rate);

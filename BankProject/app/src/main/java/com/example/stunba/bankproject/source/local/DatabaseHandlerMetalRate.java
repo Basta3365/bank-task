@@ -64,16 +64,16 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
             values.put(KEY_ID, count++);
             values.put(KEY_ID_METAL, allIngot.getMetalID());
             values.put(KEY_DATE, allIngot.getDate());
-            values.put(KEY_NOMINAL, String.valueOf(allIngot.getNominal()));
-            values.put(KEY_NO_CER_DOL, String.valueOf(allIngot.getNoCertificateDollars()));
-            values.put(KEY_NO_CER_RUB, String.valueOf(allIngot.getNoCertificateRubles()));
-            values.put(KEY_CER_DOL, String.valueOf((allIngot.getCertificateDollars())));
-            values.put(KEY_CER_RUB, String.valueOf(allIngot.getCertificateRubles()));
-            values.put(KEY_BANKS_DOL, String.valueOf(allIngot.getBanksDollars()));
-            values.put(KEY_BANKS_RUB, String.valueOf(allIngot.getBanksRubles()));
-            values.put(KEY_ENTITIES_DOL, String.valueOf(allIngot.getEntitiesDollars()));
-            values.put(KEY_ENTITIES_RUB, String.valueOf(allIngot.getEntitiesRubles()));
-            db.insertWithOnConflict(TABLE_INGOTS, null, values,SQLiteDatabase.CONFLICT_REPLACE );
+            values.put(KEY_NOMINAL, allIngot.getNominal());
+            values.put(KEY_NO_CER_DOL, allIngot.getNoCertificateDollars());
+            values.put(KEY_NO_CER_RUB, allIngot.getNoCertificateRubles());
+            values.put(KEY_CER_DOL, allIngot.getCertificateDollars());
+            values.put(KEY_CER_RUB, allIngot.getCertificateRubles());
+            values.put(KEY_BANKS_DOL, allIngot.getBanksDollars());
+            values.put(KEY_BANKS_RUB, allIngot.getBanksRubles());
+            values.put(KEY_ENTITIES_DOL, allIngot.getEntitiesDollars());
+            values.put(KEY_ENTITIES_RUB, allIngot.getEntitiesRubles());
+            db.insertWithOnConflict(TABLE_INGOTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             db.close();
         } else {
             onCreate(this.getWritableDatabase());
@@ -85,7 +85,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
     public void getIngot(final int id, final OnTaskCompleted.LoadComplete onTaskCompleted) {
         if (isTableExists(TABLE_INGOTS)) {
             SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.query(TABLE_INGOTS, new String[]{KEY_ID, KEY_ID_METAL,
+            final Cursor cursor = db.query(TABLE_INGOTS, new String[]{KEY_ID, KEY_ID_METAL,
                             KEY_DATE, KEY_NO_CER_DOL, KEY_NO_CER_RUB, KEY_CER_DOL, KEY_CER_RUB, KEY_BANKS_DOL, KEY_BANKS_RUB, KEY_ENTITIES_DOL, KEY_ENTITIES_RUB}, KEY_ID + "=?",
                     new String[]{String.valueOf(id)}, null, null, null, null);
             if (cursor != null) {
@@ -98,11 +98,13 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
                         for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
                             addIngot(rate);
                         }
+                        cursor.close();
                         getIngot(id, onTaskCompleted);
                     }
                 });
             } else {
                 ActualAllIngot rate = new ActualAllIngot(cursor.getString(0), Integer.parseInt(cursor.getString(1)), Double.parseDouble(cursor.getString(2)), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10));
+                cursor.close();
                 onTaskCompleted.onLoadComplete(rate);
             }
         } else {
@@ -125,7 +127,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
             List<ActualAllIngot> rateList = new ArrayList<ActualAllIngot>();
             String selectQuery = "SELECT * FROM " + TABLE_INGOTS;
             SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
+            final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
                 loadAllIngots(new OnTaskCompleted.LoadComplete() {
                     @Override
@@ -133,6 +135,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
                         for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
                             addIngot(rate);
                         }
+                        cursor.close();
                         getAllIngots(onTaskCompleted);
                     }
                 });
@@ -155,6 +158,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
                         rateList.add(rate);
                     } while (cursor.moveToNext());
                 }
+                cursor.close();
                 onTaskCompleted.onLoadComplete(rateList);
             }
         } else {
@@ -172,22 +176,8 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
     }
 
     private void loadAllIngots(OnTaskCompleted.LoadComplete loadComplete) {
-        if (isTableExists(TABLE_INGOTS)) {
-            deleteAll();
-            remoteDataSource.getAllIngots(loadComplete);
-        } else {
-            onCreate(this.getWritableDatabase());
-            loadAllIngots(loadComplete);
-        }
-    }
-
-    @Override
-    public int getIngotsCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_INGOTS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-        return cursor.getCount();
+        deleteAll();
+        remoteDataSource.getAllIngots(loadComplete);
     }
 
     @Override
@@ -196,15 +186,15 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
         ContentValues values = new ContentValues();
         values.put(KEY_ID_METAL, allIngot.getMetalID());
         values.put(KEY_DATE, allIngot.getDate());
-        values.put(KEY_NOMINAL, String.valueOf(allIngot.getNominal()));
-        values.put(KEY_NO_CER_DOL, String.valueOf(allIngot.getNoCertificateDollars()));
-        values.put(KEY_NO_CER_RUB, String.valueOf(allIngot.getNoCertificateRubles()));
-        values.put(KEY_CER_DOL, String.valueOf((allIngot.getCertificateDollars())));
-        values.put(KEY_CER_RUB, String.valueOf(allIngot.getCertificateRubles()));
-        values.put(KEY_BANKS_DOL, String.valueOf(allIngot.getBanksDollars()));
-        values.put(KEY_BANKS_RUB, String.valueOf(allIngot.getBanksRubles()));
-        values.put(KEY_ENTITIES_DOL, String.valueOf(allIngot.getEntitiesDollars()));
-        values.put(KEY_ENTITIES_RUB, String.valueOf(allIngot.getEntitiesRubles()));
+        values.put(KEY_NOMINAL, allIngot.getNominal());
+        values.put(KEY_NO_CER_DOL, allIngot.getNoCertificateDollars());
+        values.put(KEY_NO_CER_RUB, allIngot.getNoCertificateRubles());
+        values.put(KEY_CER_DOL, allIngot.getCertificateDollars());
+        values.put(KEY_CER_RUB, allIngot.getCertificateRubles());
+        values.put(KEY_BANKS_DOL, allIngot.getBanksDollars());
+        values.put(KEY_BANKS_RUB, allIngot.getBanksRubles());
+        values.put(KEY_ENTITIES_DOL, allIngot.getEntitiesDollars());
+        values.put(KEY_ENTITIES_RUB, allIngot.getEntitiesRubles());
         return db.update(TABLE_INGOTS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(allIngot.getId())});
     }

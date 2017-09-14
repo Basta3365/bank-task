@@ -16,35 +16,35 @@ public class ActualAllIngot {
     private double nominal;
     @SerializedName("NoCertificateDollars")
     @Expose
-    private Object noCertificateDollars;
+    private String noCertificateDollars;
     @SerializedName("NoCertificateRubles")
     @Expose
-    private Object noCertificateRubles;
+    private String noCertificateRubles;
     @SerializedName("CertificateDollars")
     @Expose
-    private Object certificateDollars;
+    private String certificateDollars;
     @SerializedName("CertificateRubles")
     @Expose
-    private Object certificateRubles;
+    private String certificateRubles;
     @SerializedName("BanksDollars")
     @Expose
-    private Object banksDollars;
+    private String banksDollars;
     @SerializedName("BanksRubles")
     @Expose
-    private Object banksRubles;
+    private String banksRubles;
     @SerializedName("EntitiesDollars")
     @Expose
-    private Object entitiesDollars;
+    private String entitiesDollars;
     @SerializedName("EntitiesRubles")
     @Expose
-    private Object entitiesRubles;
+    private String entitiesRubles;
     private int id;
 
     public ActualAllIngot() {
 
     }
 
-    public ActualAllIngot(String date, int metalID, double nominal, Object noCertificateDollars, Object noCertificateRubles, Object certificateDollars, Object certificateRubles, Object banksDollars, Object banksRubles, Object entitiesDollars, Object entitiesRubles) {
+    public ActualAllIngot(String date, int metalID, double nominal, String noCertificateDollars, String noCertificateRubles, String certificateDollars, String certificateRubles, String banksDollars, String banksRubles, String entitiesDollars, String entitiesRubles) {
         this.date = date;
         this.metalID = metalID;
         this.nominal = nominal;
@@ -82,67 +82,67 @@ public class ActualAllIngot {
         this.nominal = nominal;
     }
 
-    public Object getNoCertificateDollars() {
+    public String getNoCertificateDollars() {
         return noCertificateDollars;
     }
 
-    public void setNoCertificateDollars(Object noCertificateDollars) {
+    public void setNoCertificateDollars(String noCertificateDollars) {
         this.noCertificateDollars = noCertificateDollars;
     }
 
-    public Object getNoCertificateRubles() {
+    public String getNoCertificateRubles() {
         return noCertificateRubles;
     }
 
-    public void setNoCertificateRubles(Object noCertificateRubles) {
+    public void setNoCertificateRubles(String noCertificateRubles) {
         this.noCertificateRubles = noCertificateRubles;
     }
 
-    public Object getCertificateDollars() {
+    public String getCertificateDollars() {
         return certificateDollars;
     }
 
-    public void setCertificateDollars(Object certificateDollars) {
+    public void setCertificateDollars(String certificateDollars) {
         this.certificateDollars = certificateDollars;
     }
 
-    public Object getCertificateRubles() {
+    public String getCertificateRubles() {
         return certificateRubles;
     }
 
-    public void setCertificateRubles(Object certificateRubles) {
+    public void setCertificateRubles(String certificateRubles) {
         this.certificateRubles = certificateRubles;
     }
 
-    public Object getBanksDollars() {
+    public String getBanksDollars() {
         return banksDollars;
     }
 
-    public void setBanksDollars(Object banksDollars) {
+    public void setBanksDollars(String banksDollars) {
         this.banksDollars = banksDollars;
     }
 
-    public Object getBanksRubles() {
+    public String getBanksRubles() {
         return banksRubles;
     }
 
-    public void setBanksRubles(Object banksRubles) {
+    public void setBanksRubles(String banksRubles) {
         this.banksRubles = banksRubles;
     }
 
-    public Object getEntitiesDollars() {
+    public String getEntitiesDollars() {
         return entitiesDollars;
     }
 
-    public void setEntitiesDollars(Object entitiesDollars) {
+    public void setEntitiesDollars(String entitiesDollars) {
         this.entitiesDollars = entitiesDollars;
     }
 
-    public Object getEntitiesRubles() {
+    public String getEntitiesRubles() {
         return entitiesRubles;
     }
 
-    public void setEntitiesRubles(Object entitiesRubles) {
+    public void setEntitiesRubles(String entitiesRubles) {
         this.entitiesRubles = entitiesRubles;
     }
 

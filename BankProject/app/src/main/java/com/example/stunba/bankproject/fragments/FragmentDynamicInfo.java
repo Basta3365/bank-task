@@ -134,10 +134,18 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        startDate = savedInstanceState.getString("startDate");
-        endDate = savedInstanceState.getString("endDate");
-        rate = savedInstanceState.getString("rate");
-        presenter.loadDynamics(rate, startDate, endDate);
+        if(savedInstanceState.getString("startDate")!=null) {
+            startDate = savedInstanceState.getString("startDate");
+        }
+        if(savedInstanceState.getString("endDate")!=null) {
+            endDate = savedInstanceState.getString("endDate");
+        }
+        if(savedInstanceState.getString("endDate")!=null) {
+            rate = savedInstanceState.getString("rate");
+        }
+        if(startDate!=null & endDate!=null & rate!=null) {
+            presenter.loadDynamics(rate, startDate, endDate);
+        }
     }
 
     protected void initViews() {

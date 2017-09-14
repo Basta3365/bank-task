@@ -23,6 +23,7 @@ public class RateOnDatePresenter extends BasePresenter<TreeScreen.CalculateView>
     private TreeScreen.CalculateView calculateView;
     private Map<String, Integer> currency;
     private ArrayAdapter<String> adapter = null;
+    private List<String> names;
 
     public void setCalculateView(TreeScreen.CalculateView calculateView) {
         this.calculateView = calculateView;
@@ -32,30 +33,33 @@ public class RateOnDatePresenter extends BasePresenter<TreeScreen.CalculateView>
         repository = Repository.getInstance(context);
         calculateView = v;
         currency = new HashMap<>();
+        names = new ArrayList<>();
         adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_item, new ArrayList<String>());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
 
     public void loadInfo() {
-        if (currency.size() > 0) {
+        if (names.size() > 0) {
             adapter.clear();
-            adapter.addAll(new ArrayList<>(currency.keySet()));
+            adapter.addAll(names);
             adapter.notifyDataSetChanged();
-        }
-        repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-            @Override
-            public void onAllCurrencyLoad(Object o) {
-                if (o != null) {
-                    for (Currency cur : (List<Currency>) o) {
-                        currency.put(cur.getCurAbbreviation(), cur.getCurID());
+        }else {
+            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                @Override
+                public void onAllCurrencyLoad(Object o) {
+                    if (o != null) {
+                        for (Currency cur : (List<Currency>) o) {
+                            currency.put(cur.getCurAbbreviation(), cur.getCurID());
+                            names.add(cur.getCurAbbreviation());
+                        }
+                        adapter.clear();
+                        adapter.addAll(names);
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.clear();
-                    adapter.addAll(new ArrayList<>(currency.keySet()));
-                    adapter.notifyDataSetChanged();
                 }
-            }
-        });
+            });
+        }
     }
 
     public void actualRate(final String val, String date) {

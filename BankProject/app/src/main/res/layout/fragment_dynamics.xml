@@ -6,33 +6,37 @@
     android:id="@+id/parent"
     android:background="@drawable/wall"
     android:weightSum="13">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="@string/select_currency_and_period" />
+
     <Spinner
-        android:layout_weight="1"
-        android:background="#54FFFFF0"
+        android:background="@color/button_color"
         android:id="@+id/spinnerSelectRate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginBottom="5dp"/>
 
     <Spinner
         android:id="@+id/spinnerSelectDate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="#54FFFFF0"
+        android:layout_height="30dp"
+        android:background="@color/button_color"
         android:entries="@array/date_list"
         android:layout_marginBottom="5dp"/>
 
 
-    <LinearLayout
-        android:layout_weight="11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
     <com.github.mikephil.charting.charts.BarChart
-        android:background="#14ffffff"
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>

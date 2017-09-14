@@ -12,9 +12,14 @@ import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.source.entities.Currency;
 import com.example.stunba.bankproject.source.remote.RemoteDataSource;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Kseniya_Bastun on 8/29/2017.
@@ -65,69 +70,31 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
 
     @Override
     public void addCurrency(Currency currency) {
-        if(isTableExists(TABLE_CURRENCY)) {
-                SQLiteDatabase db = this.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(KEY_ID, currency.getCurID());
-                values.put(KEY_PARENT_ID, currency.getCurParentID());
-                values.put(KEY_CODE, currency.getCurCode());
-                values.put(KEY_CUR_ABB, currency.getCurAbbreviation());
-                values.put(KEY_CUR_SCALE, String.valueOf(currency.getCurScale()));
-                values.put(KEY_CUR_NAME, currency.getCurName());
-                values.put(KEY_CUR_NAME_BEL, currency.getCurNameBel());
-                values.put(KEY_CUR_NAME_ENG, currency.getCurNameEng());
-                values.put(KEY_QUOT_NAME, currency.getCurQuotName());
-                values.put(KEY_QUOT_NAME_BEL, currency.getCurQuotNameBel());
-                values.put(KEY_QUOT_NAME_ENG, currency.getCurQuotNameEng());
-                values.put(KEY_MUL_NAME, currency.getCurNameMulti());
-                values.put(KEY_MUL_NAME_BEL, currency.getCurNameBelMulti());
-                values.put(KEY_MUL_NAME_ENG, currency.getCurNameEngMulti());
-                values.put(KEY_PERIODICITY, currency.getCurPeriodicity());
-                values.put(KEY_DATE_START, currency.getCurDateStart());
-                values.put(KEY_DATE_END, currency.getCurDateEnd());
-                db.insertWithOnConflict(TABLE_CURRENCY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-                db.close();
-        }else {
+        if (isTableExists(TABLE_CURRENCY)) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_ID, currency.getCurID());
+            values.put(KEY_PARENT_ID, currency.getCurParentID());
+            values.put(KEY_CODE, currency.getCurCode());
+            values.put(KEY_CUR_ABB, currency.getCurAbbreviation());
+            values.put(KEY_CUR_SCALE, String.valueOf(currency.getCurScale()));
+            values.put(KEY_CUR_NAME, currency.getCurName());
+            values.put(KEY_CUR_NAME_BEL, currency.getCurNameBel());
+            values.put(KEY_CUR_NAME_ENG, currency.getCurNameEng());
+            values.put(KEY_QUOT_NAME, currency.getCurQuotName());
+            values.put(KEY_QUOT_NAME_BEL, currency.getCurQuotNameBel());
+            values.put(KEY_QUOT_NAME_ENG, currency.getCurQuotNameEng());
+            values.put(KEY_MUL_NAME, currency.getCurNameMulti());
+            values.put(KEY_MUL_NAME_BEL, currency.getCurNameBelMulti());
+            values.put(KEY_MUL_NAME_ENG, currency.getCurNameEngMulti());
+            values.put(KEY_PERIODICITY, currency.getCurPeriodicity());
+            values.put(KEY_DATE_START, currency.getCurDateStart());
+            values.put(KEY_DATE_END, currency.getCurDateEnd());
+            db.insertWithOnConflict(TABLE_CURRENCY, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            db.close();
+        } else {
             onCreate(this.getWritableDatabase());
             addCurrency(currency);
-        }
-    }
-
-    @Override
-    public void getCurrency(final int id, final OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
-        if(isTableExists(TABLE_CURRENCY)) {
-            SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.query(TABLE_CURRENCY, new String[]{KEY_ID, KEY_PARENT_ID, KEY_CODE, KEY_CUR_ABB, KEY_CUR_NAME, KEY_CUR_NAME_BEL, KEY_CUR_NAME_ENG, KEY_QUOT_NAME, KEY_QUOT_NAME_BEL, KEY_QUOT_NAME_ENG, KEY_MUL_NAME, KEY_MUL_NAME_BEL, KEY_MUL_NAME_ENG, KEY_CUR_SCALE, KEY_PERIODICITY, KEY_DATE_START, KEY_DATE_END}, KEY_ID + "=?",
-                    new String[]{String.valueOf(id)}, null, null, null, null);
-            if (cursor != null) {
-                cursor.moveToFirst();
-            }
-            if (cursor.getCount() == 0) {
-                loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-                    @Override
-                    public void onAllCurrencyLoad(Object o) {
-                        for (Currency cur:(List<Currency>)o) {
-                            addCurrency(cur);
-                        }
-                        getCurrency(id,dynamicPresenterCompleteCurrency);
-                    }
-                });
-            }else {
-                Currency currency = new Currency(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11), cursor.getString(12), Integer.parseInt(cursor.getString(13)), Integer.parseInt(cursor.getString(14)), cursor.getString(15), cursor.getString(16));
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(currency);
-            }
-        }else {
-            onCreate(this.getWritableDatabase());
-            loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-                @Override
-                public void onAllCurrencyLoad(Object o) {
-                    for (Currency cur:(List<Currency>)o) {
-                        addCurrency(cur);
-                    }
-                    getCurrency(id,dynamicPresenterCompleteCurrency);
-                }
-            });
-            getCurrency(id,dynamicPresenterCompleteCurrency);
         }
     }
 
@@ -135,17 +102,15 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
     public void getAllCurrencies(final OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
         if (isTableExists(TABLE_CURRENCY)) {
             List<Currency> rateList = new ArrayList<Currency>();
-            Map<Integer,Currency> currencyMap=new HashMap<>();
             String selectQuery = "SELECT * FROM " + TABLE_CURRENCY;
             SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
+            final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
                 loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
                     @Override
                     public void onAllCurrencyLoad(Object o) {
-                        for (Currency cur:(List<Currency>)o) {
-                            addCurrency(cur);
-                        }
+                       addLoadCurrencies((List<Currency>)o);
+                        cursor.close();
                         getAllCurrencies(dynamicPresenterCompleteCurrency);
                     }
                 });
@@ -171,51 +136,64 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
                         rate.setCurDateStart(cursor.getString(15));
                         rate.setCurDateEnd(cursor.getString(16));
                         rateList.add(rate);
-                        currencyMap.put(rate.getCurID(),rate);
                     } while (cursor.moveToNext());
                 }
-                List<Integer> itemToDelete=new ArrayList<>();
-                for (Map.Entry<Integer,Currency> currency: currencyMap.entrySet()) {
-                    if(currency.getKey()!=currency.getValue().getCurParentID()){
-                        itemToDelete.add(currency.getValue().getCurParentID());
+                cursor.close();
+                Collections.sort(rateList, new Comparator<Currency>() {
+                    @Override
+                    public int compare(Currency o1, Currency o2) {
+                        return o1.getCurAbbreviation().compareTo(o2.getCurAbbreviation());
                     }
-                }
-                for (Integer item:itemToDelete ) {
-                    currencyMap.remove(item);
-                }
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(new ArrayList<>(currencyMap.values()));
+                });
+                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(rateList);
             }
         } else {
             onCreate(this.getWritableDatabase());
             loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
                 @Override
                 public void onAllCurrencyLoad(Object o) {
-                    for (Currency cur:(List<Currency>)o) {
-                        addCurrency(cur);
-                    }
+                    addLoadCurrencies((List<Currency>) o);
                     getAllCurrencies(dynamicPresenterCompleteCurrency);
                 }
             });
         }
     }
 
-    public void loadAllCurrency(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
-        if (isTableExists(TABLE_CURRENCY)) {
-            deleteAll();
-            remoteDataSource.getAllCurrencies(dynamicPresenterCompleteCurrency);
-        } else {
-            onCreate(this.getWritableDatabase());
-            loadAllCurrency(dynamicPresenterCompleteCurrency);
+    private void addLoadCurrencies(List<Currency> currencies) {
+        Set<Integer> itemToDelete = new HashSet<>();
+        Map<Integer,Currency> currencyMap=new HashMap();
+        for (Currency cur : currencies) {
+            currencyMap.put(cur.getCurID(),cur);
+        }
+        for (Map.Entry<Integer, Currency> currency : currencyMap.entrySet()) {
+            if (currency.getKey() != currency.getValue().getCurParentID()) {
+                itemToDelete.add(currency.getValue().getCurParentID());
+            }
+        }
+        for (Integer item : itemToDelete) {
+            currencyMap.remove(item);
+        }
+        itemToDelete.clear();
+        int t;
+        for (Currency currency : currencyMap.values()) {
+            for (Currency currencySecond :currencyMap.values()) {
+                if (currency.getCurAbbreviation().equals(currencySecond.getCurAbbreviation()) & currency.getCurID()!=currencySecond.getCurID()) {
+                    t=checkEarlier(currency,currencySecond);
+                    itemToDelete.add(t);
+                }
+            }
+        }
+        for (Integer item : itemToDelete) {
+            currencyMap.remove(item);
+        }
+        for (Currency cur: currencyMap.values()) {
+            addCurrency(cur);
         }
     }
 
-    @Override
-    public int getCurrenciesCount() {
-        String countQuery = "SELECT * FROM " + TABLE_CURRENCY;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-        return cursor.getCount();
+    public void loadAllCurrency(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
+        deleteAll();
+        remoteDataSource.getAllCurrencies(dynamicPresenterCompleteCurrency);
     }
 
     @Override
@@ -267,5 +245,17 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
             cursor.close();
         }
         return false;
+    }
+
+    private int checkEarlier(Currency curDateEnd, Currency dateEnd) {
+        String curDateFirst[] = curDateEnd.getCurDateEnd().split("-");
+        String curDateSecond[] = dateEnd.getCurDateEnd().split("-");
+        int deleteItem;
+        if(Integer.valueOf(curDateFirst[0])>Integer.valueOf(curDateSecond[0])){
+            deleteItem=dateEnd.getCurID();
+        }else {
+            deleteItem=curDateEnd.getCurID();
+        }
+        return deleteItem;
     }
 }

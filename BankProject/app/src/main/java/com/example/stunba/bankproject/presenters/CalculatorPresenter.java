@@ -24,6 +24,7 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     private ArrayAdapter<String> adapterFirst;
     private ArrayAdapter<String> adapterSecond;
     private ArrayList<String> strings;
+    private List<String> names;
 
     public void setCalculatorView(CalculatorScreen.CalculatorView calculatorView) {
         this.calculatorView = calculatorView;
@@ -32,6 +33,7 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
         repository = Repository.getInstance(context);
         calculatorView = view;
+        names=new ArrayList<>();
         strings = new ArrayList<>();
         currency = new HashMap<>();
         strings.add("BYR");
@@ -44,24 +46,26 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     }
 
     public void loadInfo() {
-        if (currency.size() > 0) {
+        if (names.size() > 0) {
             adapterFirst.clear();
-            adapterFirst.addAll(new ArrayList<>(currency.keySet()));
+            adapterFirst.addAll(names);
             adapterFirst.notifyDataSetChanged();
-        }
-        repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-            @Override
-            public void onAllCurrencyLoad(Object o) {
-                if (o != null) {
-                    for (Currency cur : (List<Currency>) o) {
-                        currency.put(cur.getCurAbbreviation(), cur.getCurID());
+        }else {
+            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                @Override
+                public void onAllCurrencyLoad(Object o) {
+                    if (o != null) {
+                        for (Currency cur : (List<Currency>) o) {
+                            currency.put(cur.getCurAbbreviation(), cur.getCurID());
+                            names.add(cur.getCurAbbreviation());
+                        }
+                        adapterFirst.clear();
+                        adapterFirst.addAll(names);
+                        adapterFirst.notifyDataSetChanged();
                     }
-                    adapterFirst.clear();
-                    adapterFirst.addAll(new ArrayList<>(currency.keySet()));
-                    adapterFirst.notifyDataSetChanged();
                 }
-            }
-        });
+            });
+        }
     }
 
     public void getRate(String abbFrom, String abbTo, double count) {

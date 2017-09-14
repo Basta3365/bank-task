@@ -14,8 +14,6 @@ public interface IDatabaseHandlerMetalName {
 
     void getAllMetal(OnTaskCompleted.LoadComplete onTaskCompleted);
 
-    int getMetalCount();
-
     int updateMetal(MetalName rate);
 
     void deleteMetal(MetalName rate);

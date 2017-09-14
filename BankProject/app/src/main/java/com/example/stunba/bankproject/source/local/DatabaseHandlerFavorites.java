@@ -29,7 +29,7 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
 
 
     public DatabaseHandlerFavorites(Context context) {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -45,9 +45,10 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
         onCreate(db);
     }
+
     @Override
     public void addFavorite(ActualRate rate) {
-        if(isTableExists(TABLE_FAVORITES)) {
+        if (isTableExists(TABLE_FAVORITES)) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(KEY_ID, rate.getCurID());
@@ -56,33 +57,11 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
             values.put(KEY_CUR_SCALE, String.valueOf(rate.getCurScale()));
             values.put(KEY_CUR_NAME, rate.getCurName());
             values.put(KEY_CUR_OFF_RATE, String.valueOf(rate.getCurOfficialRate()));
-            db.insertWithOnConflict(TABLE_FAVORITES, null, values,SQLiteDatabase.CONFLICT_REPLACE );
+            db.insertWithOnConflict(TABLE_FAVORITES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             db.close();
-        }else {
-            onCreate(this.getWritableDatabase());
-            addFavorite(rate);
-        }
-    }
-
-    @Override
-    public void getFavorite(int id, OnTaskCompleted.FavoritePresenter mainPresenterComplete) {
-        if (isTableExists(TABLE_FAVORITES)) {
-            SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.query(TABLE_FAVORITES, new String[]{KEY_ID,
-                            KEY_DATE, KEY_CUR_ABB, KEY_CUR_SCALE, KEY_CUR_NAME, KEY_CUR_OFF_RATE}, KEY_ID + "=?",
-                    new String[]{String.valueOf(id)}, null, null, null, null);
-            if (cursor != null) {
-                cursor.moveToFirst();
-            }
-            if (cursor.getCount() == 0) {
-               mainPresenterComplete.onAllFavorites(null);
-            } else {
-                ActualRate rate = new ActualRate(cursor.getInt(0), cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)), cursor.getString(4), Double.parseDouble(cursor.getString(5)));
-                mainPresenterComplete.onAllFavorites(rate);
-            }
         } else {
             onCreate(this.getWritableDatabase());
-            getFavorite(id, mainPresenterComplete);
+            addFavorite(rate);
         }
     }
 
@@ -95,6 +74,7 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
+                cursor.close();
                 mainPresenterComplete.onAllFavorites(null);
             } else {
                 if (cursor.moveToFirst()) {
@@ -108,22 +88,14 @@ public class DatabaseHandlerFavorites extends SQLiteOpenHelper implements IDatab
                         rate.setCurOfficialRate(Double.parseDouble(cursor.getString(5)));
                         rateList.add(rate);
                     } while (cursor.moveToNext());
+                    cursor.close();
                     mainPresenterComplete.onAllFavorites(rateList);
                 }
             }
-        }else {
+        } else {
             onCreate(this.getWritableDatabase());
             getAllFavorites(mainPresenterComplete);
         }
-    }
-
-    @Override
-    public int getFavoritesCount() {
-        String countQuery = "SELECT * FROM " + TABLE_FAVORITES;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-        return cursor.getCount();
     }
 
     @Override

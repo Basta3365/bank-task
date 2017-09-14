@@ -1,5 +1,9 @@
 package com.example.stunba.bankproject.activity;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.stunba.bankproject.R;
+import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.fragments.FragmentAbout;
 import com.example.stunba.bankproject.fragments.FragmentCalculator;
 import com.example.stunba.bankproject.fragments.FragmentDynamicInfo;
@@ -22,9 +27,13 @@ import com.example.stunba.bankproject.fragments.FragmentFavorites;
 import com.example.stunba.bankproject.fragments.FragmentCurrentExchangeRate;
 import com.example.stunba.bankproject.fragments.FragmentRateOnDate;
 import com.example.stunba.bankproject.fragments.RecyclerFragmentMetal;
+import com.example.stunba.bankproject.service.JobSchedulerService;
+
+import java.util.Calendar;
 
 public class DrawerActivityStart extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +56,48 @@ public class DrawerActivityStart extends AppCompatActivity
             fragment = new FragmentAbout();
             fragmentManager.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
+        startJobScheduler();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void startJobScheduler() {
+        JobScheduler mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        mJobScheduler.cancelAll();
+        JobInfo.Builder builder = new JobInfo.Builder(1,
+                new ComponentName(getPackageName(),
+                        JobSchedulerService.class.getName()));
+        int hour = Settings.CALENDAR.get(Calendar.HOUR);
+        int minute = Settings.CALENDAR.get(Calendar.MINUTE);
+        int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
+//        if (hour < 12) {
+//            long time = Settings.CALENDAR.getTimeInMillis();
+//            Settings.CALENDAR.set(Calendar.HOUR, 12);
+//            Settings.CALENDAR.set(Calendar.MINUTE, 0);
+//            long timeCall = Settings.CALENDAR.getTimeInMillis();
+//            Settings.CALENDAR.set(Calendar.HOUR, hour);
+//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
+//            builder.setOverrideDeadline(timeCall - time);
+//        } else {
+//            long time = Settings.CALENDAR.getTimeInMillis();
+//            Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day + 1);
+//            Settings.CALENDAR.set(Calendar.HOUR, 12);
+//            Settings.CALENDAR.set(Calendar.MINUTE, 0);
+//            long timeCall = Settings.CALENDAR.getTimeInMillis();
+//            Settings.CALENDAR.set(Calendar.HOUR, hour);
+//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
+//            Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day);
+//            builder.setOverrideDeadline(timeCall - time);
+//        }
+//        long time = Settings.CALENDAR.getTimeInMillis();
+//        Settings.CALENDAR.set(Calendar.MINUTE,0);
+//        Settings.CALENDAR.set(Calendar.HOUR,12);
+//
+//        long timeCall = Settings.CALENDAR.getTimeInMillis();
+//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
+//        Settings.CALENDAR.set(Calendar.HOUR,hour);
+//            builder.setPeriodic(timeCall - time);
+//        builder.setPeriodic(1000);
+//        mJobScheduler.schedule(builder.build());
     }
 
     @Override

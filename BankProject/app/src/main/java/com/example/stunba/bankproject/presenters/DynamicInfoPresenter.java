@@ -28,6 +28,7 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
     private TwoScreen.DynamicView dynamicView;
     private BankApi bankApi;
     private Map<String, Integer> currency;
+    private List<String> names;
     private ArrayAdapter<String> adapter = null;
 
     public void setDynamicView(TwoScreen.DynamicView dynamicView) {
@@ -38,6 +39,7 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
         repository = Repository.getInstance(context);
         dynamicView = view;
         currency = new HashMap<>();
+        names=new ArrayList<>();
         bankApi = new BankApi();
         adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_item, new ArrayList<String>());
@@ -45,24 +47,26 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
     }
 
     public void loadInfo() {
-        if (currency.size() > 0) {
+        if (names.size() > 0) {
             adapter.clear();
-            adapter.addAll(new ArrayList<>(currency.keySet()));
+            adapter.addAll(names);
             adapter.notifyDataSetChanged();
-        }
-        repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
-            @Override
-            public void onAllCurrencyLoad(Object o) {
-                if (o != null) {
-                    for (Currency cur : (List<Currency>) o) {
-                        currency.put(cur.getCurAbbreviation(), cur.getCurID());
+        }else {
+            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                @Override
+                public void onAllCurrencyLoad(Object o) {
+                    if (o != null) {
+                        for (Currency cur : (List<Currency>) o) {
+                            currency.put(cur.getCurAbbreviation(), cur.getCurID());
+                            names.add(cur.getCurAbbreviation());
+                        }
+                        adapter.clear();
+                        adapter.addAll(names);
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.clear();
-                    adapter.addAll(new ArrayList<>(currency.keySet()));
-                    adapter.notifyDataSetChanged();
                 }
-            }
-        });
+            });
+        }
     }
 
     public void loadDynamics(String val, String startDate, String endDate) {

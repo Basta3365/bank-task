@@ -68,7 +68,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
     public void getMetal(final int id, final OnTaskCompleted.LoadComplete onTaskCompleted) {
         if (isTableExists(TABLE_METAL)) {
             SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.query(TABLE_METAL, new String[]{KEY_ID,
+            final Cursor cursor = db.query(TABLE_METAL, new String[]{KEY_ID,
                             KEY_NAME, KEY_NAME_BEL, KEY_NAME_ENG}, KEY_ID + "=?",
                     new String[]{String.valueOf(id)}, null, null, null, null);
             if (cursor != null) {
@@ -81,11 +81,13 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                         for (MetalName rate : (List<MetalName>) o) {
                             addMetal(rate);
                         }
+                        cursor.close();
                         getMetal(id, onTaskCompleted);
                     }
                 });
             } else {
                 MetalName metalName = new MetalName(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                cursor.close();
                 onTaskCompleted.onLoadComplete(metalName);
             }
         } else {
@@ -108,7 +110,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
             List<MetalName> rateList = new ArrayList<MetalName>();
             String selectQuery = "SELECT * FROM " + TABLE_METAL;
             SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
+            final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
                 loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
                     @Override
@@ -116,6 +118,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                         for (MetalName rate : (List<MetalName>) o) {
                             addMetal(rate);
                         }
+                        cursor.close();
                         getAllMetal(onTaskCompleted);
                     }
                 });
@@ -129,6 +132,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                         rate.setNameEng(cursor.getString(3));
                         rateList.add(rate);
                     } while (cursor.moveToNext());
+                    cursor.close();
                     onTaskCompleted.onLoadComplete(rateList);
                 }
             }
@@ -147,22 +151,8 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
     }
 
     private void loadAllMetalNames(OnTaskCompleted.LoadComplete loadComplete) {
-        if (isTableExists(TABLE_METAL)) {
             deleteAll();
             remoteDataSource.getAllMetalNames(loadComplete);
-        } else {
-            onCreate(this.getWritableDatabase());
-            loadAllMetalNames(loadComplete);
-        }
-    }
-
-    @Override
-    public int getMetalCount() {
-        String countQuery = "SELECT * FROM " + TABLE_METAL;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-        return cursor.getCount();
     }
 
     @Override
