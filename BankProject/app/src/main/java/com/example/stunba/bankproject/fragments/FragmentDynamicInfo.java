@@ -94,20 +94,22 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
 
     @Override
     public void showDynamicInfo(List<DynamicPeriod> dynamicPeriods) {
-        if(dynamicPeriods.size()!=0) {
-            ArrayList<BarEntry> entries = new ArrayList<>();
-            for (int i = 0; i < dynamicPeriods.size(); i++) {
-                entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
+        if(dynamicPeriods!=null) {
+            if (dynamicPeriods.size() != 0) {
+                ArrayList<BarEntry> entries = new ArrayList<>();
+                for (int i = 0; i < dynamicPeriods.size(); i++) {
+                    entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
+                }
+                BarDataSet dataSet = new BarDataSet(entries, "Rate");
+                dataSet.setValueTextColor(Color.TRANSPARENT);
+                BarData data = new BarData(dataSet);
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                chart.setData(data);
+                chart.animateY(3000);
+                chart.invalidate();
+            } else {
+                Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
             }
-            BarDataSet dataSet = new BarDataSet(entries, "Rate");
-            dataSet.setValueTextColor(Color.TRANSPARENT);
-            BarData data = new BarData(dataSet);
-            dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-            chart.setData(data);
-            chart.animateY(3000);
-            chart.invalidate();
-        }else {
-            Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
         }
 
 
