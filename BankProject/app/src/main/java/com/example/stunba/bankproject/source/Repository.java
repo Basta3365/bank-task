@@ -26,27 +26,27 @@ public class Repository {
         return INSTANCE;
     }
 
-    public void getAllCurrencies(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
-        localDataSource.getAllCurrencies(dynamicPresenterCompleteCurrency);
+    public void getAllCurrencies(OnTaskCompleted.LoadAllCurrencies loadAllCurrencies) {
+        localDataSource.getAllCurrencies(loadAllCurrencies);
     }
 
-    public void getRateByAbb(String abb, OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
+    public void getRateByAbb(String abb, OnTaskCompleted.LoadActualRate mainPresenterComplete) {
         localDataSource.getRateByAbb(abb, mainPresenterComplete);
     }
 
-    public void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {
-        localDataSource.getRateByDate(val, date, calculatePresenterComplete);
+    public void getRateByDate(String val, String date, OnTaskCompleted.LoadActualRate loadRate) {
+        localDataSource.getRateByDate(val, date, loadRate);
     }
 
     public void updateAllCurrencies() {
         localDataSource.updateAllCurrencies();
     }
 
-    public void updateAllRates(OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
-        localDataSource.updateAllRates(mainPresenterComplete);
+    public void updateAllRates(OnTaskCompleted.LoadSuccessfully loadSuccessfully) {
+        localDataSource.updateAllRates(loadSuccessfully);
     }
 
-    public void updateFavorites(OnTaskCompleted.FavoritePresenter favoritePresenter) {
+    public void updateFavorites(OnTaskCompleted.LoadFavoriteMap favoritePresenter) {
         localDataSource.updateFavorites(favoritePresenter);
     }
 
@@ -54,11 +54,11 @@ public class Repository {
         localDataSource.addFavorite(favorite);
     }
 
-    public void getAllMetalNames(OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getAllMetalNames(OnTaskCompleted.MetalNamesLoadAll onTaskCompleted) {
         localDataSource.getAllMetalNames(onTaskCompleted);
     }
 
-    public void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getAllIngots(OnTaskCompleted.MetalLoadAll onTaskCompleted) {
         localDataSource.getAllIngots(onTaskCompleted);
     }
 
@@ -66,7 +66,7 @@ public class Repository {
         localDataSource.getRateCalculator(abbFrom, abbTo, count, loadComplete);
     }
 
-    public void getAllFavorites(OnTaskCompleted.FavoritePresenter loadComplete) {
+    public void getAllFavorites(OnTaskCompleted.LoadAllActualRate loadComplete) {
         localDataSource.getAllFavorites(loadComplete);
     }
 

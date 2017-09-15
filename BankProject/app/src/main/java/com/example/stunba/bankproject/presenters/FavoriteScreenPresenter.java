@@ -9,6 +9,7 @@ import com.example.stunba.bankproject.interfaces.FavoriteScreen;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterFavorites;
+import com.example.stunba.bankproject.presenters.ipresenters.IFavoriteScreen;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 import com.example.stunba.bankproject.source.entities.Currency;
@@ -22,7 +23,7 @@ import java.util.Set;
  * Created by Kseniya_Bastun on 9/8/2017.
  */
 
-public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.FavoriteView> implements OnTaskCompleted.LoadComplete {
+public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted.DeleteFavorite {
     private Repository repository;
     private FavoriteScreen.FavoriteView favoriteView;
     private RecyclerViewAdapterFavorites recyclerViewAdapterFavorites;
@@ -30,16 +31,8 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.Favori
     private Set<String> abbFavorite;
     private List<Currency> currencyList;
 
-    public void setFavoriteView(FavoriteScreen.FavoriteView favoriteView) {
-        this.favoriteView = favoriteView;
-    }
-
     public RecyclerViewAdapterFavorites getRecyclerViewAdapterFavorites() {
         return recyclerViewAdapterFavorites;
-    }
-
-    public void setRecyclerViewAdapterFavorites(RecyclerViewAdapterFavorites recyclerViewAdapterFavorites) {
-        this.recyclerViewAdapterFavorites = recyclerViewAdapterFavorites;
     }
 
     public FavoriteScreenPresenter(Context context, FavoriteScreen.FavoriteView view) {
@@ -53,11 +46,11 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.Favori
 
     public void loadInfo() {
         if(actualFavorites.size()==0) {
-            repository.getAllFavorites(new OnTaskCompleted.FavoritePresenter() {
+            repository.getAllFavorites(new OnTaskCompleted.LoadAllActualRate() {
                 @Override
-                public void onAllFavorites(Object o) {
+                public void onLoadAllRate(List<ActualRate> o) {
                     if (o != null) {
-                        actualFavorites = (List<ActualRate>) o;
+                        actualFavorites = o;
                         for (ActualRate rate : actualFavorites) {
                             abbFavorite.add(rate.getCurAbbreviation());
                         }
@@ -68,10 +61,10 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.Favori
                 }
             });
         }if(currencyList.size()==0) {
-            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+            repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
-                public void onAllCurrencyLoad(Object o) {
-                    currencyList = (List<Currency>) o;
+                public void onAllCurrencyLoad(List<Currency> o) {
+                    currencyList = o;
                 }
             });
         }
@@ -91,11 +84,10 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.Favori
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                         if (abb[0] != null) {
-                            repository.getRateByAbb(abb[0], new OnTaskCompleted.MainPresenterComplete() {
+                            repository.getRateByAbb(abb[0], new OnTaskCompleted.LoadActualRate() {
                                 @Override
-                                public void onLoadRate(Object o) {
-                                    if(o!=null) {
-                                        ActualRate actualRate = (ActualRate) o;
+                                public void onLoadRate(ActualRate actualRate) {
+                                    if(actualRate!=null) {
                                         if (!abbFavorite.contains(actualRate.getCurAbbreviation())) {
                                             actualFavorites.add(actualRate);
                                             abbFavorite.add(actualRate.getCurAbbreviation());
@@ -132,11 +124,22 @@ public class FavoriteScreenPresenter extends BasePresenter<FavoriteScreen.Favori
     }
 
     @Override
-    public void onLoadComplete(Object o) {
-        actualFavorites.remove((ActualRate) o);
-        abbFavorite.remove(((ActualRate) o).getCurAbbreviation());
+    public void onDeleteItem(ActualRate actualRate) {
+        actualFavorites.remove( actualRate);
+        abbFavorite.remove( actualRate.getCurAbbreviation());
         getRecyclerViewAdapterFavorites().setFavorites(actualFavorites);
         getRecyclerViewAdapterFavorites().notifyDataSetChanged();
-        repository.deleteFavorite((ActualRate) o);
+        repository.deleteFavorite(actualRate);
+    }
+
+
+    @Override
+    public FavoriteScreen.FavoriteView getView() {
+        return favoriteView;
+    }
+
+    @Override
+    public void setView(FavoriteScreen.FavoriteView view) {
+        favoriteView=view;
     }
 }

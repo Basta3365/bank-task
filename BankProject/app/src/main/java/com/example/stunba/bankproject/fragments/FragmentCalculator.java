@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.stunba.bankproject.interfaces.CalculatorScreen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.presenters.CalculatorPresenter;
+import com.example.stunba.bankproject.presenters.ipresenters.ICalculator;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 
 /**
@@ -25,7 +26,7 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
 
 public class FragmentCalculator extends Fragment implements CalculatorScreen.CalculatorView {
     private View view;
-    private CalculatorPresenter presenter;
+    private ICalculator presenter;
     private Spinner selectFirstRate;
     private Spinner selectSecondRate;
     private TextView firstText;
@@ -42,8 +43,8 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
         if (savedInstanceState == null) {
             presenter = new CalculatorPresenter(getContext(), this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setCalculatorView(this);
+            presenter = (ICalculator) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
 
         }
         initViews();
@@ -131,24 +132,19 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
 
     @Override
-    public void showChangeResults(Object o) {
-        if(o!=null) {
+    public void showChangeResults(double o) {
+        if(o!=-1) {
             secondText.setText(String.valueOf((double)o));
         }else {
             Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
+        presenter.setView(null);
     }
 
     @Override

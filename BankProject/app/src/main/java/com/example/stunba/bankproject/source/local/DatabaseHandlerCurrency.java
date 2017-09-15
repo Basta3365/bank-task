@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by Kseniya_Bastun on 8/29/2017.
@@ -99,19 +98,19 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
     }
 
     @Override
-    public void getAllCurrencies(final OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
+    public void getAllCurrencies(final OnTaskCompleted.LoadAllCurrencies loadAllCurrencies) {
         if (isTableExists(TABLE_CURRENCY)) {
             List<Currency> rateList = new ArrayList<Currency>();
             String selectQuery = "SELECT * FROM " + TABLE_CURRENCY;
             SQLiteDatabase db = this.getWritableDatabase();
             final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
-                loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+                loadAllCurrency(new OnTaskCompleted.LoadAllCurrencies() {
                     @Override
-                    public void onAllCurrencyLoad(Object o) {
-                       addLoadCurrencies((List<Currency>)o);
+                    public void onAllCurrencyLoad(List<Currency> o) {
+                       addLoadCurrencies(o);
                         cursor.close();
-                        getAllCurrencies(dynamicPresenterCompleteCurrency);
+                        getAllCurrencies(loadAllCurrencies);
                     }
                 });
             } else {
@@ -145,15 +144,15 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
                         return o1.getCurAbbreviation().compareTo(o2.getCurAbbreviation());
                     }
                 });
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(rateList);
+                loadAllCurrencies.onAllCurrencyLoad(rateList);
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllCurrency(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+            loadAllCurrency(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
-                public void onAllCurrencyLoad(Object o) {
-                    addLoadCurrencies((List<Currency>) o);
-                    getAllCurrencies(dynamicPresenterCompleteCurrency);
+                public void onAllCurrencyLoad(List<Currency> o) {
+                    addLoadCurrencies( o);
+                    getAllCurrencies(loadAllCurrencies);
                 }
             });
         }
@@ -191,9 +190,9 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
         }
     }
 
-    public void loadAllCurrency(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
+    public void loadAllCurrency(OnTaskCompleted.LoadAllCurrencies loadAllCurrencies) {
         deleteAll();
-        remoteDataSource.getAllCurrencies(dynamicPresenterCompleteCurrency);
+        remoteDataSource.getAllCurrencies(loadAllCurrencies);
     }
 
     @Override

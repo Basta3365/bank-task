@@ -9,9 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.stunba.bankproject.interfaces.FourScreen;
+import com.example.stunba.bankproject.interfaces.MetalScreen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
+import com.example.stunba.bankproject.presenters.ipresenters.IMetalScreen;
 import com.example.stunba.bankproject.presenters.MetalScreenPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 
@@ -19,10 +20,10 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
  * Created by Kseniya_Bastun on 9/6/2017.
  */
 
-public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalView {
+public class RecyclerFragmentMetal extends Fragment implements MetalScreen.MetalView {
     private RecyclerView mRecyclerView;
     private View view;
-    private MetalScreenPresenter presenter;
+    private IMetalScreen presenter;
 
     @Nullable
     @Override
@@ -33,8 +34,8 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
         if (savedInstanceState == null) {
             presenter = new MetalScreenPresenter(getContext(), this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setMetalView(this);
+            presenter = (IMetalScreen) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
         }
         initView();
         presenter.loadInfo();
@@ -51,16 +52,11 @@ public class RecyclerFragmentMetal extends Fragment implements FourScreen.MetalV
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
+        presenter.setView(null);
 
     }
 

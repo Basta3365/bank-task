@@ -8,8 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.stunba.bankproject.presenters.ipresenters.ICurrentExchangeRate;
 import com.example.stunba.bankproject.presenters.CurrentExchangeRatePresenter;
-import com.example.stunba.bankproject.interfaces.OneScreen;
+import com.example.stunba.bankproject.interfaces.CurrentExchangeRateScreen;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.entities.ActualRate;
@@ -22,12 +23,12 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 8/24/2017.
  */
 
-public class FragmentCurrentExchangeRate extends Fragment implements OneScreen.MainView {
+public class FragmentCurrentExchangeRate extends Fragment implements CurrentExchangeRateScreen.MainView {
     private View view;
     private TextView usdRate;
     private TextView rubRate;
     private TextView eurRate;
-    private CurrentExchangeRatePresenter presenter;
+    private ICurrentExchangeRate presenter;
 
     @Nullable
     @Override
@@ -35,10 +36,10 @@ public class FragmentCurrentExchangeRate extends Fragment implements OneScreen.M
         if (view == null)
             view = inflater.inflate(R.layout.fragment_current_exchange_rate, container, false);
         if (savedInstanceState == null) {
-            presenter = new CurrentExchangeRatePresenter(getContext(), this);
+            presenter = new CurrentExchangeRatePresenter(getContext(),this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setMainView(this);
+            presenter = (ICurrentExchangeRate) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
         }
         initViews();
         List<String> listCurrency = new ArrayList<>(3);
@@ -77,15 +78,9 @@ public class FragmentCurrentExchangeRate extends Fragment implements OneScreen.M
 
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
+        presenter.setView(null);
     }
 
     @Override

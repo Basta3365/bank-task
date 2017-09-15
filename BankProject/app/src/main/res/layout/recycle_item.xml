@@ -6,7 +6,6 @@
     android:background="#14ffffff"
     android:layout_weight="10"
     card_view:contentPadding="10dp"
-    layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
@@ -19,8 +18,7 @@
             <ImageView
                 android:id="@+id/imageViewMetal"
                 android:layout_width="30dp"
-                android:layout_height="60dp"
-                android:src="@drawable/image"/>
+                android:layout_height="60dp"/>
 
                 <LinearLayout
                     android:layout_weight="3"
@@ -33,22 +31,19 @@
                     <TextView
                         android:id="@+id/metalName"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="zoloto"/>
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
                     <TextView
                         android:id="@+id/nominal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="10gr"/>
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/price"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="2.89"/>
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
 
                 </LinearLayout>
         </LinearLayout>

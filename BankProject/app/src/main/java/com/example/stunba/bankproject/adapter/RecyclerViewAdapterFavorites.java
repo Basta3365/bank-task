@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
@@ -22,7 +20,7 @@ import java.util.List;
 
 public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerViewAdapterFavorites.ViewHolder> {
     private List<ActualRate> favorites;
-    private OnTaskCompleted.LoadComplete mListener;
+    private OnTaskCompleted.DeleteFavorite mListener;
 
     public void setFavorites(List<ActualRate> favorites) {
         this.favorites = favorites;
@@ -45,7 +43,7 @@ public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerV
         }
     }
 
-    public RecyclerViewAdapterFavorites(OnTaskCompleted.LoadComplete loadComplete) {
+    public RecyclerViewAdapterFavorites(OnTaskCompleted.DeleteFavorite loadComplete) {
         favorites = null;
         mListener = loadComplete;
 
@@ -66,7 +64,7 @@ public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerV
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onLoadComplete(favorites.get(holder.getAdapterPosition()));
+                mListener.onDeleteItem(favorites.get(holder.getAdapterPosition()));
             }
         });
     }

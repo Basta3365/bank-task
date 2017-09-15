@@ -15,6 +15,7 @@ import com.example.stunba.bankproject.interfaces.FavoriteScreen;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.FavoriteScreenPresenter;
+import com.example.stunba.bankproject.presenters.ipresenters.IFavoriteScreen;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 
 /**
@@ -24,7 +25,7 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
 public class FragmentFavorites extends Fragment implements FavoriteScreen.FavoriteView {
     private View view;
     private RecyclerView mRecyclerView;
-    private FavoriteScreenPresenter presenter;
+    private IFavoriteScreen presenter;
     private ImageButton buttonAdd;
 
     @Nullable
@@ -35,8 +36,8 @@ public class FragmentFavorites extends Fragment implements FavoriteScreen.Favori
         if (savedInstanceState == null) {
             presenter = new FavoriteScreenPresenter(getContext(), this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setFavoriteView(this);
+            presenter = (FavoriteScreenPresenter) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
         }
         initView();
         presenter.loadInfo();
@@ -60,17 +61,11 @@ public class FragmentFavorites extends Fragment implements FavoriteScreen.Favori
         mRecyclerView.setAdapter(presenter.getRecyclerViewAdapterFavorites());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
-
+        presenter.setView(null);
     }
 
     @Override

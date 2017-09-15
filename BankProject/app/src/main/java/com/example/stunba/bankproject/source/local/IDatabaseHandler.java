@@ -10,7 +10,7 @@ import com.example.stunba.bankproject.source.entities.ActualRate;
 public interface IDatabaseHandler {
     void addRate(ActualRate rate);
 
-    void getAllRates(OnTaskCompleted.MainPresenterComplete mainPresenterComplete);
+    void getAllRates(OnTaskCompleted.LoadAllActualRate loadAllActualRate);
 
     int updateRate(ActualRate rate);
 

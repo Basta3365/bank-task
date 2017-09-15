@@ -2,10 +2,10 @@ package com.example.stunba.bankproject.presenters;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
-import com.example.stunba.bankproject.interfaces.TwoScreen;
+import com.example.stunba.bankproject.interfaces.DynamicInfoScreen;
+import com.example.stunba.bankproject.presenters.ipresenters.IDynamicInfo;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.Currency;
 import com.example.stunba.bankproject.source.entities.DynamicPeriod;
@@ -16,28 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.security.AccessController.getContext;
-
 
 /**
  * Created by Kseniya_Bastun on 8/25/2017.
  */
 
-public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
+public class DynamicInfoPresenter implements IDynamicInfo {
     private Repository repository;
-    private TwoScreen.DynamicView dynamicView;
     private BankApi bankApi;
     private Map<String, Integer> currency;
     private List<String> names;
+    private DynamicInfoScreen.DynamicView dynamicView;
     private ArrayAdapter<String> adapter = null;
 
-    public void setDynamicView(TwoScreen.DynamicView dynamicView) {
-        this.dynamicView = dynamicView;
-    }
 
-    public DynamicInfoPresenter(Context context, TwoScreen.DynamicView view) {
+    public DynamicInfoPresenter(Context context, DynamicInfoScreen.DynamicView view) {
         repository = Repository.getInstance(context);
-        dynamicView = view;
+        dynamicView=view;
         currency = new HashMap<>();
         names=new ArrayList<>();
         bankApi = new BankApi();
@@ -52,11 +47,11 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
             adapter.addAll(names);
             adapter.notifyDataSetChanged();
         }else {
-            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+            repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
-                public void onAllCurrencyLoad(Object o) {
+                public void onAllCurrencyLoad(List<Currency> o) {
                     if (o != null) {
-                        for (Currency cur : (List<Currency>) o) {
+                        for (Currency cur :  o) {
                             currency.put(cur.getCurAbbreviation(), cur.getCurID());
                             names.add(cur.getCurAbbreviation());
                         }
@@ -74,9 +69,9 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
             @Override
             public void onDynamicLoad(List<DynamicPeriod> o) {
                 if (o != null) {
-                    dynamicView.showDynamicInfo(o);
+                    getView().showDynamicInfo(o);
                 }else {
-                    dynamicView.showDynamicInfo(null);
+                    getView().showDynamicInfo(null);
                 }
             }
         });
@@ -84,6 +79,16 @@ public class DynamicInfoPresenter extends BasePresenter<TwoScreen.DynamicView> {
 
     public ArrayAdapter<String> getAdapter() {
         return adapter;
+    }
+
+    @Override
+    public DynamicInfoScreen.DynamicView getView() {
+        return dynamicView;
+    }
+
+    @Override
+    public void setView(DynamicInfoScreen.DynamicView view) {
+        dynamicView=view;
     }
 
     public int getValueNumber(String abb) {

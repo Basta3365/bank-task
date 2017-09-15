@@ -22,13 +22,9 @@ import retrofit2.Response;
 
 public class BankApi implements IBankOperations {
 
-    @Override
-    public ActualRate getActualRate(String val, String periodicity) {
-        return null;
-    }
 
     @Override
-    public void getAllActualRate(final OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
+    public void getAllActualRate(final OnTaskCompleted.LoadAllActualRate loadAllActualRate) {
         final List<ActualRate> allRates = new ArrayList<>();
         Settings.RETROFIT.getAllActualRate("0").enqueue(new Callback<List<ActualRate>>() {
             @Override
@@ -38,13 +34,13 @@ public class BankApi implements IBankOperations {
                     @Override
                     public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
                         allRates.addAll(response.body());
-                        mainPresenterComplete.onLoadRate(allRates);
+                        loadAllActualRate.onLoadAllRate(allRates);
 
                     }
 
                     @Override
                     public void onFailure(Call<List<ActualRate>> call, Throwable t) {
-                        mainPresenterComplete.onLoadRate(allRates);
+                        loadAllActualRate.onLoadAllRate(allRates);
                     }
                 });
             }
@@ -55,13 +51,13 @@ public class BankApi implements IBankOperations {
                     @Override
                     public void onResponse(Call<List<ActualRate>> call, Response<List<ActualRate>> response) {
                         allRates.addAll(response.body());
-                        mainPresenterComplete.onLoadRate(allRates);
+                        loadAllActualRate.onLoadAllRate(allRates);
 
                     }
 
                     @Override
                     public void onFailure(Call<List<ActualRate>> call, Throwable t) {
-                        mainPresenterComplete.onLoadRate(null);
+                        loadAllActualRate.onLoadAllRate(null);
                     }
                 });
             }
@@ -84,67 +80,62 @@ public class BankApi implements IBankOperations {
     }
 
     @Override
-    public void getActualRateOnDate(String val, String onDate, final OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {
+    public void getActualRateOnDate(String val, String onDate, final OnTaskCompleted.LoadActualRate calculatePresenterComplete) {
         Settings.RETROFIT.getActualRateOnDate(val, onDate).enqueue(new Callback<ActualRate>() {
             @Override
             public void onResponse(Call<ActualRate> call, Response<ActualRate> response) {
-                calculatePresenterComplete.onLoadRateByDate(response.body());
+                calculatePresenterComplete.onLoadRate(response.body());
 
             }
 
             @Override
             public void onFailure(Call<ActualRate> call, Throwable t) {
-                calculatePresenterComplete.onLoadRateByDate(null);
+                calculatePresenterComplete.onLoadRate(null);
             }
         });
     }
 
     @Override
-    public void getAllIngotsPricesOnDate(String onDate, final OnTaskCompleted.LoadComplete loadComplete) {
+    public void getAllIngotsPricesOnDate(String onDate, final OnTaskCompleted.MetalLoadAll loadComplete) {
         Settings.RETROFIT.getAllIngotsPricesOnDate(onDate).enqueue(new Callback<List<ActualAllIngot>>() {
             @Override
             public void onResponse(Call<List<ActualAllIngot>> call, Response<List<ActualAllIngot>> response) {
-                loadComplete.onLoadComplete(response.body());
+                loadComplete.onAllIngot(response.body());
             }
 
             @Override
             public void onFailure(Call<List<ActualAllIngot>> call, Throwable t) {
-                loadComplete.onLoadComplete(null);
+                loadComplete.onAllIngot(null);
             }
         });
     }
 
     @Override
-    public List<ActualAllIngot> getIngotsPricesOnDate(String val, String onDate) {
-        return null;
-    }
-
-    @Override
-    public void getAllCurrencies(final OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
+    public void getAllCurrencies(final OnTaskCompleted.LoadAllCurrencies loadAllCurrencies) {
         Settings.RETROFIT.getAllCurrencies().enqueue(new Callback<List<Currency>>() {
             @Override
             public void onResponse(Call<List<Currency>> call, Response<List<Currency>> response) {
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(response.body());
+                loadAllCurrencies.onAllCurrencyLoad(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Currency>> call, Throwable t) {
-                dynamicPresenterCompleteCurrency.onAllCurrencyLoad(null);
+                loadAllCurrencies.onAllCurrencyLoad(null);
             }
         });
     }
 
     @Override
-    public void getAllMetalNames(final OnTaskCompleted.LoadComplete loadComplete) {
+    public void getAllMetalNames(final OnTaskCompleted.MetalNamesLoadAll loadComplete) {
         Settings.RETROFIT.getAllMetalNames().enqueue(new Callback<List<MetalName>>() {
             @Override
             public void onResponse(Call<List<MetalName>> call, Response<List<MetalName>> response) {
-                loadComplete.onLoadComplete(response.body());
+                loadComplete.onAllNames(response.body());
             }
 
             @Override
             public void onFailure(Call<List<MetalName>> call, Throwable t) {
-                loadComplete.onLoadComplete(null);
+                loadComplete.onAllNames(null);
             }
         });
     }

@@ -10,9 +10,9 @@ import com.example.stunba.bankproject.source.entities.MetalName;
 public interface IDatabaseHandlerMetalName {
     void addMetal(MetalName metalName);
 
-    void getMetal(int id, OnTaskCompleted.LoadComplete onTaskCompleted);
+    void getMetal(int id, OnTaskCompleted.MetalNamesLoad onTaskCompleted);
 
-    void getAllMetal(OnTaskCompleted.LoadComplete onTaskCompleted);
+    void getAllMetal(OnTaskCompleted.MetalNamesLoadAll onTaskCompleted);
 
     int updateMetal(MetalName rate);
 

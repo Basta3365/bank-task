@@ -95,8 +95,8 @@ public class DrawerActivityStart extends AppCompatActivity
 //        long timeCall = Settings.CALENDAR.getTimeInMillis();
 //            Settings.CALENDAR.set(Calendar.MINUTE, minute);
 //        Settings.CALENDAR.set(Calendar.HOUR,hour);
-//            builder.setPeriodic(timeCall - time);
-//        builder.setPeriodic(1000);
+////            builder.setPeriodic(timeCall - time);
+//        builder.setOverrideDeadline(1000);
 //        mJobScheduler.schedule(builder.build());
     }
 

@@ -10,9 +10,9 @@ import com.example.stunba.bankproject.source.entities.ActualAllIngot;
 public interface IDatabaseHandlerMetalRate {
     void addIngot(ActualAllIngot allIngot);
 
-    void getIngot(int id, OnTaskCompleted.LoadComplete onTaskCompleted);
+    void getIngot(int id, OnTaskCompleted.MetalLoad onTaskCompleted);
 
-    void getAllIngots(OnTaskCompleted.LoadComplete onTaskCompleted);
+    void getAllIngots(OnTaskCompleted.MetalLoadAll onTaskCompleted);
 
     int updateIngot(ActualAllIngot rate);
 

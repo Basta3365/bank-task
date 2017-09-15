@@ -11,17 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.stunba.bankproject.Settings;
+import com.example.stunba.bankproject.presenters.ipresenters.IRateOnDate;
 import com.example.stunba.bankproject.presenters.RateOnDatePresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
-import com.example.stunba.bankproject.interfaces.TreeScreen;
+import com.example.stunba.bankproject.interfaces.RateOnDateScreen;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 
 import java.util.Calendar;
@@ -30,9 +30,9 @@ import java.util.Calendar;
  * Created by Kseniya_Bastun on 9/1/2017.
  */
 
-public class FragmentRateOnDate extends Fragment implements TreeScreen.CalculateView {
+public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.RateOnDateView {
     private View view;
-    private RateOnDatePresenter presenter;
+    private IRateOnDate presenter;
     private Spinner selectRate;
     private TextView selectDate;
     private TextView actualRateTextScreen;
@@ -50,8 +50,8 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
         if (savedInstanceState == null) {
             presenter = new RateOnDatePresenter(getContext(), this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setCalculateView(this);
+            presenter = (IRateOnDate) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
             restoreState(savedInstanceState);
         }
         initViews();
@@ -128,16 +128,11 @@ public class FragmentRateOnDate extends Fragment implements TreeScreen.Calculate
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
+        presenter.setView(null);
 
     }
 

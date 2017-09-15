@@ -70,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
         }
     }
 
-    public void getRateByAbb(final String abb, final OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
+    public void getRateByAbb(final String abb, final OnTaskCompleted.LoadActualRate mainPresenterComplete) {
         if (isTableExists(TABLE_RATE)) {
             SQLiteDatabase db = this.getReadableDatabase();
             final Cursor cursor = db.query(TABLE_RATE, new String[]{KEY_ID,
@@ -81,10 +81,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
             }
             if (cursor.getCount() == 0) {
                 if (!isLoad) {
-                    loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
+                    loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
                         @Override
-                        public void onLoadRate(Object o) {
-                            for (ActualRate rate : (List<ActualRate>) o) {
+                        public void onLoadAllRate(List<ActualRate> o) {
+                            for (ActualRate rate :  o) {
                                 addRate(rate);
                             }
                             isLoad = true;
@@ -103,10 +103,10 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
+            loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
                 @Override
-                public void onLoadRate(Object o) {
-                    for (ActualRate rate : (List<ActualRate>) o) {
+                public void onLoadAllRate(List<ActualRate> o) {
+                    for (ActualRate rate : o) {
                         addRate(rate);
                     }
                     getRateByAbb(abb, mainPresenterComplete);
@@ -116,17 +116,17 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
     }
 
     @Override
-    public void getAllRates(final OnTaskCompleted.MainPresenterComplete mainPresenter) {
+    public void getAllRates(final OnTaskCompleted.LoadAllActualRate mainPresenter) {
         List<ActualRate> rateList = new ArrayList<ActualRate>();
         if (isTableExists(TABLE_RATE)) {
             String selectQuery = "SELECT * FROM " + TABLE_RATE;
             SQLiteDatabase db = this.getWritableDatabase();
             final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
-                loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
+                loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
                     @Override
-                    public void onLoadRate(Object o) {
-                        for (ActualRate rate : (List<ActualRate>) o) {
+                    public void onLoadAllRate(List<ActualRate> o) {
+                        for (ActualRate rate : o) {
                             addRate(rate);
                         }
                         cursor.close();
@@ -147,14 +147,14 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
-                mainPresenter.onLoadRate(rateList);
+                mainPresenter.onLoadAllRate(rateList);
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllRate(new OnTaskCompleted.MainPresenterComplete() {
+            loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
                 @Override
-                public void onLoadRate(Object o) {
-                    for (ActualRate rate : (List<ActualRate>) o) {
+                public void onLoadAllRate(List<ActualRate> o) {
+                    for (ActualRate rate : o) {
                         addRate(rate);
                     }
                     getAllRates(mainPresenter);
@@ -163,9 +163,9 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
         }
     }
 
-    public void loadAllRate(OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
+    public void loadAllRate(OnTaskCompleted.LoadAllActualRate loadAllActualRate) {
         deleteAll();
-        remoteDataSource.getAllRates(mainPresenterComplete);
+        remoteDataSource.getAllRates(loadAllActualRate);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class DatabaseHandler extends SQLiteOpenHelper implements IDatabaseHandle
     }
 
 
-    public void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {
+    public void getRateByDate(String val, String date, OnTaskCompleted.LoadActualRate calculatePresenterComplete) {
         remoteDataSource.getRateByDate(val, date, calculatePresenterComplete);
     }
 

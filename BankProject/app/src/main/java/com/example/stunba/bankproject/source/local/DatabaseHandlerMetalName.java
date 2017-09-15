@@ -65,7 +65,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
     }
 
     @Override
-    public void getMetal(final int id, final OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getMetal(final int id, final OnTaskCompleted.MetalNamesLoad onTaskCompleted) {
         if (isTableExists(TABLE_METAL)) {
             SQLiteDatabase db = this.getReadableDatabase();
             final Cursor cursor = db.query(TABLE_METAL, new String[]{KEY_ID,
@@ -75,10 +75,10 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                 cursor.moveToFirst();
             }
             if (cursor.getCount() == 0) {
-                loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+                loadAllMetalNames(new OnTaskCompleted.MetalNamesLoadAll() {
                     @Override
-                    public void onLoadComplete(Object o) {
-                        for (MetalName rate : (List<MetalName>) o) {
+                    public void onAllNames(List<MetalName> o) {
+                        for (MetalName rate :  o) {
                             addMetal(rate);
                         }
                         cursor.close();
@@ -88,14 +88,14 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
             } else {
                 MetalName metalName = new MetalName(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
                 cursor.close();
-                onTaskCompleted.onLoadComplete(metalName);
+                onTaskCompleted.onNames(metalName);
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+            loadAllMetalNames(new OnTaskCompleted.MetalNamesLoadAll() {
                 @Override
-                public void onLoadComplete(Object o) {
-                    for (MetalName rate : (List<MetalName>) o) {
+                public void onAllNames(List<MetalName> o) {
+                    for (MetalName rate :  o) {
                         addMetal(rate);
                     }
                     getMetal(id, onTaskCompleted);
@@ -105,17 +105,17 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
     }
 
     @Override
-    public void getAllMetal(final OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getAllMetal(final OnTaskCompleted.MetalNamesLoadAll onTaskCompleted) {
         if (isTableExists(TABLE_METAL)) {
             List<MetalName> rateList = new ArrayList<MetalName>();
             String selectQuery = "SELECT * FROM " + TABLE_METAL;
             SQLiteDatabase db = this.getWritableDatabase();
             final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
-                loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+                loadAllMetalNames(new OnTaskCompleted.MetalNamesLoadAll() {
                     @Override
-                    public void onLoadComplete(Object o) {
-                        for (MetalName rate : (List<MetalName>) o) {
+                    public void onAllNames(List<MetalName> o) {
+                        for (MetalName rate :  o) {
                             addMetal(rate);
                         }
                         cursor.close();
@@ -133,15 +133,15 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
                         rateList.add(rate);
                     } while (cursor.moveToNext());
                     cursor.close();
-                    onTaskCompleted.onLoadComplete(rateList);
+                    onTaskCompleted.onAllNames(rateList);
                 }
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllMetalNames(new OnTaskCompleted.LoadComplete() {
+            loadAllMetalNames(new OnTaskCompleted.MetalNamesLoadAll() {
                 @Override
-                public void onLoadComplete(Object o) {
-                    for (MetalName rate : (List<MetalName>) o) {
+                public void onAllNames(List<MetalName> o) {
+                    for (MetalName rate :  o) {
                         addMetal(rate);
                     }
                     getAllMetal(onTaskCompleted);
@@ -150,7 +150,7 @@ public class DatabaseHandlerMetalName extends SQLiteOpenHelper implements IDatab
         }
     }
 
-    private void loadAllMetalNames(OnTaskCompleted.LoadComplete loadComplete) {
+    private void loadAllMetalNames(OnTaskCompleted.MetalNamesLoadAll loadComplete) {
             deleteAll();
             remoteDataSource.getAllMetalNames(loadComplete);
     }

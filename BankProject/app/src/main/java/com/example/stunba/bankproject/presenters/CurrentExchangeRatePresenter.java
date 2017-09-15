@@ -3,10 +3,10 @@ package com.example.stunba.bankproject.presenters;
 import android.content.Context;
 
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
-import com.example.stunba.bankproject.interfaces.OneScreen;
+import com.example.stunba.bankproject.interfaces.CurrentExchangeRateScreen;
+import com.example.stunba.bankproject.presenters.ipresenters.ICurrentExchangeRate;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualRate;
-import com.example.stunba.bankproject.source.remote.BankApi;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,29 +16,33 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 8/23/2017.
  */
 
-public class CurrentExchangeRatePresenter extends BasePresenter<OneScreen.MainView> {
+public class CurrentExchangeRatePresenter implements ICurrentExchangeRate {
     private Repository repository;
-    private OneScreen.MainView mainView;
+    private CurrentExchangeRateScreen.MainView view;
 
-    public void setMainView(OneScreen.MainView mainView) {
-        this.mainView = mainView;
+    public CurrentExchangeRateScreen.MainView getView() {
+        return view;
     }
 
-    public CurrentExchangeRatePresenter(Context context, OneScreen.MainView view) {
+    public void setView(CurrentExchangeRateScreen.MainView view) {
+        this.view = view;
+    }
+
+    public CurrentExchangeRatePresenter(Context context, CurrentExchangeRateScreen.MainView view) {
         repository = Repository.getInstance(context);
-        mainView = view;
+        this.view=view;
     }
 
 
     public void loadInfo(final List<String> list) {
         final Map<String, ActualRate> actualRateMap = new HashMap<>();
         for (String str : list) {
-            repository.getRateByAbb(str, new OnTaskCompleted.MainPresenterComplete() {
+            repository.getRateByAbb(str, new OnTaskCompleted.LoadActualRate() {
                 @Override
-                public void onLoadRate(Object o) {
-                    actualRateMap.put(((ActualRate) o).getCurAbbreviation(), (ActualRate) o);
+                public void onLoadRate(ActualRate o) {
+                    actualRateMap.put( o.getCurAbbreviation(), o);
                     if (actualRateMap.size() == list.size()) {
-                        mainView.showLoadInfo(actualRateMap);
+                        view.showLoadInfo(actualRateMap);
                     }
                 }
             });

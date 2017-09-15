@@ -3,6 +3,7 @@ package com.example.stunba.bankproject.presenters;
 
 import android.os.Bundle;
 
+import com.example.stunba.bankproject.presenters.ipresenters.BaseInterface;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -17,7 +18,7 @@ public class PresenterManager {
 
     private static final String SIS_KEY_PRESENTER_ID = "presenter_id";
     private static PresenterManager instance;
-    private final Cache<Long, BasePresenter<?>> presenters;
+    private final Cache<Long,BaseInterface> presenters;
     private final AtomicLong currentId;
 
 
@@ -38,16 +39,16 @@ public class PresenterManager {
     }
 
 
-    public <P extends BasePresenter<?>> P restorePresenter(Bundle savedInstanceState) {
+    public BaseInterface restorePresenter(Bundle savedInstanceState) {
         Long presenterId = savedInstanceState.getLong(SIS_KEY_PRESENTER_ID);
-        P presenter = (P) presenters.getIfPresent(presenterId);
+        BaseInterface presenter = presenters.getIfPresent(presenterId);
         presenters.invalidate(presenterId);
         return presenter;
 
     }
 
 
-    public void savePresenter(BasePresenter<?> presenter, Bundle outState) {
+    public void savePresenter(BaseInterface presenter, Bundle outState) {
         long presenterId = currentId.incrementAndGet();
         presenters.put(presenterId, presenter);
         outState.putLong(SIS_KEY_PRESENTER_ID, presenterId);

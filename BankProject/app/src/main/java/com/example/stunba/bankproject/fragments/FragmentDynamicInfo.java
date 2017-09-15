@@ -15,11 +15,12 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.stunba.bankproject.presenters.ipresenters.IDynamicInfo;
 import com.example.stunba.bankproject.presenters.DynamicInfoPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.Settings;
-import com.example.stunba.bankproject.interfaces.TwoScreen;
+import com.example.stunba.bankproject.interfaces.DynamicInfoScreen;
 import com.example.stunba.bankproject.source.entities.DynamicPeriod;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -35,9 +36,9 @@ import java.util.List;
  * Created by Kseniya_Bastun on 8/25/2017.
  */
 
-public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicView {
+public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.DynamicView {
     private View view;
-    private DynamicInfoPresenter presenter;
+    private IDynamicInfo presenter;
     private BarChart chart;
     private Spinner selectRate;
     private Spinner selectDate;
@@ -70,8 +71,8 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
         if (savedInstanceState == null) {
             presenter = new DynamicInfoPresenter(getContext(), this);
         } else {
-            presenter = PresenterManager.getInstance().restorePresenter(savedInstanceState);
-            presenter.setDynamicView(this);
+            presenter = (IDynamicInfo) PresenterManager.getInstance().restorePresenter(savedInstanceState);
+            presenter.setView(this);
             restoreState(savedInstanceState);
         }
         initViews();
@@ -112,16 +113,11 @@ public class FragmentDynamicInfo extends Fragment implements TwoScreen.DynamicVi
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.bindView(this);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindView();
+        presenter.setView(null);
     }
 
     @Override

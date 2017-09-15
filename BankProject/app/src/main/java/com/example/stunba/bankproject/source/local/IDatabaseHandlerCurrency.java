@@ -10,7 +10,7 @@ import com.example.stunba.bankproject.source.entities.Currency;
 public interface IDatabaseHandlerCurrency {
     void addCurrency(Currency currency);
 
-    void getAllCurrencies(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency);
+    void getAllCurrencies(OnTaskCompleted.LoadAllCurrencies loadAllCurrencies);
 
     int updateCurrency(Currency currency);
 

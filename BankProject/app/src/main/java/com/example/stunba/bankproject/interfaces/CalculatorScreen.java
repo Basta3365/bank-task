@@ -1,8 +1,5 @@
 package com.example.stunba.bankproject.interfaces;
 
-import com.example.stunba.bankproject.source.entities.Currency;
-
-import java.util.List;
 
 /**
  * Created by Kseniya_Bastun on 9/7/2017.
@@ -10,6 +7,6 @@ import java.util.List;
 
 public interface CalculatorScreen {
     interface CalculatorView{
-        void showChangeResults(Object o);
+        void showChangeResults(double o);
     }
 }

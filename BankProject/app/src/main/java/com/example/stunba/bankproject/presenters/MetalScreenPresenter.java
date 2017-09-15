@@ -1,10 +1,12 @@
 package com.example.stunba.bankproject.presenters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
-import com.example.stunba.bankproject.interfaces.FourScreen;
+import com.example.stunba.bankproject.interfaces.MetalScreen;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterMetal;
+import com.example.stunba.bankproject.presenters.ipresenters.IMetalScreen;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualAllIngot;
 import com.example.stunba.bankproject.source.entities.MetalName;
@@ -18,27 +20,14 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 9/6/2017.
  */
 
-public class MetalScreenPresenter extends BasePresenter<FourScreen.MetalView> {
+public class MetalScreenPresenter implements IMetalScreen {
     private Repository repository;
-    private FourScreen.MetalView metalView;
+    private MetalScreen.MetalView metalView;
     private RecyclerViewAdapterMetal recyclerViewAdapterMetal;
     private List<ActualAllIngot> actualAllIngots;
     private Map<Integer, MetalName> values;
 
-    public RecyclerViewAdapterMetal getRecyclerViewAdapterMetal() {
-        return recyclerViewAdapterMetal;
-    }
-
-    public void setRecyclerViewAdapterMetal(RecyclerViewAdapterMetal recyclerViewAdapterMetal) {
-
-        this.recyclerViewAdapterMetal = recyclerViewAdapterMetal;
-    }
-
-    public void setMetalView(FourScreen.MetalView metalView) {
-        this.metalView = metalView;
-    }
-
-    public MetalScreenPresenter(Context context, FourScreen.MetalView view) {
+    public MetalScreenPresenter(Context context, MetalScreen.MetalView view) {
         repository = Repository.getInstance(context);
         metalView = view;
         recyclerViewAdapterMetal = new RecyclerViewAdapterMetal(context);
@@ -47,19 +36,19 @@ public class MetalScreenPresenter extends BasePresenter<FourScreen.MetalView> {
     }
 
     public void loadInfo() {
-        repository.getAllMetalNames(new OnTaskCompleted.LoadComplete() {
+        repository.getAllMetalNames(new OnTaskCompleted.MetalNamesLoadAll() {
             @Override
-            public void onLoadComplete(final Object o) {
+            public void onAllNames(final List<MetalName> o) {
                 if (o != null) {
-                    repository.getAllIngots(new OnTaskCompleted.LoadComplete() {
+                    repository.getAllIngots(new OnTaskCompleted.MetalLoadAll() {
                         @Override
-                        public void onLoadComplete(Object load) {
+                        public void onAllIngot(List<ActualAllIngot> load) {
                             if (load != null) {
-                                actualAllIngots.addAll((List<ActualAllIngot>) load);
-                                for (MetalName metal : (List<MetalName>) o) {
+                                actualAllIngots.addAll(load);
+                                for (MetalName metal : o) {
                                     values.put(metal.getId(), metal);
                                 }
-                                recyclerViewAdapterMetal.setActualData((List<ActualAllIngot>) load);
+                                recyclerViewAdapterMetal.setActualData(load);
                                 recyclerViewAdapterMetal.setNames(values);
                                 recyclerViewAdapterMetal.notifyDataSetChanged();
                             }
@@ -70,4 +59,18 @@ public class MetalScreenPresenter extends BasePresenter<FourScreen.MetalView> {
         });
     }
 
+    @Override
+    public RecyclerView.Adapter getRecyclerViewAdapterMetal() {
+        return recyclerViewAdapterMetal;
+    }
+
+    @Override
+    public MetalScreen.MetalView getView() {
+        return metalView;
+    }
+
+    @Override
+    public void setView(MetalScreen.MetalView view) {
+        metalView=view;
+    }
 }

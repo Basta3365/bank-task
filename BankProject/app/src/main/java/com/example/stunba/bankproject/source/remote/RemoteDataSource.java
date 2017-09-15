@@ -12,23 +12,23 @@ import java.util.Calendar;
 public class RemoteDataSource {
     private BankApi bankApi = new BankApi();
 
-    public void getAllCurrencies(OnTaskCompleted.DynamicPresenterCompleteCurrency dynamicPresenterCompleteCurrency) {
-        bankApi.getAllCurrencies(dynamicPresenterCompleteCurrency);
+    public void getAllCurrencies(OnTaskCompleted.LoadAllCurrencies loadAllCurrencies) {
+        bankApi.getAllCurrencies(loadAllCurrencies);
     }
 
-    public void getAllRates(OnTaskCompleted.MainPresenterComplete mainPresenterComplete) {
-        bankApi.getAllActualRate(mainPresenterComplete);
+    public void getAllRates(OnTaskCompleted.LoadAllActualRate loadAllActualRate) {
+        bankApi.getAllActualRate(loadAllActualRate);
     }
 
-    public void getRateByDate(String val, String date, OnTaskCompleted.CalculatePresenterComplete calculatePresenterComplete) {
+    public void getRateByDate(String val, String date, OnTaskCompleted.LoadActualRate calculatePresenterComplete) {
         bankApi.getActualRateOnDate(val, date, calculatePresenterComplete);
     }
 
-    public void getAllMetalNames(OnTaskCompleted.LoadComplete loadComplete) {
+    public void getAllMetalNames(OnTaskCompleted.MetalNamesLoadAll loadComplete) {
         bankApi.getAllMetalNames(loadComplete);
     }
 
-    public void getAllIngots(OnTaskCompleted.LoadComplete loadComplete) {
+    public void getAllIngots(OnTaskCompleted.MetalLoadAll loadComplete) {
         int year = Settings.CALENDAR.get(Calendar.YEAR);
         int month = Settings.CALENDAR.get(Calendar.MONTH);
         int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);

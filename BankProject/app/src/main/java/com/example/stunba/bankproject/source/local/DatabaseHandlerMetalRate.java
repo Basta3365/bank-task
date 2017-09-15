@@ -82,7 +82,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
     }
 
     @Override
-    public void getIngot(final int id, final OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getIngot(final int id, final OnTaskCompleted.MetalLoad onTaskCompleted) {
         if (isTableExists(TABLE_INGOTS)) {
             SQLiteDatabase db = this.getReadableDatabase();
             final Cursor cursor = db.query(TABLE_INGOTS, new String[]{KEY_ID, KEY_ID_METAL,
@@ -92,10 +92,10 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
                 cursor.moveToFirst();
             }
             if (cursor.getCount() == 0) {
-                loadAllIngots(new OnTaskCompleted.LoadComplete() {
+                loadAllIngots(new OnTaskCompleted.MetalLoadAll() {
                     @Override
-                    public void onLoadComplete(Object o) {
-                        for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
+                    public void onAllIngot(List<ActualAllIngot> o) {
+                        for (ActualAllIngot rate :  o) {
                             addIngot(rate);
                         }
                         cursor.close();
@@ -105,14 +105,14 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
             } else {
                 ActualAllIngot rate = new ActualAllIngot(cursor.getString(0), Integer.parseInt(cursor.getString(1)), Double.parseDouble(cursor.getString(2)), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10));
                 cursor.close();
-                onTaskCompleted.onLoadComplete(rate);
+                onTaskCompleted.onIngot(rate);
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllIngots(new OnTaskCompleted.LoadComplete() {
+            loadAllIngots(new OnTaskCompleted.MetalLoadAll() {
                 @Override
-                public void onLoadComplete(Object o) {
-                    for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
+                public void onAllIngot(List<ActualAllIngot> o) {
+                    for (ActualAllIngot rate :  o) {
                         addIngot(rate);
                     }
                     getIngot(id, onTaskCompleted);
@@ -122,17 +122,17 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
     }
 
     @Override
-    public void getAllIngots(final OnTaskCompleted.LoadComplete onTaskCompleted) {
+    public void getAllIngots(final OnTaskCompleted.MetalLoadAll onTaskCompleted) {
         if (isTableExists(TABLE_INGOTS)) {
             List<ActualAllIngot> rateList = new ArrayList<ActualAllIngot>();
             String selectQuery = "SELECT * FROM " + TABLE_INGOTS;
             SQLiteDatabase db = this.getWritableDatabase();
             final Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.getCount() == 0) {
-                loadAllIngots(new OnTaskCompleted.LoadComplete() {
+                loadAllIngots(new OnTaskCompleted.MetalLoadAll() {
                     @Override
-                    public void onLoadComplete(Object o) {
-                        for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
+                    public void onAllIngot(List<ActualAllIngot> o) {
+                        for (ActualAllIngot rate : o) {
                             addIngot(rate);
                         }
                         cursor.close();
@@ -159,14 +159,14 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
-                onTaskCompleted.onLoadComplete(rateList);
+                onTaskCompleted.onAllIngot(rateList);
             }
         } else {
             onCreate(this.getWritableDatabase());
-            loadAllIngots(new OnTaskCompleted.LoadComplete() {
+            loadAllIngots(new OnTaskCompleted.MetalLoadAll() {
                 @Override
-                public void onLoadComplete(Object o) {
-                    for (ActualAllIngot rate : (List<ActualAllIngot>) o) {
+                public void onAllIngot(List<ActualAllIngot> o) {
+                    for (ActualAllIngot rate : o) {
                         addIngot(rate);
                     }
                     getAllIngots(onTaskCompleted);
@@ -175,7 +175,7 @@ public class DatabaseHandlerMetalRate extends SQLiteOpenHelper implements IDatab
         }
     }
 
-    private void loadAllIngots(OnTaskCompleted.LoadComplete loadComplete) {
+    private void loadAllIngots(OnTaskCompleted.MetalLoadAll loadComplete) {
         deleteAll();
         remoteDataSource.getAllIngots(loadComplete);
     }

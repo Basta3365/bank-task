@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.stunba.bankproject.interfaces.CalculatorScreen;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
+import com.example.stunba.bankproject.presenters.ipresenters.ICalculator;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.Currency;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 9/7/2017.
  */
 
-public class CalculatorPresenter extends BasePresenter<CalculatorScreen.CalculatorView> {
+public class CalculatorPresenter implements ICalculator {
     private Repository repository;
     private CalculatorScreen.CalculatorView calculatorView;
     private Map<String, Integer> currency;
@@ -25,10 +26,6 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     private ArrayAdapter<String> adapterSecond;
     private ArrayList<String> strings;
     private List<String> names;
-
-    public void setCalculatorView(CalculatorScreen.CalculatorView calculatorView) {
-        this.calculatorView = calculatorView;
-    }
 
     public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
         repository = Repository.getInstance(context);
@@ -51,11 +48,11 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
             adapterFirst.addAll(names);
             adapterFirst.notifyDataSetChanged();
         }else {
-            repository.getAllCurrencies(new OnTaskCompleted.DynamicPresenterCompleteCurrency() {
+            repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
-                public void onAllCurrencyLoad(Object o) {
+                public void onAllCurrencyLoad(List<Currency> o) {
                     if (o != null) {
-                        for (Currency cur : (List<Currency>) o) {
+                        for (Currency cur :  o) {
                             currency.put(cur.getCurAbbreviation(), cur.getCurID());
                             names.add(cur.getCurAbbreviation());
                         }
@@ -71,7 +68,7 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
     public void getRate(String abbFrom, String abbTo, double count) {
         repository.getRateCalculator(abbFrom, abbTo, count, new OnTaskCompleted.LoadComplete() {
             @Override
-            public void onLoadComplete(Object o) {
+            public void onLoadComplete(double o) {
                 calculatorView.showChangeResults(o);
             }
         });
@@ -83,5 +80,15 @@ public class CalculatorPresenter extends BasePresenter<CalculatorScreen.Calculat
 
     public ArrayAdapter<String> getAdapterSecond() {
         return adapterSecond;
+    }
+
+    @Override
+    public CalculatorScreen.CalculatorView getView() {
+        return calculatorView;
+    }
+
+    @Override
+    public void setView(CalculatorScreen.CalculatorView view) {
+        calculatorView=view;
     }
 }
