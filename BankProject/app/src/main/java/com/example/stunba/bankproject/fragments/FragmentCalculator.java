@@ -33,7 +33,7 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     private TextView secondText;
     private ImageButton change;
     private boolean isBYR = false;
-    private boolean isSelect=false;
+    private boolean isSelect = false;
 
     @Nullable
     @Override
@@ -58,10 +58,10 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
         selectFirstRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(isSelect & firstText.getText().length()>0) {
+                if (isSelect & firstText.getText().length() > 0) {
                     presenter.getRate(selectFirstRate.getSelectedItem().toString(), selectSecondRate.getSelectedItem().toString(), Double.parseDouble(firstText.getText().toString()));
-                }else{
-                    isSelect=true;
+                } else {
+                    isSelect = true;
                 }
             }
 
@@ -75,10 +75,10 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
         selectSecondRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(isSelect & firstText.getText().length()>0) {
+                if (isSelect & firstText.getText().length() > 0) {
                     presenter.getRate(selectFirstRate.getSelectedItem().toString(), selectSecondRate.getSelectedItem().toString(), Double.parseDouble(firstText.getText().toString()));
-                }else{
-                    isSelect=true;
+                } else {
+                    isSelect = true;
                 }
             }
 
@@ -133,9 +133,9 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
     @Override
     public void showChangeResults(double o) {
-        if(o!=-1) {
-            secondText.setText(String.valueOf((double)o));
-        }else {
+        if (o != -1) {
+            secondText.setText(String.valueOf(o));
+        } else {
             Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
         }
     }

@@ -63,7 +63,7 @@ public class RecyclerViewAdapterMetal extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public RecyclerViewAdapterMetal.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycle_item, parent, false);
+                .inflate(R.layout.recycle_item_metal, parent, false);
 
         return new ViewHolder(v);
     }
@@ -71,21 +71,6 @@ public class RecyclerViewAdapterMetal extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public void onBindViewHolder(RecyclerViewAdapterMetal.ViewHolder holder, int position) {
         holder.cv.setTag(position);
-        //TODO set image
-        switch (actualData.get(position).getMetalID()) {
-            case 0:
-                holder.imageView.setImageResource(R.drawable.usd);
-                break;
-            case 1:
-                holder.imageView.setImageResource(R.drawable.usd);
-                break;
-            case 2:
-                holder.imageView.setImageResource(R.drawable.usd);
-                break;
-            case 3:
-                holder.imageView.setImageResource(R.drawable.usd);
-                break;
-        }
         String language = context.getResources().getConfiguration().locale.getLanguage();
         switch (language) {
             case "en":

@@ -30,10 +30,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="the_current_exchange_rate_of_major_currencies">Current rate of major currencies</string>
+    <string name="the_current_exchange_rate_of_major_currencies">Current rate </string>
     <string name="rate_graph_currency">Rate graph currency</string>
-    <string name="the_exchange_rate_on_the_date">The exchange rate on the date</string>
-    <string name="the_list_of_cost_of_precious_metals">List of cost of precious metals</string>
+    <string name="the_exchange_rate_on_the_date">Rate on the date</string>
+    <string name="the_list_of_cost_of_precious_metals">List of metals</string>
     <string name="currency_calculator">Currency calculator</string>
     <string name="favorite">Favorite</string>
     <string name="about">About</string>

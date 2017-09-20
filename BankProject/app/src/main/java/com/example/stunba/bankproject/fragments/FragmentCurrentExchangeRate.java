@@ -28,6 +28,9 @@ public class FragmentCurrentExchangeRate extends Fragment implements CurrentExch
     private TextView usdRate;
     private TextView rubRate;
     private TextView eurRate;
+    private TextView usdScale;
+    private TextView rubScale;
+    private TextView eurScale;
     private ICurrentExchangeRate presenter;
 
     @Nullable
@@ -36,7 +39,7 @@ public class FragmentCurrentExchangeRate extends Fragment implements CurrentExch
         if (view == null)
             view = inflater.inflate(R.layout.fragment_current_exchange_rate, container, false);
         if (savedInstanceState == null) {
-            presenter = new CurrentExchangeRatePresenter(getContext(),this);
+            presenter = new CurrentExchangeRatePresenter(getContext(), this);
         } else {
             presenter = (ICurrentExchangeRate) PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setView(this);
@@ -54,6 +57,9 @@ public class FragmentCurrentExchangeRate extends Fragment implements CurrentExch
         usdRate = (TextView) view.findViewById(R.id.textViewActualUSD);
         eurRate = (TextView) view.findViewById(R.id.textViewActualEUR);
         rubRate = (TextView) view.findViewById(R.id.textViewActualRUB);
+        usdScale = (TextView) view.findViewById(R.id.textViewScaleUSD);
+        eurScale = (TextView) view.findViewById(R.id.textViewScaleEUR);
+        rubScale = (TextView) view.findViewById(R.id.textViewScaleRUB);
     }
 
     @Override
@@ -61,14 +67,17 @@ public class FragmentCurrentExchangeRate extends Fragment implements CurrentExch
         for (Map.Entry<String, ActualRate> entry : map.entrySet()) {
             switch (entry.getKey()) {
                 case "USD": {
+                    usdScale.setText(entry.getValue().getCurScale() + " " + entry.getValue().getCurAbbreviation());
                     usdRate.setText(String.valueOf(entry.getValue().getCurOfficialRate()));
                     break;
                 }
                 case "EUR": {
+                    eurScale.setText(entry.getValue().getCurScale() + " " + entry.getValue().getCurAbbreviation());
                     eurRate.setText(String.valueOf(entry.getValue().getCurOfficialRate()));
                     break;
                 }
                 case "RUB": {
+                    rubScale.setText(entry.getValue().getCurScale() + " " + entry.getValue().getCurAbbreviation());
                     rubRate.setText(String.valueOf(entry.getValue().getCurOfficialRate()));
                     break;
                 }

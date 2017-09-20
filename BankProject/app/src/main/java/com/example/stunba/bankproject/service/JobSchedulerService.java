@@ -2,8 +2,11 @@ package com.example.stunba.bankproject.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.job.JobInfo;
 import android.app.job.JobParameters;
+import android.app.job.JobScheduler;
 import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -20,6 +23,7 @@ import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +37,6 @@ public class JobSchedulerService extends JobService {
     @Override
     public boolean onStartJob(final JobParameters params) {
         Log.d("TAG", "Start");
-        Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_SHORT).show();
         Repository.getInstance(getBaseContext()).updateAllCurrencies();
         Repository.getInstance(getBaseContext()).updateAllRates(new OnTaskCompleted.LoadSuccessfully() {
             @Override
@@ -45,19 +48,23 @@ public class JobSchedulerService extends JobService {
                             for (Map.Entry<String, Double> entry : changes.entrySet()) {
                                 sendNotification(entry.getKey(), entry.getValue());
                             }
-//                            jobFinished(params,false);
                         }
                     }
                 });
             }
         });
-//        JobScheduler mJobScheduler = (JobScheduler)getSystemService( Context.JOB_SCHEDULER_SERVICE );
-//        mJobScheduler.cancelAll();
-//        JobInfo.Builder builder = new JobInfo.Builder( 1,
-//                new ComponentName( getPackageName(),
-//                        JobSchedulerService.class.getName() ) );
-//        builder.setOverrideDeadline(28800000);
-//        mJobScheduler.schedule(builder.build());
+        JobScheduler mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        mJobScheduler.cancel(Settings.SERVICE_ID);
+        JobInfo.Builder builder = new JobInfo.Builder(Settings.SERVICE_ID,
+                new ComponentName(getPackageName(),
+                        JobSchedulerService.class.getName()));
+        int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
+        long time = Settings.CALENDAR.getTimeInMillis();
+        Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day + 1);
+        long timeCall = Settings.CALENDAR.getTimeInMillis();
+        Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day);
+        builder.setOverrideDeadline(timeCall - time);
+        mJobScheduler.schedule(builder.build());
         return true;
     }
 
@@ -68,6 +75,7 @@ public class JobSchedulerService extends JobService {
                         .setContentTitle(key + " cheaper!!!!!!! ")
                         .setContentText("View statistics for 3 months");
         Intent intent = new Intent(this, DynamicActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("abb", key);
         intent.putExtra("cheaper", value);
         Settings.COUNT++;
@@ -78,8 +86,8 @@ public class JobSchedulerService extends JobService {
         stackBuilder.addNextIntent(intent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        Settings.COUNT,
+                        0
                 );
         mBuilder.setContentIntent(resultPendingIntent);
         mNotificationManager.notify(Settings.COUNT, mBuilder.build());

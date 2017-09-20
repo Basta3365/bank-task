@@ -30,9 +30,12 @@ import com.example.stunba.bankproject.fragments.RecyclerFragmentMetal;
 import com.example.stunba.bankproject.service.JobSchedulerService;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class DrawerActivityStart extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private boolean isRun = false;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,42 +65,44 @@ public class DrawerActivityStart extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startJobScheduler() {
         JobScheduler mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        mJobScheduler.cancelAll();
-        JobInfo.Builder builder = new JobInfo.Builder(1,
+        JobInfo.Builder builder = new JobInfo.Builder(Settings.SERVICE_ID,
                 new ComponentName(getPackageName(),
                         JobSchedulerService.class.getName()));
-        int hour = Settings.CALENDAR.get(Calendar.HOUR);
-        int minute = Settings.CALENDAR.get(Calendar.MINUTE);
-        int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
-//        if (hour < 12) {
-//            long time = Settings.CALENDAR.getTimeInMillis();
-//            Settings.CALENDAR.set(Calendar.HOUR, 12);
-//            Settings.CALENDAR.set(Calendar.MINUTE, 0);
-//            long timeCall = Settings.CALENDAR.getTimeInMillis();
-//            Settings.CALENDAR.set(Calendar.HOUR, hour);
-//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
-//            builder.setOverrideDeadline(timeCall - time);
-//        } else {
-//            long time = Settings.CALENDAR.getTimeInMillis();
-//            Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day + 1);
-//            Settings.CALENDAR.set(Calendar.HOUR, 12);
-//            Settings.CALENDAR.set(Calendar.MINUTE, 0);
-//            long timeCall = Settings.CALENDAR.getTimeInMillis();
-//            Settings.CALENDAR.set(Calendar.HOUR, hour);
-//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
-//            Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day);
-//            builder.setOverrideDeadline(timeCall - time);
-//        }
-//        long time = Settings.CALENDAR.getTimeInMillis();
-//        Settings.CALENDAR.set(Calendar.MINUTE,0);
-//        Settings.CALENDAR.set(Calendar.HOUR,12);
-//
-//        long timeCall = Settings.CALENDAR.getTimeInMillis();
-//            Settings.CALENDAR.set(Calendar.MINUTE, minute);
-//        Settings.CALENDAR.set(Calendar.HOUR,hour);
-////            builder.setPeriodic(timeCall - time);
-//        builder.setOverrideDeadline(1000);
-//        mJobScheduler.schedule(builder.build());
+
+        List<JobInfo> jobInfos = mJobScheduler.getAllPendingJobs();
+        if (jobInfos.size() > 0) {
+            for (JobInfo info : jobInfos) {
+                if (info.getId() == Settings.SERVICE_ID) {
+                    isRun = true;
+                }
+            }
+        }
+        if (!isRun) {
+            int hour = Settings.CALENDAR.get(Calendar.HOUR);
+            int minute = Settings.CALENDAR.get(Calendar.MINUTE);
+            int day = Settings.CALENDAR.get(Calendar.DAY_OF_MONTH);
+            if (hour < 12) {
+                long time = Settings.CALENDAR.getTimeInMillis();
+                Settings.CALENDAR.set(Calendar.HOUR, 12);
+                Settings.CALENDAR.set(Calendar.MINUTE, 0);
+                long timeCall = Settings.CALENDAR.getTimeInMillis();
+                Settings.CALENDAR.set(Calendar.HOUR, hour);
+                Settings.CALENDAR.set(Calendar.MINUTE, minute);
+                builder.setOverrideDeadline(timeCall - time);
+            } else {
+                long time = Settings.CALENDAR.getTimeInMillis();
+                Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day + 1);
+                Settings.CALENDAR.set(Calendar.HOUR, 12);
+                Settings.CALENDAR.set(Calendar.MINUTE, 0);
+                long timeCall = Settings.CALENDAR.getTimeInMillis();
+                Settings.CALENDAR.set(Calendar.HOUR, hour);
+                Settings.CALENDAR.set(Calendar.MINUTE, minute);
+                Settings.CALENDAR.set(Calendar.DAY_OF_MONTH, day);
+                builder.setOverrideDeadline(timeCall - time);
+            }
+            mJobScheduler.schedule(builder.build());
+
+        }
     }
 
     @Override

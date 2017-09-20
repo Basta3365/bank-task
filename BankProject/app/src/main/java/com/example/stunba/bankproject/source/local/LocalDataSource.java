@@ -58,9 +58,7 @@ public class LocalDataSource implements DataSource {
             @Override
             public void onAllCurrencyLoad(List<Currency> o) {
                 if (o != null) {
-                    for (Currency cur : o) {
-                        databaseHandlerCurrency.addCurrency(cur);
-                    }
+                    databaseHandlerCurrency.addLoadCurrencies(o);
                 }
             }
         });

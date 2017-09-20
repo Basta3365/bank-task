@@ -32,9 +32,9 @@ public class DynamicInfoPresenter implements IDynamicInfo {
 
     public DynamicInfoPresenter(Context context, DynamicInfoScreen.DynamicView view) {
         repository = Repository.getInstance(context);
-        dynamicView=view;
+        dynamicView = view;
         currency = new HashMap<>();
-        names=new ArrayList<>();
+        names = new ArrayList<>();
         bankApi = new BankApi();
         adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_item, new ArrayList<String>());
@@ -46,12 +46,12 @@ public class DynamicInfoPresenter implements IDynamicInfo {
             adapter.clear();
             adapter.addAll(names);
             adapter.notifyDataSetChanged();
-        }else {
+        } else {
             repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
                 public void onAllCurrencyLoad(List<Currency> o) {
                     if (o != null) {
-                        for (Currency cur :  o) {
+                        for (Currency cur : o) {
                             currency.put(cur.getCurAbbreviation(), cur.getCurID());
                             names.add(cur.getCurAbbreviation());
                         }
@@ -70,7 +70,7 @@ public class DynamicInfoPresenter implements IDynamicInfo {
             public void onDynamicLoad(List<DynamicPeriod> o) {
                 if (o != null) {
                     getView().showDynamicInfo(o);
-                }else {
+                } else {
                     getView().showDynamicInfo(null);
                 }
             }
@@ -88,14 +88,13 @@ public class DynamicInfoPresenter implements IDynamicInfo {
 
     @Override
     public void setView(DynamicInfoScreen.DynamicView view) {
-        dynamicView=view;
+        dynamicView = view;
     }
 
     public int getValueNumber(String abb) {
         int number = -1;
-        List<String> list = new ArrayList<>(currency.keySet());
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).equals(abb)) {
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).equals(abb)) {
                 number = i;
                 break;
             }

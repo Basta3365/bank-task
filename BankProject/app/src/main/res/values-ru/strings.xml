@@ -8,10 +8,10 @@
     <string name="select_currency">Выбрать валюту </string>
     <string name="ok">OK </string>
     <string name="cancel">Отмена </string>
-    <string name="the_current_exchange_rate_of_major_currencies">Текущий курс основных валют</string>
+    <string name="the_current_exchange_rate_of_major_currencies">Текущий курс валют</string>
     <string name="rate_graph_currency">График курса валют</string>
-    <string name="the_exchange_rate_on_the_date">Курс валют на указанную дату</string>
-    <string name="the_list_of_cost_of_precious_metals">Список стоимостей драгоценных металлов</string>
+    <string name="the_exchange_rate_on_the_date">Курс валют на дату</string>
+    <string name="the_list_of_cost_of_precious_metals">Список металлов</string>
     <string name="currency_calculator">Калькулятор валют</string>
     <string name="favorite">Избранные</string>
     <string name="internet_not_available">Нет подключения к интернету</string>

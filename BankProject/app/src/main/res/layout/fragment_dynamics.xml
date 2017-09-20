@@ -10,21 +10,23 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/select_currency_and_period" />
 
     <Spinner
         android:background="@color/button_color"
         android:id="@+id/spinnerSelectRate"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="5dp"/>
 
     <Spinner
         android:id="@+id/spinnerSelectDate"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:background="@color/button_color"
         android:entries="@array/date_list"
         android:layout_marginBottom="5dp"/>

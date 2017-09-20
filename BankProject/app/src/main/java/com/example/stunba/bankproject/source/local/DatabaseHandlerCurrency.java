@@ -158,7 +158,7 @@ public class DatabaseHandlerCurrency extends SQLiteOpenHelper implements IDataba
         }
     }
 
-    private void addLoadCurrencies(List<Currency> currencies) {
+    public void addLoadCurrencies(List<Currency> currencies) {
         Set<Integer> itemToDelete = new HashSet<>();
         Map<Integer,Currency> currencyMap=new HashMap();
         for (Currency cur : currencies) {

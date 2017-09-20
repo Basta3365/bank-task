@@ -45,7 +45,7 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
     }
 
     public void loadInfo() {
-        if(actualFavorites.size()==0) {
+        if (actualFavorites.size() == 0) {
             repository.getAllFavorites(new OnTaskCompleted.LoadAllActualRate() {
                 @Override
                 public void onLoadAllRate(List<ActualRate> o) {
@@ -60,7 +60,8 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
                     }
                 }
             });
-        }if(currencyList.size()==0) {
+        }
+        if (currencyList.size() == 0) {
             repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
                 public void onAllCurrencyLoad(List<Currency> o) {
@@ -87,7 +88,7 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
                             repository.getRateByAbb(abb[0], new OnTaskCompleted.LoadActualRate() {
                                 @Override
                                 public void onLoadRate(ActualRate actualRate) {
-                                    if(actualRate!=null) {
+                                    if (actualRate != null) {
                                         if (!abbFavorite.contains(actualRate.getCurAbbreviation())) {
                                             actualFavorites.add(actualRate);
                                             abbFavorite.add(actualRate.getCurAbbreviation());
@@ -95,7 +96,7 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
                                             getRecyclerViewAdapterFavorites().setFavorites(actualFavorites);
                                             getRecyclerViewAdapterFavorites().notifyDataSetChanged();
                                         }
-                                    }else {
+                                    } else {
                                         favoriteView.showError();
                                     }
                                 }
@@ -125,8 +126,8 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
 
     @Override
     public void onDeleteItem(ActualRate actualRate) {
-        actualFavorites.remove( actualRate);
-        abbFavorite.remove( actualRate.getCurAbbreviation());
+        actualFavorites.remove(actualRate);
+        abbFavorite.remove(actualRate.getCurAbbreviation());
         getRecyclerViewAdapterFavorites().setFavorites(actualFavorites);
         getRecyclerViewAdapterFavorites().notifyDataSetChanged();
         repository.deleteFavorite(actualRate);
@@ -140,6 +141,6 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
 
     @Override
     public void setView(FavoriteScreen.FavoriteView view) {
-        favoriteView=view;
+        favoriteView = view;
     }
 }

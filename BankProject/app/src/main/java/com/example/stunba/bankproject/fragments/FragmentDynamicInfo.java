@@ -94,7 +94,7 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
 
     @Override
     public void showDynamicInfo(List<DynamicPeriod> dynamicPeriods) {
-        if(dynamicPeriods!=null) {
+        if (dynamicPeriods != null) {
             if (dynamicPeriods.size() != 0) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 for (int i = 0; i < dynamicPeriods.size(); i++) {
@@ -132,16 +132,16 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if(savedInstanceState.getString("startDate")!=null) {
+        if (savedInstanceState.getString("startDate") != null) {
             startDate = savedInstanceState.getString("startDate");
         }
-        if(savedInstanceState.getString("endDate")!=null) {
+        if (savedInstanceState.getString("endDate") != null) {
             endDate = savedInstanceState.getString("endDate");
         }
-        if(savedInstanceState.getString("endDate")!=null) {
+        if (savedInstanceState.getString("endDate") != null) {
             rate = savedInstanceState.getString("rate");
         }
-        if(startDate!=null & endDate!=null & rate!=null) {
+        if (startDate != null & endDate != null & rate != null) {
             presenter.loadDynamics(rate, startDate, endDate);
         }
     }
@@ -154,8 +154,8 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
                     drawDynamics();
-                }else {
-                    isDraw=true;
+                } else {
+                    isDraw = true;
                 }
             }
 
@@ -171,8 +171,8 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isDraw) {
                     drawDynamics();
-                }else {
-                    isDraw=true;
+                } else {
+                    isDraw = true;
                 }
             }
 
@@ -218,6 +218,7 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
         }
         return isAvailable;
     }
+
     private void drawDynamics() {
         if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
             if (internetAvailable()) {

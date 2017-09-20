@@ -71,6 +71,6 @@ public class MetalScreenPresenter implements IMetalScreen {
 
     @Override
     public void setView(MetalScreen.MetalView view) {
-        metalView=view;
+        metalView = view;
     }
 }

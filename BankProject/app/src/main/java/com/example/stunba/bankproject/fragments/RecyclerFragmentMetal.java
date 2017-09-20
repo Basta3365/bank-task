@@ -52,7 +52,6 @@ public class RecyclerFragmentMetal extends Fragment implements MetalScreen.Metal
     }
 
 
-
     @Override
     public void onPause() {
         super.onPause();

@@ -30,7 +30,7 @@ public class CalculatorPresenter implements ICalculator {
     public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
         repository = Repository.getInstance(context);
         calculatorView = view;
-        names=new ArrayList<>();
+        names = new ArrayList<>();
         strings = new ArrayList<>();
         currency = new HashMap<>();
         strings.add("BYR");
@@ -47,12 +47,12 @@ public class CalculatorPresenter implements ICalculator {
             adapterFirst.clear();
             adapterFirst.addAll(names);
             adapterFirst.notifyDataSetChanged();
-        }else {
+        } else {
             repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
                 public void onAllCurrencyLoad(List<Currency> o) {
                     if (o != null) {
-                        for (Currency cur :  o) {
+                        for (Currency cur : o) {
                             currency.put(cur.getCurAbbreviation(), cur.getCurID());
                             names.add(cur.getCurAbbreviation());
                         }
@@ -89,6 +89,6 @@ public class CalculatorPresenter implements ICalculator {
 
     @Override
     public void setView(CalculatorScreen.CalculatorView view) {
-        calculatorView=view;
+        calculatorView = view;
     }
 }

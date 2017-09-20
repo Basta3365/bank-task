@@ -18,7 +18,7 @@ public class PresenterManager {
 
     private static final String SIS_KEY_PRESENTER_ID = "presenter_id";
     private static PresenterManager instance;
-    private final Cache<Long,BaseInterface> presenters;
+    private final Cache<Long, BaseInterface> presenters;
     private final AtomicLong currentId;
 
 

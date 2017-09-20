@@ -30,7 +30,7 @@ public class CurrentExchangeRatePresenter implements ICurrentExchangeRate {
 
     public CurrentExchangeRatePresenter(Context context, CurrentExchangeRateScreen.MainView view) {
         repository = Repository.getInstance(context);
-        this.view=view;
+        this.view = view;
     }
 
 
@@ -40,7 +40,7 @@ public class CurrentExchangeRatePresenter implements ICurrentExchangeRate {
             repository.getRateByAbb(str, new OnTaskCompleted.LoadActualRate() {
                 @Override
                 public void onLoadRate(ActualRate o) {
-                    actualRateMap.put( o.getCurAbbreviation(), o);
+                    actualRateMap.put(o.getCurAbbreviation(), o);
                     if (actualRateMap.size() == list.size()) {
                         view.showLoadInfo(actualRateMap);
                     }

@@ -28,7 +28,7 @@ public class RateOnDatePresenter implements IRateOnDate {
 
     public RateOnDatePresenter(Context context, RateOnDateScreen.RateOnDateView v) {
         repository = Repository.getInstance(context);
-        calculateView=v;
+        calculateView = v;
         currency = new HashMap<>();
         names = new ArrayList<>();
         adapter = new ArrayAdapter<>(context,
@@ -41,12 +41,12 @@ public class RateOnDatePresenter implements IRateOnDate {
             adapter.clear();
             adapter.addAll(names);
             adapter.notifyDataSetChanged();
-        }else {
+        } else {
             repository.getAllCurrencies(new OnTaskCompleted.LoadAllCurrencies() {
                 @Override
                 public void onAllCurrencyLoad(List<Currency> o) {
                     if (o != null) {
-                        for (Currency cur :  o) {
+                        for (Currency cur : o) {
                             currency.put(cur.getCurAbbreviation(), cur.getCurID());
                             names.add(cur.getCurAbbreviation());
                         }
@@ -75,7 +75,7 @@ public class RateOnDatePresenter implements IRateOnDate {
 
     @Override
     public void setView(RateOnDateScreen.RateOnDateView view) {
-        calculateView=view;
+        calculateView = view;
     }
 
     public ArrayAdapter<String> getAdapter() {
