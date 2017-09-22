@@ -2,7 +2,7 @@ package com.example.stunba.bankproject.presenters.ipresenters;
 
 import android.widget.ArrayAdapter;
 
-import com.example.stunba.bankproject.interfaces.CalculatorScreen;
+import com.example.stunba.bankproject.interfaces.CalculatorView;
 
 /**
  * Created by Kseniya_Bastun on 9/15/2017.
@@ -17,7 +17,7 @@ public interface ICalculator extends BaseInterface {
 
     ArrayAdapter<String> getAdapterSecond();
 
-    CalculatorScreen.CalculatorView getView();
+    CalculatorView getView();
 
-    void setView(CalculatorScreen.CalculatorView view);
+    void setView(CalculatorView view);
 }

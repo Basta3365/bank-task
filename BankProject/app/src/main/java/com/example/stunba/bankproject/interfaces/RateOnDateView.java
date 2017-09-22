@@ -6,8 +6,7 @@ import com.example.stunba.bankproject.source.entities.ActualRate;
  * Created by Kseniya_Bastun on 9/1/2017.
  */
 
-public interface TreeScreen {
-    interface CalculateView{
+public interface RateOnDateView {
         void showActualRate(ActualRate rate);
-    }
+        void showError(String s) ;
 }

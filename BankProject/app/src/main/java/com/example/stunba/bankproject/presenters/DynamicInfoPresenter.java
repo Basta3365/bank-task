@@ -1,10 +1,11 @@
 package com.example.stunba.bankproject.presenters;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.ArrayAdapter;
-
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
-import com.example.stunba.bankproject.interfaces.DynamicInfoScreen;
+import com.example.stunba.bankproject.interfaces.DynamicView;
 import com.example.stunba.bankproject.presenters.ipresenters.IDynamicInfo;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.Currency;
@@ -26,13 +27,15 @@ public class DynamicInfoPresenter implements IDynamicInfo {
     private BankApi bankApi;
     private Map<String, Integer> currency;
     private List<String> names;
-    private DynamicInfoScreen.DynamicView dynamicView;
+    private DynamicView dynamicView;
     private ArrayAdapter<String> adapter = null;
+    private Context context;
 
 
-    public DynamicInfoPresenter(Context context, DynamicInfoScreen.DynamicView view) {
+    public DynamicInfoPresenter(Context context, DynamicView view) {
         repository = Repository.getInstance(context);
         dynamicView = view;
+        this.context = context;
         currency = new HashMap<>();
         names = new ArrayList<>();
         bankApi = new BankApi();
@@ -65,16 +68,20 @@ public class DynamicInfoPresenter implements IDynamicInfo {
     }
 
     public void loadDynamics(String val, String startDate, String endDate) {
-        bankApi.getDynamicsPeriod(String.valueOf(currency.get(val)), startDate, endDate, new OnTaskCompleted.DynamicPresenterCompleteDynamic() {
-            @Override
-            public void onDynamicLoad(List<DynamicPeriod> o) {
-                if (o != null) {
-                    getView().showDynamicInfo(o);
-                } else {
-                    getView().showDynamicInfo(null);
+        if (internetAvailable()) {
+            bankApi.getDynamicsPeriod(String.valueOf(currency.get(val)), startDate, endDate, new OnTaskCompleted.DynamicPresenterCompleteDynamic() {
+                @Override
+                public void onDynamicLoad(List<DynamicPeriod> o) {
+                    if (o != null && o.size()!=0) {
+                        getView().showDynamicInfo(o);
+                    }else {
+                        getView().showError("No information");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            getView().showError("Internet not available");
+        }
     }
 
     public ArrayAdapter<String> getAdapter() {
@@ -82,12 +89,12 @@ public class DynamicInfoPresenter implements IDynamicInfo {
     }
 
     @Override
-    public DynamicInfoScreen.DynamicView getView() {
+    public DynamicView getView() {
         return dynamicView;
     }
 
     @Override
-    public void setView(DynamicInfoScreen.DynamicView view) {
+    public void setView(DynamicView view) {
         dynamicView = view;
     }
 
@@ -103,4 +110,9 @@ public class DynamicInfoPresenter implements IDynamicInfo {
 
     }
 
+    private Boolean internetAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
 }

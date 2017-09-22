@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="right"
-        android:background="#24ffffff" />
+        android:background="@color/image_button_color" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_favorites"
         android:layout_width="match_parent"

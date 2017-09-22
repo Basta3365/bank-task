@@ -1,10 +1,7 @@
 package com.example.stunba.bankproject.fragments;
 
 
-import android.content.Context;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +17,7 @@ import com.example.stunba.bankproject.presenters.DynamicInfoPresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.Settings;
-import com.example.stunba.bankproject.interfaces.DynamicInfoScreen;
+import com.example.stunba.bankproject.interfaces.DynamicView;
 import com.example.stunba.bankproject.source.entities.DynamicPeriod;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -36,8 +33,7 @@ import java.util.List;
  * Created by Kseniya_Bastun on 8/25/2017.
  */
 
-public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.DynamicView {
-    private View view;
+public class FragmentDynamicInfo extends Fragment implements DynamicView {
     private IDynamicInfo presenter;
     private BarChart chart;
     private Spinner selectRate;
@@ -59,8 +55,7 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_dynamics, container, false);
+        View view = inflater.inflate(R.layout.fragment_dynamics, container, false);
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.getString("abb") != null) {
@@ -75,7 +70,7 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
             presenter.setView(this);
             restoreState(savedInstanceState);
         }
-        initViews();
+        initViews(view);
         presenter.loadInfo();
         if (isNotification) {
             selectDate.setSelection(1);
@@ -83,36 +78,28 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
             if (position != -1) {
                 selectRate.setSelection(position);
             }
-            if (internetAvailable()) {
-                loadDynamics(defaultPeriod, abb);
-            } else {
-                Toast.makeText(getContext(), "Internet not available", Toast.LENGTH_SHORT).show();
-            }
+            loadDynamics(defaultPeriod, abb);
         }
         return view;
     }
 
     @Override
     public void showDynamicInfo(List<DynamicPeriod> dynamicPeriods) {
-        if (dynamicPeriods != null) {
-            if (dynamicPeriods.size() != 0) {
-                ArrayList<BarEntry> entries = new ArrayList<>();
-                for (int i = 0; i < dynamicPeriods.size(); i++) {
-                    entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
-                }
-                BarDataSet dataSet = new BarDataSet(entries, "Rate");
-                dataSet.setValueTextColor(Color.TRANSPARENT);
-                BarData data = new BarData(dataSet);
-                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-                chart.setData(data);
-                chart.animateY(3000);
-                chart.invalidate();
-            } else {
-                Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
-            }
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        for (int i = 0; i < dynamicPeriods.size(); i++) {
+            entries.add(new BarEntry(i, (float) dynamicPeriods.get(i).getCurOfficialRate()));
         }
+        BarDataSet dataSet = new BarDataSet(entries, "Rate");
+        dataSet.setValueTextColor(Color.TRANSPARENT);
+        BarData data = new BarData(dataSet);
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        chart.setData(data);
+        chart.animateY(3000);
+        chart.invalidate();
 
-
+    }
+    public void showError(String error){
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -146,7 +133,7 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
         }
     }
 
-    protected void initViews() {
+    protected void initViews(View view) {
         chart = (BarChart) view.findViewById(R.id.chart);
         selectDate = (Spinner) view.findViewById(R.id.spinnerSelectDate);
         selectDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -200,32 +187,10 @@ public class FragmentDynamicInfo extends Fragment implements DynamicInfoScreen.D
         }
     }
 
-    public String getPeriod(String date) {
-        if (date.contains("3")) {
-            return "3";
-        } else if (date.contains("6")) {
-            return "6";
-        }
-        return "12";
-    }
-
-    private Boolean internetAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        boolean isAvailable = false;
-        if (networkInfo != null && networkInfo.isConnected()) {
-            isAvailable = true;
-        }
-        return isAvailable;
-    }
 
     private void drawDynamics() {
         if (!selectDate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none)) & !selectRate.getSelectedItem().toString().equals(getResources().getString(R.string.select_none))) {
-            if (internetAvailable()) {
-                loadDynamics(getPeriod(selectDate.getSelectedItem().toString()), (String) selectRate.getSelectedItem());
-            } else {
-                Toast.makeText(getContext(), R.string.internet_not_available, Toast.LENGTH_SHORT).show();
-            }
+            loadDynamics(String.valueOf(selectDate.getSelectedItem().toString().toCharArray()[0]), (String) selectRate.getSelectedItem());
         }
     }
 }

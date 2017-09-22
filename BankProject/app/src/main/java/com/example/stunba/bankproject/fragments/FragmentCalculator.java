@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.stunba.bankproject.interfaces.CalculatorScreen;
+import com.example.stunba.bankproject.interfaces.CalculatorView;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.presenters.CalculatorPresenter;
 import com.example.stunba.bankproject.presenters.ipresenters.ICalculator;
@@ -24,8 +24,7 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
  * Created by Kseniya_Bastun on 9/7/2017.
  */
 
-public class FragmentCalculator extends Fragment implements CalculatorScreen.CalculatorView {
-    private View view;
+public class FragmentCalculator extends Fragment implements CalculatorView {
     private ICalculator presenter;
     private Spinner selectFirstRate;
     private Spinner selectSecondRate;
@@ -38,8 +37,7 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_calculator, container, false);
+         View  view = inflater.inflate(R.layout.fragment_calculator, container, false);
         if (savedInstanceState == null) {
             presenter = new CalculatorPresenter(getContext(), this);
         } else {
@@ -47,12 +45,12 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
             presenter.setView(this);
 
         }
-        initViews();
+        initViews(view);
         presenter.loadInfo();
         return view;
     }
 
-    private void initViews() {
+    private void initViews(View view) {
         selectFirstRate = (Spinner) view.findViewById(R.id.spinnerFirst);
         selectFirstRate.setAdapter(presenter.getAdapterFirst());
         selectFirstRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -133,11 +131,7 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
 
     @Override
     public void showChangeResults(double o) {
-        if (o != -1) {
-            secondText.setText(String.valueOf(o));
-        } else {
-            Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
-        }
+        secondText.setText(String.valueOf(o));
     }
 
 
@@ -151,5 +145,8 @@ public class FragmentCalculator extends Fragment implements CalculatorScreen.Cal
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         PresenterManager.getInstance().savePresenter(presenter, outState);
+    }
+    public void showError(String error){
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

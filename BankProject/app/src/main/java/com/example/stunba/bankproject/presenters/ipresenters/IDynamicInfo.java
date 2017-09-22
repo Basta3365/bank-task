@@ -2,7 +2,7 @@ package com.example.stunba.bankproject.presenters.ipresenters;
 
 import android.widget.ArrayAdapter;
 
-import com.example.stunba.bankproject.interfaces.DynamicInfoScreen;
+import com.example.stunba.bankproject.interfaces.DynamicView;
 
 
 /**
@@ -18,7 +18,7 @@ public interface IDynamicInfo extends BaseInterface {
 
     ArrayAdapter<String> getAdapter();
 
-    DynamicInfoScreen.DynamicView getView();
+    DynamicView getView();
 
-    void setView(DynamicInfoScreen.DynamicView view);
+    void setView(DynamicView view);
 }

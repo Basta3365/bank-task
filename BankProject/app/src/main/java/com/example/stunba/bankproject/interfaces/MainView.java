@@ -8,8 +8,6 @@ import java.util.Map;
  * Created by Kseniya_Bastun on 8/25/2017.
  */
 
-public interface CurrentExchangeRateScreen {
-     interface MainView {
+public interface MainView {
         void  showLoadInfo(Map<String,ActualRate> map);
-    }
 }

@@ -14,17 +14,14 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.activity.DynamicActivity;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.Repository;
-import com.example.stunba.bankproject.source.entities.ActualRate;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 /**

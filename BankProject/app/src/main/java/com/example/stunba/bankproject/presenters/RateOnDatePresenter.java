@@ -1,10 +1,14 @@
 package com.example.stunba.bankproject.presenters;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
-import com.example.stunba.bankproject.interfaces.RateOnDateScreen;
+import com.example.stunba.bankproject.interfaces.RateOnDateView;
 import com.example.stunba.bankproject.presenters.ipresenters.IRateOnDate;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualRate;
@@ -24,11 +28,13 @@ public class RateOnDatePresenter implements IRateOnDate {
     private Map<String, Integer> currency;
     private ArrayAdapter<String> adapter = null;
     private List<String> names;
-    private RateOnDateScreen.RateOnDateView calculateView;
+    private RateOnDateView calculateView;
+    private Context context;
 
-    public RateOnDatePresenter(Context context, RateOnDateScreen.RateOnDateView v) {
+    public RateOnDatePresenter(Context context, RateOnDateView v) {
         repository = Repository.getInstance(context);
         calculateView = v;
+        this.context = context;
         currency = new HashMap<>();
         names = new ArrayList<>();
         adapter = new ArrayAdapter<>(context,
@@ -60,25 +66,35 @@ public class RateOnDatePresenter implements IRateOnDate {
     }
 
     public void actualRate(final String val, String date) {
-        repository.getRateByDate(String.valueOf(currency.get(val)), date, new OnTaskCompleted.LoadActualRate() {
-            @Override
-            public void onLoadRate(ActualRate o) {
-                getView().showActualRate(o);
-            }
-        });
+        if (internetAvailable()) {
+            repository.getRateByDate(String.valueOf(currency.get(val)), date, new OnTaskCompleted.LoadActualRate() {
+                @Override
+                public void onLoadRate(ActualRate o) {
+                    getView().showActualRate(o);
+                }
+            });
+        } else {
+            getView().showError("Internet not available");
+        }
     }
 
     @Override
-    public RateOnDateScreen.RateOnDateView getView() {
+    public RateOnDateView getView() {
         return calculateView;
     }
 
     @Override
-    public void setView(RateOnDateScreen.RateOnDateView view) {
+    public void setView(RateOnDateView view) {
         calculateView = view;
     }
 
     public ArrayAdapter<String> getAdapter() {
         return adapter;
+    }
+
+    private Boolean internetAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

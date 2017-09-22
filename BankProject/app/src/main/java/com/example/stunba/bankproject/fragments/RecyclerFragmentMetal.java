@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.stunba.bankproject.interfaces.MetalScreen;
+import com.example.stunba.bankproject.interfaces.MetalView;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.ipresenters.IMetalScreen;
@@ -20,29 +20,26 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
  * Created by Kseniya_Bastun on 9/6/2017.
  */
 
-public class RecyclerFragmentMetal extends Fragment implements MetalScreen.MetalView {
+public class RecyclerFragmentMetal extends Fragment implements MetalView {
     private RecyclerView mRecyclerView;
-    private View view;
     private IMetalScreen presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.recycler_view, container, false);
-        }
+          View view = inflater.inflate(R.layout.recycler_view, container, false);
         if (savedInstanceState == null) {
             presenter = new MetalScreenPresenter(getContext(), this);
         } else {
             presenter = (IMetalScreen) PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setView(this);
         }
-        initView();
+        initView(view);
         presenter.loadInfo();
         return view;
     }
 
-    private void initView() {
+    private void initView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         mRecyclerView.addItemDecoration(new SimpleDividerDecoration(getContext()));
         mRecyclerView.setHasFixedSize(true);

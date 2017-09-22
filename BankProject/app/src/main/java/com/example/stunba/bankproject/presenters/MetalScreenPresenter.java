@@ -3,7 +3,7 @@ package com.example.stunba.bankproject.presenters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.stunba.bankproject.interfaces.MetalScreen;
+import com.example.stunba.bankproject.interfaces.MetalView;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterMetal;
 import com.example.stunba.bankproject.presenters.ipresenters.IMetalScreen;
@@ -22,12 +22,12 @@ import java.util.Map;
 
 public class MetalScreenPresenter implements IMetalScreen {
     private Repository repository;
-    private MetalScreen.MetalView metalView;
+    private MetalView metalView;
     private RecyclerViewAdapterMetal recyclerViewAdapterMetal;
     private List<ActualAllIngot> actualAllIngots;
     private Map<Integer, MetalName> values;
 
-    public MetalScreenPresenter(Context context, MetalScreen.MetalView view) {
+    public MetalScreenPresenter(Context context, MetalView view) {
         repository = Repository.getInstance(context);
         metalView = view;
         recyclerViewAdapterMetal = new RecyclerViewAdapterMetal(context);
@@ -65,12 +65,12 @@ public class MetalScreenPresenter implements IMetalScreen {
     }
 
     @Override
-    public MetalScreen.MetalView getView() {
+    public MetalView getView() {
         return metalView;
     }
 
     @Override
-    public void setView(MetalScreen.MetalView view) {
+    public void setView(MetalView view) {
         metalView = view;
     }
 }

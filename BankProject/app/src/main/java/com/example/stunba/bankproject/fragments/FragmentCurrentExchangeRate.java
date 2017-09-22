@@ -8,23 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.stunba.bankproject.Settings;
 import com.example.stunba.bankproject.presenters.ipresenters.ICurrentExchangeRate;
 import com.example.stunba.bankproject.presenters.CurrentExchangeRatePresenter;
-import com.example.stunba.bankproject.interfaces.CurrentExchangeRateScreen;
+import com.example.stunba.bankproject.interfaces.MainView;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Kseniya_Bastun on 8/24/2017.
  */
 
-public class FragmentCurrentExchangeRate extends Fragment implements CurrentExchangeRateScreen.MainView {
-    private View view;
+public class FragmentCurrentExchangeRate extends Fragment implements MainView {
     private TextView usdRate;
     private TextView rubRate;
     private TextView eurRate;
@@ -36,24 +34,19 @@ public class FragmentCurrentExchangeRate extends Fragment implements CurrentExch
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_current_exchange_rate, container, false);
+         View  view = inflater.inflate(R.layout.fragment_current_exchange_rate, container, false);
         if (savedInstanceState == null) {
             presenter = new CurrentExchangeRatePresenter(getContext(), this);
         } else {
             presenter = (ICurrentExchangeRate) PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setView(this);
         }
-        initViews();
-        List<String> listCurrency = new ArrayList<>(3);
-        listCurrency.add("USD");
-        listCurrency.add("EUR");
-        listCurrency.add("RUB");
-        presenter.loadInfo(listCurrency);
+        initViews(view);
+        presenter.loadInfo(Settings.listCurrency);
         return view;
     }
 
-    private void initViews() {
+    private void initViews(View view) {
         usdRate = (TextView) view.findViewById(R.id.textViewActualUSD);
         eurRate = (TextView) view.findViewById(R.id.textViewActualEUR);
         rubRate = (TextView) view.findViewById(R.id.textViewActualRUB);

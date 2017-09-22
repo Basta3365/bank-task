@@ -3,16 +3,16 @@ package com.example.stunba.bankproject.presenters.ipresenters;
 import android.support.v4.app.FragmentActivity;
 
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterFavorites;
-import com.example.stunba.bankproject.interfaces.FavoriteScreen;
+import com.example.stunba.bankproject.interfaces.FavoriteView;
 
 /**
  * Created by Kseniya_Bastun on 9/15/2017.
  */
 
 public interface IFavoriteScreen extends BaseInterface {
-    FavoriteScreen.FavoriteView getView();
+    FavoriteView getView();
 
-    void setView(FavoriteScreen.FavoriteView view);
+    void setView(FavoriteView view);
 
     void loadInfo();
 

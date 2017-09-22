@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.stunba.bankproject.interfaces.FavoriteScreen;
+import com.example.stunba.bankproject.interfaces.FavoriteView;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.SimpleDividerDecoration;
 import com.example.stunba.bankproject.presenters.FavoriteScreenPresenter;
@@ -22,8 +22,7 @@ import com.example.stunba.bankproject.presenters.PresenterManager;
  * Created by Kseniya_Bastun on 9/5/2017.
  */
 
-public class FragmentFavorites extends Fragment implements FavoriteScreen.FavoriteView {
-    private View view;
+public class FragmentFavorites extends Fragment implements FavoriteView {
     private RecyclerView mRecyclerView;
     private IFavoriteScreen presenter;
     private ImageButton buttonAdd;
@@ -31,20 +30,19 @@ public class FragmentFavorites extends Fragment implements FavoriteScreen.Favori
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_favorites, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
         if (savedInstanceState == null) {
             presenter = new FavoriteScreenPresenter(getContext(), this);
         } else {
             presenter = (FavoriteScreenPresenter) PresenterManager.getInstance().restorePresenter(savedInstanceState);
             presenter.setView(this);
         }
-        initView();
+        initView(view);
         presenter.loadInfo();
         return view;
     }
 
-    private void initView() {
+    private void initView(View view) {
         buttonAdd = (ImageButton) view.findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override

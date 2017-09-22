@@ -3,7 +3,7 @@ package com.example.stunba.bankproject.presenters;
 import android.content.Context;
 
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
-import com.example.stunba.bankproject.interfaces.CurrentExchangeRateScreen;
+import com.example.stunba.bankproject.interfaces.MainView;
 import com.example.stunba.bankproject.presenters.ipresenters.ICurrentExchangeRate;
 import com.example.stunba.bankproject.source.Repository;
 import com.example.stunba.bankproject.source.entities.ActualRate;
@@ -18,17 +18,17 @@ import java.util.Map;
 
 public class CurrentExchangeRatePresenter implements ICurrentExchangeRate {
     private Repository repository;
-    private CurrentExchangeRateScreen.MainView view;
+    private MainView view;
 
-    public CurrentExchangeRateScreen.MainView getView() {
+    public MainView getView() {
         return view;
     }
 
-    public void setView(CurrentExchangeRateScreen.MainView view) {
+    public void setView(MainView view) {
         this.view = view;
     }
 
-    public CurrentExchangeRatePresenter(Context context, CurrentExchangeRateScreen.MainView view) {
+    public CurrentExchangeRatePresenter(Context context, MainView view) {
         repository = Repository.getInstance(context);
         this.view = view;
     }

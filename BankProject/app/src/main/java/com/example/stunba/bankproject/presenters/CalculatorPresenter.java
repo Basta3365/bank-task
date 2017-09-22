@@ -3,7 +3,7 @@ package com.example.stunba.bankproject.presenters;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import com.example.stunba.bankproject.interfaces.CalculatorScreen;
+import com.example.stunba.bankproject.interfaces.CalculatorView;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.presenters.ipresenters.ICalculator;
 import com.example.stunba.bankproject.source.Repository;
@@ -20,14 +20,14 @@ import java.util.Map;
 
 public class CalculatorPresenter implements ICalculator {
     private Repository repository;
-    private CalculatorScreen.CalculatorView calculatorView;
+    private CalculatorView calculatorView;
     private Map<String, Integer> currency;
     private ArrayAdapter<String> adapterFirst;
     private ArrayAdapter<String> adapterSecond;
     private ArrayList<String> strings;
     private List<String> names;
 
-    public CalculatorPresenter(Context context, CalculatorScreen.CalculatorView view) {
+    public CalculatorPresenter(Context context, CalculatorView view) {
         repository = Repository.getInstance(context);
         calculatorView = view;
         names = new ArrayList<>();
@@ -69,7 +69,11 @@ public class CalculatorPresenter implements ICalculator {
         repository.getRateCalculator(abbFrom, abbTo, count, new OnTaskCompleted.LoadComplete() {
             @Override
             public void onLoadComplete(double o) {
-                calculatorView.showChangeResults(o);
+                if (o != -1) {
+                    calculatorView.showChangeResults(o);
+                } else {
+                    calculatorView.showError("No information");
+                }
             }
         });
     }
@@ -83,12 +87,12 @@ public class CalculatorPresenter implements ICalculator {
     }
 
     @Override
-    public CalculatorScreen.CalculatorView getView() {
+    public CalculatorView getView() {
         return calculatorView;
     }
 
     @Override
-    public void setView(CalculatorScreen.CalculatorView view) {
+    public void setView(CalculatorView view) {
         calculatorView = view;
     }
 }

@@ -14,13 +14,10 @@ import com.example.stunba.bankproject.R;
  */
 
 public class FragmentAbout extends Fragment {
-    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_about, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_about, container, false);
     }
 }

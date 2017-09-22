@@ -21,7 +21,7 @@ import com.example.stunba.bankproject.presenters.ipresenters.IRateOnDate;
 import com.example.stunba.bankproject.presenters.RateOnDatePresenter;
 import com.example.stunba.bankproject.presenters.PresenterManager;
 import com.example.stunba.bankproject.R;
-import com.example.stunba.bankproject.interfaces.RateOnDateScreen;
+import com.example.stunba.bankproject.interfaces.RateOnDateView;
 import com.example.stunba.bankproject.source.entities.ActualRate;
 
 import java.util.Calendar;
@@ -30,8 +30,7 @@ import java.util.Calendar;
  * Created by Kseniya_Bastun on 9/1/2017.
  */
 
-public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.RateOnDateView {
-    private View view;
+public class FragmentRateOnDate extends Fragment implements RateOnDateView {
     private IRateOnDate presenter;
     private Spinner selectRate;
     private TextView selectDate;
@@ -45,8 +44,7 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.Rat
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_rate_on_date, container, false);
+        View view = inflater.inflate(R.layout.fragment_rate_on_date, container, false);
         if (savedInstanceState == null) {
             presenter = new RateOnDatePresenter(getContext(), this);
         } else {
@@ -54,7 +52,7 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.Rat
             presenter.setView(this);
             restoreState(savedInstanceState);
         }
-        initViews();
+        initViews(view);
         presenter.loadInfo();
         return view;
     }
@@ -64,7 +62,7 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.Rat
         actualRateText = savedInstanceState.getString("actual_rate");
     }
 
-    private void initViews() {
+    private void initViews(View view) {
         selectDate = (TextView) view.findViewById(R.id.textViewSelectDate);
         if (startDate != null) {
             selectDate.setText(startDate);
@@ -144,23 +142,13 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateScreen.Rat
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 
-    public Boolean internetAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        boolean isAvailable = false;
-        if (networkInfo != null && networkInfo.isConnected()) {
-            isAvailable = true;
-        }
-        return isAvailable;
-    }
 
     private void calculateRate() {
-        if (internetAvailable()) {
-            presenter.actualRate(value, startDate);
-        } else {
-            Toast.makeText(getContext(), R.string.internet_not_available, Toast.LENGTH_SHORT).show();
-        }
+        presenter.actualRate(value, startDate);
+    }
 
+    public void showError(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
 }

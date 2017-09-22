@@ -1,6 +1,6 @@
 package com.example.stunba.bankproject.presenters.ipresenters;
 
-import com.example.stunba.bankproject.interfaces.CurrentExchangeRateScreen;
+import com.example.stunba.bankproject.interfaces.MainView;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public interface ICurrentExchangeRate extends BaseInterface {
     void loadInfo(final List<String> list);
 
-    CurrentExchangeRateScreen.MainView getView();
+    MainView getView();
 
-    void setView(CurrentExchangeRateScreen.MainView view);
+    void setView(MainView view);
 }

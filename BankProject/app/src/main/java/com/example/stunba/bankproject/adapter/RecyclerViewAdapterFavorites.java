@@ -26,9 +26,6 @@ public class RecyclerViewAdapterFavorites extends RecyclerView.Adapter<RecyclerV
         this.favorites = favorites;
     }
 
-    public List<ActualRate> getFavorites() {
-        return favorites;
-    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cv;

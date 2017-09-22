@@ -2,7 +2,9 @@ package com.example.stunba.bankproject;
 
 import com.example.stunba.bankproject.source.remote.IBankAPI;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -20,6 +22,11 @@ public class Settings {
     public static int COUNT = 100;
     public static final int SERVICE_ID = 1;
     public final static Calendar CALENDAR = Calendar.getInstance();
+    public static List<String> listCurrency=new ArrayList<String>() {{
+        add("USD");
+        add("EUR");
+        add("RUB");
+    }};
 
     public static String getDate(int year, int month, int dayOfMonth) {
         String sMonth = String.valueOf(month + 1);

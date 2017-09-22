@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
-import com.example.stunba.bankproject.interfaces.FavoriteScreen;
+import com.example.stunba.bankproject.interfaces.FavoriteView;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.adapter.RecyclerViewAdapterFavorites;
@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted.DeleteFavorite {
     private Repository repository;
-    private FavoriteScreen.FavoriteView favoriteView;
+    private FavoriteView favoriteView;
     private RecyclerViewAdapterFavorites recyclerViewAdapterFavorites;
     private List<ActualRate> actualFavorites;
     private Set<String> abbFavorite;
@@ -35,13 +35,13 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
         return recyclerViewAdapterFavorites;
     }
 
-    public FavoriteScreenPresenter(Context context, FavoriteScreen.FavoriteView view) {
+    public FavoriteScreenPresenter(Context context, FavoriteView view) {
         repository = Repository.getInstance(context);
         favoriteView = view;
         recyclerViewAdapterFavorites = new RecyclerViewAdapterFavorites(this);
         currencyList = new ArrayList<>();
         actualFavorites = new ArrayList<>();
-        abbFavorite = new HashSet();
+        abbFavorite = new HashSet<>();
     }
 
     public void loadInfo() {
@@ -104,15 +104,7 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                dialog.cancel();
-
-                            }
-                        })
+                .setNegativeButton(R.string.cancel,null)
                 .setSingleChoiceItems(cs, -1,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -135,12 +127,12 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
 
 
     @Override
-    public FavoriteScreen.FavoriteView getView() {
+    public FavoriteView getView() {
         return favoriteView;
     }
 
     @Override
-    public void setView(FavoriteScreen.FavoriteView view) {
+    public void setView(FavoriteView view) {
         favoriteView = view;
     }
 }
