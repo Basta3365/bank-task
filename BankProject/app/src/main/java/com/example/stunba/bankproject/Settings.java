@@ -28,6 +28,14 @@ public class Settings {
         add("RUB");
     }};
 
+    public static String START_DATE="startDate";
+    public static String END_DATE="endDate";
+    public static String DATE="date";
+    public static String ACTUAL_RATE="actual_rate";
+    public static String RATE="rate";
+    public static String ABBREVIATION="abb";
+    public static String NOTIFICATION_ID="id";
+    public static String CHEAPER="cheaper";
     public static String getDate(int year, int month, int dayOfMonth) {
         String sMonth = String.valueOf(month + 1);
         String sDay = String.valueOf(dayOfMonth);

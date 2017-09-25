@@ -58,8 +58,8 @@ public class FragmentDynamicInfo extends Fragment implements DynamicView {
         View view = inflater.inflate(R.layout.fragment_dynamics, container, false);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            if (bundle.getString("abb") != null) {
-                abb = bundle.getString("abb");
+            if (bundle.getString(Settings.ABBREVIATION) != null) {
+                abb = bundle.getString(Settings.ABBREVIATION);
                 isNotification = true;
             }
         }
@@ -98,7 +98,8 @@ public class FragmentDynamicInfo extends Fragment implements DynamicView {
         chart.invalidate();
 
     }
-    public void showError(String error){
+
+    public void showError(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
@@ -112,21 +113,21 @@ public class FragmentDynamicInfo extends Fragment implements DynamicView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("startDate", startDate);
-        outState.putString("endDate", endDate);
-        outState.putString("rate", rate);
+        outState.putString(Settings.START_DATE, startDate);
+        outState.putString(Settings.END_DATE, endDate);
+        outState.putString(Settings.RATE, rate);
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState.getString("startDate") != null) {
-            startDate = savedInstanceState.getString("startDate");
+        if (savedInstanceState.getString(Settings.START_DATE) != null) {
+            startDate = savedInstanceState.getString(Settings.START_DATE);
         }
-        if (savedInstanceState.getString("endDate") != null) {
-            endDate = savedInstanceState.getString("endDate");
+        if (savedInstanceState.getString(Settings.END_DATE) != null) {
+            endDate = savedInstanceState.getString(Settings.END_DATE);
         }
-        if (savedInstanceState.getString("endDate") != null) {
-            rate = savedInstanceState.getString("rate");
+        if (savedInstanceState.getString(Settings.RATE) != null) {
+            rate = savedInstanceState.getString(Settings.RATE);
         }
         if (startDate != null & endDate != null & rate != null) {
             presenter.loadDynamics(rate, startDate, endDate);

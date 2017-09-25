@@ -73,10 +73,10 @@ public class JobSchedulerService extends JobService {
                         .setContentText("View statistics for 3 months");
         Intent intent = new Intent(this, DynamicActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("abb", key);
-        intent.putExtra("cheaper", value);
+        intent.putExtra(Settings.ABBREVIATION, key);
+        intent.putExtra(Settings.CHEAPER, value);
         Settings.COUNT++;
-        intent.putExtra("id", Settings.COUNT);
+        intent.putExtra(Settings.NOTIFICATION_ID, Settings.COUNT);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(DynamicActivity.class);

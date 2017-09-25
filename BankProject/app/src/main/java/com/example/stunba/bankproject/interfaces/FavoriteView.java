@@ -5,5 +5,5 @@ package com.example.stunba.bankproject.interfaces;
  */
 
 public interface FavoriteView {
-        void showError();
+        void showError(String str);
 }

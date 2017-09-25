@@ -97,14 +97,16 @@ public class FavoriteScreenPresenter implements IFavoriteScreen, OnTaskCompleted
                                             getRecyclerViewAdapterFavorites().notifyDataSetChanged();
                                         }
                                     } else {
-                                        favoriteView.showError();
+                                        if (favoriteView != null) {
+                                            favoriteView.showError("No information");
+                                        }
                                     }
                                 }
                             });
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel,null)
+                .setNegativeButton(R.string.cancel, null)
                 .setSingleChoiceItems(cs, -1,
                         new DialogInterface.OnClickListener() {
                             @Override

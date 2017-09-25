@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.ArrayAdapter;
+
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.interfaces.DynamicView;
 import com.example.stunba.bankproject.presenters.ipresenters.IDynamicInfo;
@@ -72,15 +73,21 @@ public class DynamicInfoPresenter implements IDynamicInfo {
             bankApi.getDynamicsPeriod(String.valueOf(currency.get(val)), startDate, endDate, new OnTaskCompleted.DynamicPresenterCompleteDynamic() {
                 @Override
                 public void onDynamicLoad(List<DynamicPeriod> o) {
-                    if (o != null && o.size()!=0) {
-                        getView().showDynamicInfo(o);
-                    }else {
-                        getView().showError("No information");
+                    if (o != null && o.size() != 0) {
+                        if (getView() != null) {
+                            getView().showDynamicInfo(o);
+                        }
+                    } else {
+                        if (getView() != null) {
+                            getView().showError("No information");
+                        }
                     }
                 }
             });
         } else {
-            getView().showError("Internet not available");
+            if (getView() != null) {
+                getView().showError("Internet not available");
+            }
         }
     }
 

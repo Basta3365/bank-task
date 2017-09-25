@@ -37,7 +37,7 @@ public class FragmentCalculator extends Fragment implements CalculatorView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         View  view = inflater.inflate(R.layout.fragment_calculator, container, false);
+        View view = inflater.inflate(R.layout.fragment_calculator, container, false);
         if (savedInstanceState == null) {
             presenter = new CalculatorPresenter(getContext(), this);
         } else {
@@ -146,7 +146,8 @@ public class FragmentCalculator extends Fragment implements CalculatorView {
         super.onSaveInstanceState(outState);
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
-    public void showError(String error){
+
+    public void showError(String error) {
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

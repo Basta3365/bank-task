@@ -40,9 +40,13 @@ public class CurrentExchangeRatePresenter implements ICurrentExchangeRate {
             repository.getRateByAbb(str, new OnTaskCompleted.LoadActualRate() {
                 @Override
                 public void onLoadRate(ActualRate o) {
-                    actualRateMap.put(o.getCurAbbreviation(), o);
-                    if (actualRateMap.size() == list.size()) {
-                        view.showLoadInfo(actualRateMap);
+                    if (o != null) {
+                        actualRateMap.put(o.getCurAbbreviation(), o);
+                        if (actualRateMap.size() == list.size()) {
+                            if (view != null) {
+                                view.showLoadInfo(actualRateMap);
+                            }
+                        }
                     }
                 }
             });

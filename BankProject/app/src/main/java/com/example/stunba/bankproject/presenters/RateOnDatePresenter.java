@@ -4,9 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.example.stunba.bankproject.R;
 import com.example.stunba.bankproject.interfaces.OnTaskCompleted;
 import com.example.stunba.bankproject.interfaces.RateOnDateView;
 import com.example.stunba.bankproject.presenters.ipresenters.IRateOnDate;
@@ -70,7 +68,9 @@ public class RateOnDatePresenter implements IRateOnDate {
             repository.getRateByDate(String.valueOf(currency.get(val)), date, new OnTaskCompleted.LoadActualRate() {
                 @Override
                 public void onLoadRate(ActualRate o) {
-                    getView().showActualRate(o);
+                    if (getView() != null) {
+                        getView().showActualRate(o);
+                    }
                 }
             });
         } else {

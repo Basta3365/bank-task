@@ -70,9 +70,13 @@ public class CalculatorPresenter implements ICalculator {
             @Override
             public void onLoadComplete(double o) {
                 if (o != -1) {
-                    calculatorView.showChangeResults(o);
+                    if (calculatorView != null) {
+                        calculatorView.showChangeResults(o);
+                    }
                 } else {
-                    calculatorView.showError("No information");
+                    if (calculatorView != null) {
+                        calculatorView.showError("No information");
+                    }
                 }
             }
         });

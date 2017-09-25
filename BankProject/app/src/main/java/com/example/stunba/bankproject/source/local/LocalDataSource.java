@@ -18,14 +18,14 @@ import java.util.Map;
  */
 
 public class LocalDataSource implements DataSource {
-    private final DatabaseHandler databaseHandler;
+    private DatabaseHandlerActualRate databaseHandlerActualRate;
     private final DatabaseHandlerMetalName databaseHandlerMetalName;
     private final DatabaseHandlerCurrency databaseHandlerCurrency;
     private final DatabaseHandlerMetalRate databaseHandlerMetalRate;
     private final DatabaseHandlerFavorites databaseHandlerFavorites;
 
     public LocalDataSource(Context context) {
-        databaseHandler = new DatabaseHandler(context);
+        databaseHandlerActualRate=new DatabaseHandlerActualRate(context);
         databaseHandlerCurrency = new DatabaseHandlerCurrency(context);
         databaseHandlerMetalName = new DatabaseHandlerMetalName(context);
         databaseHandlerMetalRate = new DatabaseHandlerMetalRate(context);
@@ -38,17 +38,17 @@ public class LocalDataSource implements DataSource {
     }
 
     public void getRateByDate(String val, String date, OnTaskCompleted.LoadActualRate calculatePresenterComplete) {
-        databaseHandler.getRateByDate(val, date, calculatePresenterComplete);
+        databaseHandlerActualRate.getRateByDate(val, date, calculatePresenterComplete);
     }
 
     @Override
     public void getAllRates(OnTaskCompleted.LoadAllActualRate mainPresenter) {
-        databaseHandler.getAllRates(mainPresenter);
+        databaseHandlerActualRate.getAllRates(mainPresenter);
     }
 
     @Override
     public void loadRates(OnTaskCompleted.LoadAllActualRate loadAllActualRate) {
-        databaseHandler.loadAllRate(loadAllActualRate);
+        databaseHandlerActualRate.loadAllRate(loadAllActualRate);
     }
 
     @Override
@@ -66,13 +66,13 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void updateAllRates(final OnTaskCompleted.LoadSuccessfully loadSuccessfully) {
-        databaseHandler.deleteAll();
-        databaseHandler.loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
+        databaseHandlerActualRate.deleteAll();
+        databaseHandlerActualRate.loadAllRate(new OnTaskCompleted.LoadAllActualRate() {
             @Override
             public void onLoadAllRate(List<ActualRate> o) {
                 if (o != null) {
                     for (ActualRate actual : o) {
-                        databaseHandler.addRate(actual);
+                        databaseHandlerActualRate.addRate(actual);
                     }
                     loadSuccessfully.onLoadSuccess(true);
                 }
@@ -91,7 +91,7 @@ public class LocalDataSource implements DataSource {
                 final int count = favorites.size();
                 for (int i = 0; i < count; i++) {
                     final int finalI = i;
-                    databaseHandler.getRateByAbb(favorites.get(i).getCurAbbreviation(), new OnTaskCompleted.LoadActualRate() {
+                    databaseHandlerActualRate.getRateByAbb(favorites.get(i).getCurAbbreviation(), new OnTaskCompleted.LoadActualRate() {
                         @Override
                         public void onLoadRate(ActualRate temp) {
                             if (temp != null) {
@@ -129,7 +129,7 @@ public class LocalDataSource implements DataSource {
     @Override
     public void getRateCalculator(String abbFrom, String abbTo, final double count, final OnTaskCompleted.LoadComplete loadComplete) {
         if (abbFrom.equals("BYR")) {
-            databaseHandler.getRateByAbb(abbTo, new OnTaskCompleted.LoadActualRate() {
+            databaseHandlerActualRate.getRateByAbb(abbTo, new OnTaskCompleted.LoadActualRate() {
                 @Override
                 public void onLoadRate(ActualRate rate) {
                     if(rate!=null) {
@@ -142,7 +142,7 @@ public class LocalDataSource implements DataSource {
             });
         }
         if (abbTo.equals("BYR")) {
-            databaseHandler.getRateByAbb(abbFrom, new OnTaskCompleted.LoadActualRate() {
+            databaseHandlerActualRate.getRateByAbb(abbFrom, new OnTaskCompleted.LoadActualRate() {
                 @Override
                 public void onLoadRate(ActualRate rate) {
                     if(rate!=null) {
@@ -167,7 +167,7 @@ public class LocalDataSource implements DataSource {
     }
 
     public void getRateByAbb(String abb, OnTaskCompleted.LoadActualRate mainPresenter) {
-        databaseHandler.getRateByAbb(abb, mainPresenter);
+        databaseHandlerActualRate.getRateByAbb(abb, mainPresenter);
     }
 
 }

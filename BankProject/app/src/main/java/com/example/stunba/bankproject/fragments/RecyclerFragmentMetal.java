@@ -27,7 +27,7 @@ public class RecyclerFragmentMetal extends Fragment implements MetalView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-          View view = inflater.inflate(R.layout.recycler_view, container, false);
+        View view = inflater.inflate(R.layout.recycler_view, container, false);
         if (savedInstanceState == null) {
             presenter = new MetalScreenPresenter(getContext(), this);
         } else {

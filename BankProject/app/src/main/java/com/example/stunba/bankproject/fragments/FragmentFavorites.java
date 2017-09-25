@@ -73,7 +73,7 @@ public class FragmentFavorites extends Fragment implements FavoriteView {
     }
 
     @Override
-    public void showError() {
-        Toast.makeText(getContext(), "No information", Toast.LENGTH_SHORT).show();
+    public void showError(String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

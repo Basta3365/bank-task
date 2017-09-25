@@ -1,9 +1,6 @@
 package com.example.stunba.bankproject.fragments;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -58,8 +55,8 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateView {
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        startDate = savedInstanceState.getString("date");
-        actualRateText = savedInstanceState.getString("actual_rate");
+        startDate = savedInstanceState.getString(Settings.DATE);
+        actualRateText = savedInstanceState.getString(Settings.ACTUAL_RATE);
     }
 
     private void initViews(View view) {
@@ -137,8 +134,8 @@ public class FragmentRateOnDate extends Fragment implements RateOnDateView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("date", startDate);
-        outState.putString("actual_rate", actualRateTextScreen.getText().toString());
+        outState.putString(Settings.DATE, startDate);
+        outState.putString(Settings.ACTUAL_RATE, actualRateTextScreen.getText().toString());
         PresenterManager.getInstance().savePresenter(presenter, outState);
     }
 
