@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">BankProject</string>
+    <string name="usd">USD</string>
+    <string name="eur">EUR</string>
+    <string name="rub">RUB</string>
+    <string name="stacked_one_1">STATE 1</string>
+    <string name="stacked_one_2">STATE 2</string>
+    <string name="stacked_one_3">STATE 3</string>
+    <string name="select_none">Select none</string>
+    <string name="select_date">Select date</string>
+    <string name="wrong_input">Wrong input or no information</string>
+    <string name="select_currency">Select currency </string>
+    <string name="ok">OK </string>
+    <string name="cancel">Cancel </string>
+    <string-array name="rate_list">
+        <item>@string/select_none</item>
+        <item>@string/eur</item>
+        <item>@string/rub</item>
+        <item>@string/usd</item>
+    </string-array>
+    <string-array name="date_list">
+        <item>@string/select_none</item>
+        <item>3 months</item>
+        <item>6 months</item>
+        <item>12 months</item>
+    </string-array>
+    <string name="title_activity_drawer_start">Bank API</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="the_current_exchange_rate_of_major_currencies">Current rate </string>
+    <string name="rate_graph_currency">Rate graph currency</string>
+    <string name="the_exchange_rate_on_the_date">Rate on the date</string>
+    <string name="the_list_of_cost_of_precious_metals">List of metals</string>
+    <string name="currency_calculator">Currency calculator</string>
+    <string name="favorite">Favorite</string>
+    <string name="about">About</string>
+    <string name="internet_not_available">Internet not available</string>
+    <string name="select_currency_and_period">Select currency and period</string>
+    <string name="description">Bank API RB</string>
+
+</resources>
